@@ -19,6 +19,7 @@ var_dump(
 
 ?>
 --EXPECT--
+Deprecated: Constant DATE_ISO8601 is deprecated in %s on line %d
 bool(true)
 bool(true)
 bool(true)

@@ -27,6 +27,7 @@ foreach ($constants as $const) {
 }
 ?>
 --EXPECT--
+Deprecated: Constant DATE_ISO8601 is deprecated in %s on line %d
 DATE_ATOM:	OK
 DATE_COOKIE:	OK
 DATE_ISO8601:	OK

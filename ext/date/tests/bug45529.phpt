@@ -9,7 +9,7 @@ echo $tz1->getName(), PHP_EOL;
 echo $tz2->getName(), PHP_EOL;
 $d = new DateTime('2008-01-01 12:00:00+02:00');
 $d->setTimeZone($tz1);
-echo $d->format(DATE_ISO8601), PHP_EOL;
+echo $d->format(DATE_ATOM), PHP_EOL;
 $d = new DateTime('2008-01-01 12:00:00+02:00');
 $d->setTimeZone($tz2);
 echo $d->format(DATE_ATOM), PHP_EOL;
