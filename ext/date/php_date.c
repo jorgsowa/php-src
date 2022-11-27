@@ -161,7 +161,7 @@ PHPAPI time_t php_time(void)
  * This format does not technically match the ISO 8601 standard, as it does not
  * use : in the UTC offset format specifier. This is kept for BC reasons. The
  * DATE_FORMAT_ISO8601_EXPANDED format does correct this, as well as adding
- * support for years out side of the traditional 0000-9999 range.
+ * support for years outside the traditional 0000-9999 range.
  */
 #define DATE_FORMAT_ISO8601  "Y-m-d\\TH:i:sO"
 
