@@ -20,7 +20,7 @@ foreach( $formats as $format )
     }
 }
 ?>
---EXPECT--
+--EXPECTF--
 Deprecated: Constant DATE_ISO8601 is deprecated in %s on line %d
 string(13) "Y-m-d\TH:i:sP"
 string(25) "2008-07-08T22:14:12+02:00"

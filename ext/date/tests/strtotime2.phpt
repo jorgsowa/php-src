@@ -26,11 +26,12 @@ foreach ($constants as $const) {
     echo ((strtotime(date(constant($const), $time)) === $time) ? "OK" : "FAIL") . "\n";
 }
 ?>
---EXPECT--
-Deprecated: Constant DATE_ISO8601 is deprecated in %s on line %d
+--EXPECTF--
 DATE_ATOM:	OK
 DATE_COOKIE:	OK
-DATE_ISO8601:	OK
+DATE_ISO8601:	
+Deprecated: Constant DATE_ISO8601 is deprecated in %s on line %d
+OK
 DATE_RFC822:	OK
 DATE_RFC850:	OK
 DATE_RFC1036:	OK

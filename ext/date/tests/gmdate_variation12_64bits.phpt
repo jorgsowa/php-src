@@ -32,13 +32,13 @@ var_dump( gmdate(DATE_ATOM, $timestamp) );
 *** Testing gmdate() : usage variation ***
 
 -- Testing gmdate() function with minimum range of timestamp --
-string(24) "1901-12-13T20:45:54+00:00"
+string(25) "1901-12-13T20:45:54+00:00"
 
 -- Testing gmdate() function with less than the range of timestamp --
-string(24) "1901-12-13T20:45:50+00:00"
+string(25) "1901-12-13T20:45:50+00:00"
 
 -- Testing gmdate() function with maximum range of timestamp --
-string(24) "2038-01-19T03:14:07+00:00"
+string(25) "2038-01-19T03:14:07+00:00"
 
 -- Testing gmdate() function with greater than the range of timestamp --
-string(24) "2038-01-19T03:14:10+00:00"
+string(25) "2038-01-19T03:14:10+00:00"

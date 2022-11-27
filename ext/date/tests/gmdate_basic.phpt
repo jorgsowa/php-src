@@ -18,5 +18,5 @@ var_dump( gmdate($format) );
 ?>
 --EXPECTF--
 *** Testing gmdate() : basic functionality ***
-string(24) "2008-08-08T08:08:08+00:00"
+string(25) "2008-08-08T08:08:08+00:00"
 string(%d) "%s"
