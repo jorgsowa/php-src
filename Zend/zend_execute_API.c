@@ -37,6 +37,7 @@
 #include "zend_weakrefs.h"
 #include "zend_inheritance.h"
 #include "zend_observer.h"
+#include "zend_call_stack.h"
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
@@ -638,6 +639,10 @@ ZEND_API uint32_t zend_get_executed_lineno(void) /* {{{ */
 		ex = ex->prev_execute_data;
 	}
 	if (ex) {
+		if (!ex->opline) {
+			/* Missing SAVE_OPLINE()? Falling back to first line of function */
+			return ex->func->op_array.opcodes[0].lineno;
+		}
 		if (EG(exception) && ex->opline->opcode == ZEND_HANDLE_EXCEPTION &&
 		    ex->opline->lineno == 0 && EG(opline_before_exception)) {
 			return EG(opline_before_exception)->lineno;
@@ -670,7 +675,7 @@ ZEND_API bool zend_is_executing(void) /* {{{ */
 }
 /* }}} */
 
-ZEND_API zend_result ZEND_FASTCALL zval_update_constant_ex(zval *p, zend_class_entry *scope) /* {{{ */
+ZEND_API zend_result ZEND_FASTCALL zval_update_constant_with_ctx(zval *p, zend_class_entry *scope, zend_ast_evaluate_ctx *ctx)
 {
 	if (Z_TYPE_P(p) == IS_CONSTANT_AST) {
 		zend_ast *ast = Z_ASTVAL_P(p);
@@ -686,8 +691,9 @@ ZEND_API zend_result ZEND_FASTCALL zval_update_constant_ex(zval *p, zend_class_e
 			ZVAL_COPY_OR_DUP(p, zv);
 		} else {
 			zval tmp;
+			bool short_circuited;
 
-			if (UNEXPECTED(zend_ast_evaluate(&tmp, ast, scope) != SUCCESS)) {
+			if (UNEXPECTED(zend_ast_evaluate_ex(&tmp, ast, scope, &short_circuited, ctx) != SUCCESS)) {
 				return FAILURE;
 			}
 			zval_ptr_dtor_nogc(p);
@@ -697,6 +703,12 @@ ZEND_API zend_result ZEND_FASTCALL zval_update_constant_ex(zval *p, zend_class_e
 	return SUCCESS;
 }
 /* }}} */
+
+ZEND_API zend_result ZEND_FASTCALL zval_update_constant_ex(zval *p, zend_class_entry *scope)
+{
+	zend_ast_evaluate_ctx ctx = {0};
+	return zval_update_constant_with_ctx(p, scope, &ctx);
+}
 
 ZEND_API zend_result ZEND_FASTCALL zval_update_constant(zval *pp) /* {{{ */
 {

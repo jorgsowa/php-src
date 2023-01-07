@@ -3181,6 +3181,12 @@ static zend_never_inline ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL zend_dispatch_try
 static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_HANDLE_EXCEPTION_SPEC_HANDLER(ZEND_OPCODE_HANDLER_ARGS)
 {
 	const zend_op *throw_op = EG(opline_before_exception);
+
+	/* Exception was thrown before executing any op */
+	if (UNEXPECTED(!throw_op)) {
+		ZEND_VM_TAIL_CALL(zend_dispatch_try_catch_finally_helper_SPEC(-1, 0 ZEND_OPCODE_HANDLER_ARGS_PASSTHRU_CC));
+	}
+
 	uint32_t throw_op_num = throw_op - EX(func)->op_array.opcodes;
 	int i, current_try_catch_offset = -1;
 
@@ -3425,7 +3431,9 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CALL_TRAMPOLINE_SPEC_HANDLER(Z
 			SAVE_OPLINE_EX();
 
 			execute_data = EX(prev_execute_data);
-			LOAD_OPLINE();
+			if (execute_data) {
+				LOAD_OPLINE();
+			}
 			ZEND_ADD_CALL_FLAG(call, ZEND_CALL_TOP);
 			zend_execute_ex(call);
 		}
@@ -3476,7 +3484,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CALL_TRAMPOLINE_SPEC_HANDLER(Z
 
 	execute_data = EG(current_execute_data);
 
-	if (!EX(func) || !ZEND_USER_CODE(EX(func)->type) || (call_info & ZEND_CALL_TOP)) {
+	if (!execute_data || !EX(func) || !ZEND_USER_CODE(EX(func)->type) || (call_info & ZEND_CALL_TOP)) {
 		ZEND_VM_RETURN();
 	}
 
@@ -3563,7 +3571,9 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CALL_TRAMPOLINE_SPEC_OBSERVER_
 			SAVE_OPLINE_EX();
 			zend_observer_fcall_begin(execute_data);
 			execute_data = EX(prev_execute_data);
-			LOAD_OPLINE();
+			if (execute_data) {
+				LOAD_OPLINE();
+			}
 			ZEND_ADD_CALL_FLAG(call, ZEND_CALL_TOP);
 			zend_execute_ex(call);
 		}
@@ -3615,7 +3625,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CALL_TRAMPOLINE_SPEC_OBSERVER_
 
 	execute_data = EG(current_execute_data);
 
-	if (!EX(func) || !ZEND_USER_CODE(EX(func)->type) || (call_info & ZEND_CALL_TOP)) {
+	if (!execute_data || !EX(func) || !ZEND_USER_CODE(EX(func)->type) || (call_info & ZEND_CALL_TOP)) {
 		ZEND_VM_RETURN();
 	}
 
@@ -3834,12 +3844,13 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_RECV_INIT_SPEC_CON
 			} else {
 				SAVE_OPLINE();
 				ZVAL_COPY(param, default_value);
-				if (UNEXPECTED(zval_update_constant_ex(param, EX(func)->op_array.scope) != SUCCESS)) {
+				zend_ast_evaluate_ctx ctx = {0};
+				if (UNEXPECTED(zval_update_constant_with_ctx(param, EX(func)->op_array.scope, &ctx) != SUCCESS)) {
 					zval_ptr_dtor_nogc(param);
 					ZVAL_UNDEF(param);
 					HANDLE_EXCEPTION();
 				}
-				if (!Z_REFCOUNTED_P(param)) {
+				if (!Z_REFCOUNTED_P(param) && !ctx.had_side_effects) {
 					ZVAL_COPY_VALUE(cache_val, param);
 				}
 			}
@@ -7536,7 +7547,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_DECLARE_CONST_SPEC_CONST_CONST
 		}
 	}
 	/* non persistent, case sensitive */
-	ZEND_CONSTANT_SET_FLAGS(&c, CONST_CS, PHP_USER_CONSTANT);
+	ZEND_CONSTANT_SET_FLAGS(&c, 0, PHP_USER_CONSTANT);
 	c.name = zend_string_copy(Z_STR_P(name));
 
 	if (zend_register_constant(&c) == FAILURE) {
@@ -55772,6 +55783,16 @@ ZEND_API void execute_ex(zend_execute_data *ex)
 
 	LOAD_OPLINE();
 	ZEND_VM_LOOP_INTERRUPT_CHECK();
+
+#ifdef ZEND_CHECK_STACK_LIMIT
+	if (UNEXPECTED(zend_call_stack_overflowed(EG(stack_limit)))) {
+		zend_call_stack_size_error();
+		/* No opline was executed before exception */
+		EG(opline_before_exception) = NULL;
+		LOAD_OPLINE();
+		/* Fall through to handle exception below. */
+	}
+#endif /* ZEND_CHECK_STACK_LIMIT */
 
 	while (1) {
 #if !defined(ZEND_VM_FP_GLOBAL_REG) || !defined(ZEND_VM_IP_GLOBAL_REG)

@@ -26,6 +26,7 @@
 
 #include "php.h"
 
+#include "Zend/zend_enum.h"
 #include "Zend/zend_exceptions.h"
 
 #include "php_random.h"
@@ -76,6 +77,8 @@ PHPAPI zend_class_entry *random_ce_Random_Engine_Secure;
 
 PHPAPI zend_class_entry *random_ce_Random_Randomizer;
 
+PHPAPI zend_class_entry *random_ce_Random_IntervalBoundary;
+
 PHPAPI zend_class_entry *random_ce_Random_RandomError;
 PHPAPI zend_class_entry *random_ce_Random_BrokenRandomEngineError;
 PHPAPI zend_class_entry *random_ce_Random_RandomException;
@@ -86,9 +89,7 @@ static zend_object_handlers random_engine_xoshiro256starstar_object_handlers;
 static zend_object_handlers random_engine_secure_object_handlers;
 static zend_object_handlers random_randomizer_object_handlers;
 
-#define RANDOM_RANGE_ATTEMPTS (50)
-
-static inline uint32_t rand_range32(const php_random_algo *algo, php_random_status *status, uint32_t umax)
+PHPAPI uint32_t php_random_range32(const php_random_algo *algo, php_random_status *status, uint32_t umax)
 {
 	uint32_t result, limit;
 	size_t total_size = 0;
@@ -124,8 +125,8 @@ static inline uint32_t rand_range32(const php_random_algo *algo, php_random_stat
 	/* Discard numbers over the limit to avoid modulo bias */
 	while (UNEXPECTED(result > limit)) {
 		/* If the requirements cannot be met in a cycles, return fail */
-		if (++count > RANDOM_RANGE_ATTEMPTS) {
-			zend_throw_error(random_ce_Random_BrokenRandomEngineError, "Failed to generate an acceptable random number in %d attempts", RANDOM_RANGE_ATTEMPTS);
+		if (++count > PHP_RANDOM_RANGE_ATTEMPTS) {
+			zend_throw_error(random_ce_Random_BrokenRandomEngineError, "Failed to generate an acceptable random number in %d attempts", PHP_RANDOM_RANGE_ATTEMPTS);
 			return 0;
 		}
 
@@ -144,7 +145,7 @@ static inline uint32_t rand_range32(const php_random_algo *algo, php_random_stat
 	return result % umax;
 }
 
-static inline uint64_t rand_range64(const php_random_algo *algo, php_random_status *status, uint64_t umax)
+PHPAPI uint64_t php_random_range64(const php_random_algo *algo, php_random_status *status, uint64_t umax)
 {
 	uint64_t result, limit;
 	size_t total_size = 0;
@@ -180,8 +181,8 @@ static inline uint64_t rand_range64(const php_random_algo *algo, php_random_stat
 	/* Discard numbers over the limit to avoid modulo bias */
 	while (UNEXPECTED(result > limit)) {
 		/* If the requirements cannot be met in a cycles, return fail */
-		if (++count > RANDOM_RANGE_ATTEMPTS) {
-			zend_throw_error(random_ce_Random_BrokenRandomEngineError, "Failed to generate an acceptable random number in %d attempts", RANDOM_RANGE_ATTEMPTS);
+		if (++count > PHP_RANDOM_RANGE_ATTEMPTS) {
+			zend_throw_error(random_ce_Random_BrokenRandomEngineError, "Failed to generate an acceptable random number in %d attempts", PHP_RANDOM_RANGE_ATTEMPTS);
 			return 0;
 		}
 
@@ -312,10 +313,10 @@ PHPAPI zend_long php_random_range(const php_random_algo *algo, php_random_status
 	zend_ulong umax = (zend_ulong) max - (zend_ulong) min;
 
 	if (umax > UINT32_MAX) {
-		return (zend_long) (rand_range64(algo, status, umax) + min);
+		return (zend_long) (php_random_range64(algo, status, umax) + min);
 	}
 
-	return (zend_long) (rand_range32(algo, status, umax) + min);
+	return (zend_long) (php_random_range32(algo, status, umax) + min);
 }
 /* }}} */
 
@@ -826,7 +827,7 @@ static PHP_GINIT_FUNCTION(random)
 /* {{{ PHP_GSHUTDOWN_FUNCTION */
 static PHP_GSHUTDOWN_FUNCTION(random)
 {
-	if (random_globals->random_fd > 0) {
+	if (random_globals->random_fd >= 0) {
 		close(random_globals->random_fd);
 		random_globals->random_fd = -1;
 	}
@@ -897,6 +898,9 @@ PHP_MINIT_FUNCTION(random)
 	random_randomizer_object_handlers.offset = XtOffsetOf(php_random_randomizer, std);
 	random_randomizer_object_handlers.free_obj = randomizer_free_obj;
 	random_randomizer_object_handlers.clone_obj = NULL;
+
+	/* Random\IntervalBoundary */
+	random_ce_Random_IntervalBoundary = register_class_Random_IntervalBoundary();
 
 	register_random_symbols(module_number);
 

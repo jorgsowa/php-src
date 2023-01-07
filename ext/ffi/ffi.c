@@ -32,6 +32,17 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#ifdef HAVE_LIBDL
+#ifdef PHP_WIN32
+#include "win32/param.h"
+#include "win32/winutil.h"
+#define GET_DL_ERROR()  php_win_err()
+#else
+#include <sys/param.h>
+#define GET_DL_ERROR()  DL_ERROR()
+#endif
+#endif
+
 #ifdef HAVE_GLOB
 #ifdef PHP_WIN32
 #include "win32/glob.h"
@@ -1096,7 +1107,7 @@ static zval *zend_ffi_cdata_get(zend_object *obj, zend_string *member, int read_
 
 	if (UNEXPECTED(!zend_string_equals_literal(member, "cdata"))) {
 		zend_throw_error(zend_ffi_exception_ce, "Only 'cdata' property may be read");
-		return &EG(uninitialized_zval);;
+		return &EG(uninitialized_zval);
 	}
 
 	zend_ffi_cdata_to_zval(cdata, cdata->ptr, type, BP_VAR_R, rv, 0, 0, 0);
@@ -1112,13 +1123,13 @@ static zval *zend_ffi_cdata_set(zend_object *obj, zend_string *member, zval *val
 #if 0
 	if (UNEXPECTED(!cdata->ptr)) {
 		zend_throw_error(zend_ffi_exception_ce, "NULL pointer dereference");
-		return &EG(uninitialized_zval);;
+		return &EG(uninitialized_zval);
 	}
 #endif
 
 	if (UNEXPECTED(!zend_string_equals_literal(member, "cdata"))) {
 		zend_throw_error(zend_ffi_exception_ce, "Only 'cdata' property may be set");
-		return &EG(uninitialized_zval);;
+		return &EG(uninitialized_zval);
 	}
 
 	zend_ffi_zval_to_cdata(cdata->ptr, type, value);
@@ -2637,7 +2648,7 @@ again:
 				zend_ffi_cdata *cdata = (zend_ffi_cdata*)Z_OBJ_P(arg);
 
 				if (zend_ffi_is_compatible_type(type, ZEND_FFI_TYPE(cdata->type))) {
-					*pass_type = zend_ffi_make_fake_struct_type(type);;
+					*pass_type = zend_ffi_make_fake_struct_type(type);
 					arg_values[n] = cdata->ptr;
 					break;
 				}
@@ -2934,6 +2945,7 @@ ZEND_METHOD(FFI, cdef) /* {{{ */
 	zend_string *lib = NULL;
 	zend_ffi *ffi = NULL;
 	DL_HANDLE handle = NULL;
+	char *err;
 	void *addr;
 
 	ZEND_FFI_VALIDATE_API_RESTRICTION();
@@ -2946,9 +2958,21 @@ ZEND_METHOD(FFI, cdef) /* {{{ */
 	if (lib) {
 		handle = DL_LOAD(ZSTR_VAL(lib));
 		if (!handle) {
-			zend_throw_error(zend_ffi_exception_ce, "Failed loading '%s'", ZSTR_VAL(lib));
+			err = GET_DL_ERROR();
+#ifdef PHP_WIN32
+			if (err && err[0]) {
+				zend_throw_error(zend_ffi_exception_ce, "Failed loading '%s' (%s)", ZSTR_VAL(lib), err);
+				php_win32_error_msg_free(err);
+			} else {
+				zend_throw_error(zend_ffi_exception_ce, "Failed loading '%s' (Unknown reason)", ZSTR_VAL(lib));
+			}
+#else
+			zend_throw_error(zend_ffi_exception_ce, "Failed loading '%s' (%s)", ZSTR_VAL(lib), err);
+			GET_DL_ERROR(); /* free the buffer storing the error */
+#endif
 			RETURN_THROWS();
 		}
+
 #ifdef RTLD_DEFAULT
 	} else if (1) {
 		// TODO: this might need to be disabled or protected ???
@@ -3201,7 +3225,7 @@ static zend_ffi *zend_ffi_load(const char *filename, bool preload) /* {{{ */
 {
 	struct stat buf;
 	int fd;
-	char *code, *code_pos, *scope_name, *lib;
+	char *code, *code_pos, *scope_name, *lib, *err;
 	size_t code_size, scope_name_len;
 	zend_ffi *ffi;
 	DL_HANDLE handle = NULL;
@@ -3278,7 +3302,18 @@ static zend_ffi *zend_ffi_load(const char *filename, bool preload) /* {{{ */
 			if (preload) {
 				zend_error(E_WARNING, "FFI: Failed pre-loading '%s'", lib);
 			} else {
-				zend_throw_error(zend_ffi_exception_ce, "Failed loading '%s'", lib);
+				err = GET_DL_ERROR();
+#ifdef PHP_WIN32
+				if (err && err[0]) {
+					zend_throw_error(zend_ffi_exception_ce, "Failed loading '%s' (%s)", lib, err);
+					php_win32_error_msg_free(err);
+				} else {
+					zend_throw_error(zend_ffi_exception_ce, "Failed loading '%s' (Unknown reason)", lib);
+				}
+#else
+				zend_throw_error(zend_ffi_exception_ce, "Failed loading '%s' (%s)", lib, err);
+				GET_DL_ERROR(); /* free the buffer storing the error */
+#endif
 			}
 			goto cleanup;
 		}
@@ -5735,7 +5770,7 @@ void zend_ffi_resolve_typedef(const char *name, size_t name_len, zend_ffi_dcl *d
 	if (FFI_G(symbols)) {
 		sym = zend_hash_str_find_ptr(FFI_G(symbols), name, name_len);
 		if (sym && sym->kind == ZEND_FFI_SYM_TYPE) {
-			dcl->type = ZEND_FFI_TYPE(sym->type);;
+			dcl->type = ZEND_FFI_TYPE(sym->type);
 			if (sym->is_const) {
 				dcl->attr |= ZEND_FFI_ATTR_CONST;
 			}

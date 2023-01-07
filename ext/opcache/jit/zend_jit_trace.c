@@ -247,6 +247,13 @@ static void zend_jit_trace_add_code(const void *start, uint32_t size)
 	t->code_size  = size;
 }
 
+/**
+ * Locate a trace in the #zend_jit_traces array with the specified
+ * #code_start address.
+ *
+ * @return the #zend_jit_traces index or 0 if no such #code_start
+ * address was found
+ */
 static uint32_t zend_jit_find_trace(const void *addr)
 {
 	uint32_t i;
@@ -256,7 +263,6 @@ static uint32_t zend_jit_find_trace(const void *addr)
 			return i;
 		}
 	}
-	ZEND_UNREACHABLE();
 	return 0;
 }
 
@@ -858,7 +864,7 @@ static void zend_jit_trace_propagate_range(const zend_op_array *op_array, const 
 	int def = tssa->vars[ssa_var].definition;
 
 	if (tssa->vars[ssa_var].alias == NO_ALIAS
-	 && zend_inference_propagate_range(op_array, tssa, (zend_op*)tssa_opcodes[def], (zend_ssa_op*)&tssa->ops[def], ssa_var, &tmp)) {
+	 && zend_inference_propagate_range(op_array, tssa, tssa_opcodes[def], &tssa->ops[def], ssa_var, &tmp)) {
 		tssa->var_info[ssa_var].range.min = tmp.min;
 		tssa->var_info[ssa_var].range.max = tmp.max;
 		tssa->var_info[ssa_var].range.underflow = tmp.underflow;
@@ -1140,6 +1146,7 @@ static int is_checked_guard(const zend_ssa *tssa, const zend_op **ssa_opcodes, u
 					} else if (!(tssa->var_info[tssa->ops[idx].op2_use].type & (MAY_BE_LONG|MAY_BE_DOUBLE))) {
 						return 0;
 					}
+					return 1;
 				} else if (opline->opcode == ZEND_PRE_DEC
 				 || opline->opcode == ZEND_PRE_INC
 				 || opline->opcode == ZEND_POST_DEC
@@ -6274,7 +6281,7 @@ done:
 					}
 
 					if (type == IS_LONG
-					 && zend_inference_propagate_range(op_array, ssa, (zend_op*)opline, (zend_ssa_op*)ssa_op, ssa_op->result_def, &tmp)) {
+					 && zend_inference_propagate_range(op_array, ssa, opline, ssa_op, ssa_op->result_def, &tmp)) {
 						ssa->var_info[ssa_op->result_def].range.min = tmp.min;
 						ssa->var_info[ssa_op->result_def].range.max = tmp.max;
 						ssa->var_info[ssa_op->result_def].range.underflow = 0;
@@ -6335,7 +6342,7 @@ done:
 						}
 					}
 					if (type == IS_LONG
-					 && zend_inference_propagate_range(op_array, ssa, (zend_op*)opline, (zend_ssa_op*)ssa_op, ssa_op->op1_def, &tmp)) {
+					 && zend_inference_propagate_range(op_array, ssa, opline, ssa_op, ssa_op->op1_def, &tmp)) {
 						ssa->var_info[ssa_op->op1_def].range.min = tmp.min;
 						ssa->var_info[ssa_op->op1_def].range.max = tmp.max;
 						ssa->var_info[ssa_op->op1_def].range.underflow = 0;
@@ -6376,7 +6383,7 @@ done:
 						}
 					}
 					if (type == IS_LONG
-					 && zend_inference_propagate_range(op_array, ssa, (zend_op*)opline, (zend_ssa_op*)ssa_op, ssa_op->op2_def, &tmp)) {
+					 && zend_inference_propagate_range(op_array, ssa, opline, ssa_op, ssa_op->op2_def, &tmp)) {
 						ssa->var_info[ssa_op->op2_def].range.min = tmp.min;
 						ssa->var_info[ssa_op->op2_def].range.max = tmp.max;
 						ssa->var_info[ssa_op->op2_def].range.underflow = 0;
@@ -6419,7 +6426,7 @@ done:
 								}
 							}
 							if (type == IS_LONG
-							 && zend_inference_propagate_range(op_array, ssa, (zend_op*)opline, (zend_ssa_op*)ssa_op, ssa_op->op1_def, &tmp)) {
+							 && zend_inference_propagate_range(op_array, ssa, opline, ssa_op, ssa_op->op1_def, &tmp)) {
 								ssa->var_info[ssa_op->op1_def].range.min = tmp.min;
 								ssa->var_info[ssa_op->op1_def].range.max = tmp.max;
 								ssa->var_info[ssa_op->op1_def].range.underflow = 0;
@@ -6832,6 +6839,15 @@ done:
 			const void *timeout_exit_addr = NULL;
 
 			t->link = zend_jit_find_trace(p->opline->handler);
+			if (t->link == 0) {
+				/* this can happen if ZEND_JIT_EXIT_INVALIDATE was handled
+				 * by zend_jit_trace_exit() in another thread after this
+				 * thread set ZEND_JIT_TRACE_STOP_LINK in zend_jit_trace_execute();
+				 * ZEND_JIT_EXIT_INVALIDATE resets the opline handler to one of
+				 * the "_counter_handler" functions, and these are not registered
+				 * tracer functions */
+				goto jit_failure;
+			}
 			if ((zend_jit_traces[t->link].flags & ZEND_JIT_TRACE_USES_INITIAL_IP)
 			 && !zend_jit_set_ip(&dasm_state, p->opline)) {
 				goto jit_failure;
@@ -8187,22 +8203,34 @@ int ZEND_FASTCALL zend_jit_trace_exit(uint32_t exit_num, zend_jit_registers_buf 
 			t = &zend_jit_traces[num];
 		}
 
-		SHM_UNPROTECT();
-		zend_jit_unprotect();
+		zend_shared_alloc_lock();
 
 		jit_extension = (zend_jit_op_array_trace_extension*)ZEND_FUNC_INFO(t->op_array);
-		if (ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags & ZEND_JIT_TRACE_START_LOOP) {
-			((zend_op*)(t->opline))->handler = (const void*)zend_jit_loop_trace_counter_handler;
-		} else if (ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags & ZEND_JIT_TRACE_START_ENTER) {
-			((zend_op*)(t->opline))->handler = (const void*)zend_jit_func_trace_counter_handler;
-		} else if (ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags & ZEND_JIT_TRACE_START_RETURN) {
-			((zend_op*)(t->opline))->handler = (const void*)zend_jit_ret_trace_counter_handler;
-		}
-		ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags &=
-			ZEND_JIT_TRACE_START_LOOP|ZEND_JIT_TRACE_START_ENTER|ZEND_JIT_TRACE_START_RETURN;
 
-		zend_jit_protect();
-		SHM_PROTECT();
+		/* Checks under lock, just in case something has changed while we were waiting for the lock */
+		if (!(ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags & (ZEND_JIT_TRACE_JITED|ZEND_JIT_TRACE_BLACKLISTED))) {
+			/* skip: not JIT-ed nor blacklisted */
+		} else if (ZEND_JIT_TRACE_NUM >= JIT_G(max_root_traces)) {
+			/* skip: too many root traces */
+		} else {
+			SHM_UNPROTECT();
+			zend_jit_unprotect();
+
+			if (ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags & ZEND_JIT_TRACE_START_LOOP) {
+				((zend_op*)(t->opline))->handler = (const void*)zend_jit_loop_trace_counter_handler;
+			} else if (ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags & ZEND_JIT_TRACE_START_ENTER) {
+				((zend_op*)(t->opline))->handler = (const void*)zend_jit_func_trace_counter_handler;
+			} else if (ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags & ZEND_JIT_TRACE_START_RETURN) {
+				((zend_op*)(t->opline))->handler = (const void*)zend_jit_ret_trace_counter_handler;
+			}
+			ZEND_OP_TRACE_INFO(t->opline, jit_extension->offset)->trace_flags &=
+				ZEND_JIT_TRACE_START_LOOP|ZEND_JIT_TRACE_START_ENTER|ZEND_JIT_TRACE_START_RETURN;
+
+			zend_jit_protect();
+			SHM_PROTECT();
+		}
+
+		zend_shared_alloc_unlock();
 
 		return 0;
 	}

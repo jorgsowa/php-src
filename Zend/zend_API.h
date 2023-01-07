@@ -267,7 +267,7 @@ typedef struct _zend_fcall_info_cache {
 #endif
 
 #define INIT_CLASS_ENTRY(class_container, class_name, functions) \
-	INIT_CLASS_ENTRY_EX(class_container, class_name, sizeof(class_name)-1, functions)
+	INIT_CLASS_ENTRY_EX(class_container, class_name, strlen(class_name), functions)
 
 #define INIT_CLASS_ENTRY_EX(class_container, class_name, class_name_len, functions) \
 	{															\
@@ -733,6 +733,14 @@ ZEND_API zend_result zend_fcall_info_call(zend_fcall_info *fci, zend_fcall_info_
 /* Zend FCC API to store and handle PHP userland functions */
 static zend_always_inline bool zend_fcc_equals(const zend_fcall_info_cache* a, const zend_fcall_info_cache* b)
 {
+	if (UNEXPECTED((a->function_handler->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE) &&
+		(b->function_handler->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE))) {
+		return a->object == b->object
+			&& a->calling_scope == b->calling_scope
+			&& a->closure == b->closure
+			&& zend_string_equals(a->function_handler->common.function_name, b->function_handler->common.function_name)
+		;
+	}
 	return a->function_handler == b->function_handler
 		&& a->object == b->object
 		&& a->calling_scope == b->calling_scope
@@ -742,6 +750,15 @@ static zend_always_inline bool zend_fcc_equals(const zend_fcall_info_cache* a, c
 
 static zend_always_inline void zend_fcc_addref(zend_fcall_info_cache *fcc)
 {
+	ZEND_ASSERT(ZEND_FCC_INITIALIZED(*fcc) && "FCC Not initialized, possibly refetch trampoline freed by ZPP?");
+	/* If the cached trampoline is set, free it */
+	if (UNEXPECTED(fcc->function_handler == &EG(trampoline))) {
+		zend_function *copy = (zend_function*)emalloc(sizeof(zend_function));
+
+		memcpy(copy, fcc->function_handler, sizeof(zend_function));
+		fcc->function_handler->common.function_name = NULL;
+		fcc->function_handler = copy;
+	}
 	if (fcc->object) {
 		GC_ADDREF(fcc->object);
 	}
@@ -758,9 +775,12 @@ static zend_always_inline void zend_fcc_dup(/* restrict */ zend_fcall_info_cache
 
 static zend_always_inline void zend_fcc_dtor(zend_fcall_info_cache *fcc)
 {
+	ZEND_ASSERT(fcc->function_handler);
 	if (fcc->object) {
 		OBJ_RELEASE(fcc->object);
 	}
+	/* Need to free potential trampoline (__call/__callStatic) copied function handler before releasing the closure */
+	zend_release_fcall_info_cache(fcc);
 	if (fcc->closure) {
 		OBJ_RELEASE(fcc->closure);
 	}
@@ -806,7 +826,14 @@ ZEND_API void zend_call_known_function(
 static zend_always_inline void zend_call_known_fcc(
 	zend_fcall_info_cache *fcc, zval *retval_ptr, uint32_t param_count, zval *params, HashTable *named_params)
 {
-	zend_call_known_function(fcc->function_handler, fcc->object, fcc->called_scope, retval_ptr, param_count, params, named_params);
+	zend_function *func = fcc->function_handler;
+	/* Need to copy trampolines as they get released after they are called */
+	if (UNEXPECTED(func->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE)) {
+		func = (zend_function*) emalloc(sizeof(zend_function));
+		memcpy(func, fcc->function_handler, sizeof(zend_function));
+		zend_string_addref(func->op_array.function_name);
+	}
+	zend_call_known_function(func, fcc->object, fcc->called_scope, retval_ptr, param_count, params, named_params);
 }
 
 /* Call the provided zend_function instance method on an object. */
@@ -877,9 +904,9 @@ static zend_always_inline const char *zend_get_object_type_uc(const zend_class_e
 	return zend_get_object_type_case(ce, true);
 }
 
-ZEND_API bool zend_is_iterable(zval *iterable);
+ZEND_API bool zend_is_iterable(const zval *iterable);
 
-ZEND_API bool zend_is_countable(zval *countable);
+ZEND_API bool zend_is_countable(const zval *countable);
 
 ZEND_API zend_result zend_get_default_from_internal_arg_info(
 		zval *default_value_zval, zend_internal_arg_info *arg_info);
@@ -2100,18 +2127,18 @@ ZEND_API ZEND_COLD void zend_argument_value_error(uint32_t arg_num, const char *
 /* Inlined implementations shared by new and old parameter parsing APIs */
 
 ZEND_API bool ZEND_FASTCALL zend_parse_arg_class(zval *arg, zend_class_entry **pce, uint32_t num, bool check_null);
-ZEND_API bool ZEND_FASTCALL zend_parse_arg_bool_slow(zval *arg, bool *dest, uint32_t arg_num);
-ZEND_API bool ZEND_FASTCALL zend_parse_arg_bool_weak(zval *arg, bool *dest, uint32_t arg_num);
-ZEND_API bool ZEND_FASTCALL zend_parse_arg_long_slow(zval *arg, zend_long *dest, uint32_t arg_num);
-ZEND_API bool ZEND_FASTCALL zend_parse_arg_long_weak(zval *arg, zend_long *dest, uint32_t arg_num);
-ZEND_API bool ZEND_FASTCALL zend_parse_arg_double_slow(zval *arg, double *dest, uint32_t arg_num);
-ZEND_API bool ZEND_FASTCALL zend_parse_arg_double_weak(zval *arg, double *dest, uint32_t arg_num);
+ZEND_API bool ZEND_FASTCALL zend_parse_arg_bool_slow(const zval *arg, bool *dest, uint32_t arg_num);
+ZEND_API bool ZEND_FASTCALL zend_parse_arg_bool_weak(const zval *arg, bool *dest, uint32_t arg_num);
+ZEND_API bool ZEND_FASTCALL zend_parse_arg_long_slow(const zval *arg, zend_long *dest, uint32_t arg_num);
+ZEND_API bool ZEND_FASTCALL zend_parse_arg_long_weak(const zval *arg, zend_long *dest, uint32_t arg_num);
+ZEND_API bool ZEND_FASTCALL zend_parse_arg_double_slow(const zval *arg, double *dest, uint32_t arg_num);
+ZEND_API bool ZEND_FASTCALL zend_parse_arg_double_weak(const zval *arg, double *dest, uint32_t arg_num);
 ZEND_API bool ZEND_FASTCALL zend_parse_arg_str_slow(zval *arg, zend_string **dest, uint32_t arg_num);
 ZEND_API bool ZEND_FASTCALL zend_parse_arg_str_weak(zval *arg, zend_string **dest, uint32_t arg_num);
 ZEND_API bool ZEND_FASTCALL zend_parse_arg_number_slow(zval *arg, zval **dest, uint32_t arg_num);
 ZEND_API bool ZEND_FASTCALL zend_parse_arg_str_or_long_slow(zval *arg, zend_string **dest_str, zend_long *dest_long, uint32_t arg_num);
 
-static zend_always_inline bool zend_parse_arg_bool(zval *arg, bool *dest, bool *is_null, bool check_null, uint32_t arg_num)
+static zend_always_inline bool zend_parse_arg_bool(const zval *arg, bool *dest, bool *is_null, bool check_null, uint32_t arg_num)
 {
 	if (check_null) {
 		*is_null = 0;
@@ -2145,7 +2172,7 @@ static zend_always_inline bool zend_parse_arg_long(zval *arg, zend_long *dest, b
 	return 1;
 }
 
-static zend_always_inline bool zend_parse_arg_double(zval *arg, double *dest, bool *is_null, bool check_null, uint32_t arg_num)
+static zend_always_inline bool zend_parse_arg_double(const zval *arg, double *dest, bool *is_null, bool check_null, uint32_t arg_num)
 {
 	if (check_null) {
 		*is_null = 0;
@@ -2256,7 +2283,7 @@ static zend_always_inline bool zend_parse_arg_array(zval *arg, zval **dest, bool
 	return 1;
 }
 
-static zend_always_inline bool zend_parse_arg_array_ht(zval *arg, HashTable **dest, bool check_null, bool or_object, bool separate)
+static zend_always_inline bool zend_parse_arg_array_ht(const zval *arg, HashTable **dest, bool check_null, bool or_object, bool separate)
 {
 	if (EXPECTED(Z_TYPE_P(arg) == IS_ARRAY)) {
 		*dest = Z_ARRVAL_P(arg);
@@ -2315,7 +2342,7 @@ static zend_always_inline bool zend_parse_arg_object(zval *arg, zval **dest, zen
 	return 1;
 }
 
-static zend_always_inline bool zend_parse_arg_obj(zval *arg, zend_object **dest, zend_class_entry *ce, bool check_null)
+static zend_always_inline bool zend_parse_arg_obj(const zval *arg, zend_object **dest, zend_class_entry *ce, bool check_null)
 {
 	if (EXPECTED(Z_TYPE_P(arg) == IS_OBJECT) &&
 	    (!ce || EXPECTED(instanceof_function(Z_OBJCE_P(arg), ce) != 0))) {
