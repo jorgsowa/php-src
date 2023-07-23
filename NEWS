@@ -55,6 +55,9 @@ PHP                                                                        NEWS
 - DOM:
   . Fix DOMEntity field getter bugs. (nielsdos)
 
+- DOM:
+  . Fix DOMEntity field getter bugs. (nielsdos)
+
 - FFI:
   . Fix leaking definitions when using FFI::cdef()->new(...). (ilutov)
 
