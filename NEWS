@@ -12,6 +12,9 @@ PHP                                                                        NEWS
 - Core:
   . Fixed oss-fuzz #60741 (Leak in open_basedir). (ilutov)
 
+- DOM:
+  . Fix DOMEntity field getter bugs. (nielsdos)
+
 - FFI:
   . Fix leaking definitions when using FFI::cdef()->new(...). (ilutov)
 
