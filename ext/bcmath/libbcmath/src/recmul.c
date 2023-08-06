@@ -66,7 +66,6 @@ static void _bc_simp_mul(bc_num n1, size_t n1len, bc_num n2, int n2len, bc_num *
 	char *n1ptr, *n2ptr, *pvptr;
 	char *n1end, *n2end;        /* To the end of n1 and n2. */
 	int sum = 0;
-
 	int prodlen = n1len + n2len + 1;
 
 	*prod = bc_new_num (prodlen, 0);
@@ -229,7 +228,6 @@ static void _bc_rec_mul(bc_num u, size_t ulen, bc_num v, size_t vlen, bc_num *pr
 		_bc_rec_mul(u0, u0->n_len, v0, v0->n_len, &m3);
 	}
 
-	/* Initialize product */
 	*prod = bc_new_num(ulen + vlen + 1, 0);
 
 	if (!m1zero) {
@@ -241,15 +239,67 @@ static void _bc_rec_mul(bc_num u, size_t ulen, bc_num v, size_t vlen, bc_num *pr
 	_bc_shift_addsub(*prod, m2, n, d1->n_sign != d2->n_sign);
 
 	/* Now clean up! */
-	bc_free_num (&u1);
 	bc_free_num (&u0);
+	bc_free_num (&u1);
+	bc_free_num (&v0);
 	bc_free_num (&v1);
 	bc_free_num (&m1);
-	bc_free_num (&v0);
 	bc_free_num (&m2);
 	bc_free_num (&m3);
 	bc_free_num (&d1);
 	bc_free_num (&d2);
+}
+
+/**
+ * Representation of _bc_rec_mul for squaring
+ */
+static void _bc_rec_square(bc_num u, size_t ulen, bc_num *prod) {
+	bc_num u0, u1;
+	bc_num  m2, m3, d1;
+	size_t n;
+
+	/* Base case? */
+	if (ulen < MUL_SMALL_DIGITS) {
+		_bc_simp_mul(u, ulen, u, ulen, prod);
+		return;
+	}
+
+	/* Calculate n */
+	n = (ulen + 1) / 2;
+
+	if (ulen == 0) {
+		return;
+	} else {
+		u1 = new_sub_num(ulen - n, 0, u->n_value);
+		u0 = new_sub_num(n, 0, u->n_value + ulen - n);
+		_bc_rec_square(u0, u0->n_len, &m3);
+		_bc_rm_leading_zeros(u1);
+		_bc_rm_leading_zeros(u0);
+		bc_init_num(&d1);
+		bc_sub(u1, u0, &d1, 0);
+		_bc_rec_square(d1, d1->n_len, &m2);
+	}
+
+	/* Do recursive multiplies and shifted adds. */
+	*prod = bc_new_num(ulen + ulen + 1, 0);
+
+	if (!bc_is_zero(u1)) {
+		bc_num m1;
+		_bc_rec_square(u1, u1->n_len, &m1);
+		_bc_shift_addsub(*prod, m1, 2 * n, false);
+		_bc_shift_addsub(*prod, m1, n, false);
+		bc_free_num (&m1);
+	}
+	_bc_shift_addsub(*prod, m3, n, false);
+	_bc_shift_addsub(*prod, m3, 0, false);
+	_bc_shift_addsub(*prod, m2, n, true);
+
+	/* Now clean up! */
+	bc_free_num (&u0);
+	bc_free_num (&u1);
+	bc_free_num (&m2);
+	bc_free_num (&m3);
+	bc_free_num (&d1);
 }
 
 /* The multiply routine.  N2 times N1 is put int PROD with the scale of
@@ -276,6 +326,25 @@ void bc_multiply(bc_num n1, bc_num n2, bc_num *prod, size_t scale)
 	pval->n_value = pval->n_ptr;
 	pval->n_len = len2 + len1 + 1 - full_scale;
 	pval->n_scale = prod_scale;
+	_bc_rm_leading_zeros(pval);
+	if (bc_is_zero(pval)) {
+		pval->n_sign = PLUS;
+	}
+	bc_free_num(prod);
+	*prod = pval;
+}
+
+void bc_square(bc_num num, bc_num *prod, size_t scale) {
+	bc_num pval;
+
+	/* Do the square */
+	_bc_rec_square(num, num->n_len + num->n_scale, &pval);
+
+	/* Assign to prod and clean up the number. */
+	pval->n_sign = PLUS;
+	pval->n_value = pval->n_ptr;
+	pval->n_len = num->n_len * 2 + 1;
+	pval->n_scale = MIN(num->n_scale * 2, MAX(scale, num->n_scale));
 	_bc_rm_leading_zeros(pval);
 	if (bc_is_zero(pval)) {
 		pval->n_sign = PLUS;

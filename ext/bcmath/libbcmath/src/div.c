@@ -39,11 +39,10 @@
 
 /* Some utility routines for the divide:  First a one digit multiply.
    NUM (with SIZE digits) is multiplied by DIGIT and the result is
-   placed into RESULT.  It is written so that NUM and RESULT can be
+   placed into RESULT. It is written so that NUM and RESULT can be
    the same pointers.  */
 
-static void _one_mult(unsigned char *num, size_t size, int digit, unsigned char *result)
-{
+static void _one_mult(unsigned char *num, size_t size, size_t digit, unsigned char *result) {
 	size_t carry, value;
 	unsigned char *nptr, *rptr;
 
@@ -70,7 +69,6 @@ static void _one_mult(unsigned char *num, size_t size, int digit, unsigned char 
 		}
 	}
 }
-
 
 /* The full division routine. This computes N1 / N2.  It returns
    true if the division is ok and the result is in QUOT.  The number of

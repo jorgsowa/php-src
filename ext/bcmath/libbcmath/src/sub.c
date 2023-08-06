@@ -39,8 +39,7 @@
    N2 is subtracted from N1 and the result placed in RESULT.  SCALE_MIN
    is the minimum scale for the result. */
 
-void bc_sub(bc_num n1, bc_num n2, bc_num *result, size_t scale_min)
-{
+void bc_sub(bc_num n1, bc_num n2, bc_num *result, size_t scale_min) {
 	bc_num diff = NULL;
 
 	if (n1->n_sign != n2->n_sign) {
