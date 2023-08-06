@@ -1522,7 +1522,7 @@ PHP_METHOD(DOMElement, toggleAttribute)
 			}
 
 			ns->next = NULL;
-			dom_set_old_ns(thisp->doc, ns);
+			php_libxml_set_old_ns(thisp->doc, ns);
 			dom_reconcile_ns(thisp->doc, thisp);
 		} else {
 			/* TODO: in the future when namespace bugs are fixed,
