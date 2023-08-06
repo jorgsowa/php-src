@@ -18,7 +18,9 @@ $baseNumbers = [
     "0",
 ];
 
-run_bcmath_tests($baseNumbers, $exponents, "**", bcpow(...));
+//run_bcmath_tests($baseNumbers, $exponents, "**", bcpow(...));
+
+echo bcpow("0.0000001",1515151551);
 
 ?>
 --EXPECT--

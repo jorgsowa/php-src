@@ -61,7 +61,7 @@ typedef struct bc_struct {
 #include "../../php_bcmath.h" /* Needed for BCG() macro */
 
 /* The base used in storing the numbers in n_value above.
-   Currently this MUST be 10. */
+   Currently, this MUST be 10. */
 
 #define BASE 10
 
@@ -118,6 +118,8 @@ void bc_add(bc_num n1, bc_num n2, bc_num *result, size_t scale_min);
 void bc_sub(bc_num n1, bc_num n2, bc_num *result, size_t scale_min);
 
 void bc_multiply(bc_num n1, bc_num n2, bc_num *prod, size_t scale);
+
+void bc_square(bc_num num, bc_num *prod, size_t scale);
 
 bool bc_divide(bc_num n1, bc_num n2, bc_num *quot, int scale);
 
