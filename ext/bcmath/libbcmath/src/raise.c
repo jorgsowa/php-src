@@ -32,19 +32,15 @@
 #include "bcmath.h"
 #include <assert.h>
 #include <stdbool.h>
-#include <stddef.h>
 
 
 /* Raise NUM1 to the NUM2 power.  The result is placed in RESULT.
    Maximum exponent is LONG_MAX.  If a NUM2 is not an integer,
    only the integer part is used.  */
 
-void bc_raise(bc_num num1, long exponent, bc_num *result, size_t scale)
-{
+void bc_raise(bc_num num1, long exponent, bc_num *result, size_t scale) {
 	bc_num temp, power;
-	size_t rscale;
-	size_t pwrscale;
-	size_t calcscale;
+	size_t rscale, pwrscale, calcscale;
 	bool is_neg;
 
 	/* Special case if exponent is a zero. */
@@ -102,8 +98,7 @@ void bc_raise(bc_num num1, long exponent, bc_num *result, size_t scale)
 }
 
 /* This is used internally by BCMath */
-void bc_raise_bc_exponent(bc_num base, bc_num expo, bc_num *result, size_t scale)
-{
+void bc_raise_bc_exponent(bc_num base, bc_num expo, bc_num *result, size_t scale) {
 	/* Exponent must not have fractional part */
 	assert(expo->n_scale == 0);
 
