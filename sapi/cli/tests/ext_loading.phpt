@@ -2,6 +2,9 @@
 Extension loading
 --SKIPIF--
 <?php
+if (getenv('SKIP_ASAN')) {
+    die('xleak LSAN bug on Clang 14 crashes this test');
+}
 $extDir = ini_get('extension_dir');
 if (!file_exists($extDir . '/opcache.so') && !file_exists($extDir . '/php_opcache.dll')) {
     die('skip Opcache shared object not found in extension_dir');
