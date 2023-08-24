@@ -4,6 +4,15 @@ PHP                                                                        NEWS
 
 - Core:
   . Fixed bug GH-11937 (Constant ASTs containing objects). (ilutov)
+  . Introduced Zend guard recursion protection to fix __debugInfo issue.
+    (Jakub Zelenka)
+
+- DOM:
+  . Fixed GH-11952 (Confusing warning when blocking entity loading via
+    libxml_set_external_entity_loader). (nielsdos)
+
+- Standard:
+  . Added $before_needle argument to strrchr(). (HypeMC)
 
 17 Aug 2023, PHP 8.3.0beta3
 

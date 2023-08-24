@@ -6,7 +6,7 @@ on:
       - NEWS
       - UPGRADING
       - UPGRADING.INTERNALS
-      - README.md
+      - '**/README.*'
       - CONTRIBUTING.md
       - CODING_STANDARDS.md
     branches:
@@ -21,7 +21,7 @@ on:
       - NEWS
       - UPGRADING
       - UPGRADING.INTERNALS
-      - README.md
+      - '**/README.*'
       - CONTRIBUTING.md
       - CODING_STANDARDS.md
     branches:
@@ -37,12 +37,21 @@ env:
 jobs:
   LINUX_X64:
     services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: test
+          MYSQL_ROOT_PASSWORD: root
       postgres:
         image: postgres
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: test
+    env:
+      MYSQL_TEST_HOST: mysql
+      PDO_MYSQL_TEST_DSN: mysql:host=mysql;dbname=test
+      PDO_MYSQL_TEST_HOST: mysql
     strategy:
       fail-fast: false
       matrix:
@@ -55,17 +64,29 @@ jobs:
             asan: true
     name: "LINUX_X64_${{ matrix.debug && 'DEBUG' || 'RELEASE' }}_${{ matrix.zts && 'ZTS' || 'NTS' }}${{ matrix.asan && '_ASAN' || '' }}"
     runs-on: ubuntu-22.04
+    container:
+      image: ${{ matrix.asan && 'ubuntu:23.04' || null }}
     steps:
       - name: git checkout
         uses: actions/checkout@v3
+      - name: apt
+        uses: ./.github/actions/apt-x64
+      - name: System info
+        run: |
+          echo "::group::Show host CPU info"
+          lscpu
+          echo "::endgroup::"
+          echo "::group::Show installed package versions"
+          dpkg -l
+          echo "::endgroup::"
       - name: Create MSSQL container
+        if: ${{ !matrix.asan }}
         uses: ./.github/actions/setup-mssql
       - name: Create Oracle container
+        if: ${{ !matrix.asan }}
         uses: ./.github/actions/setup-oracle
       - name: Setup Caddy server
         uses: ./.github/actions/setup-caddy
-      - name: apt
-        uses: ./.github/actions/apt-x64
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
@@ -86,9 +107,8 @@ jobs:
         run: make -j$(/usr/bin/nproc) >/dev/null
       - name: make install
         uses: ./.github/actions/install-linux
-        with:
-          withOci: ${{ !matrix.asan }}
       - name: Setup
+        if: ${{ !matrix.asan }}
         uses: ./.github/actions/setup-x64
       - name: Test
         if: matrix.asan == false
@@ -105,6 +125,7 @@ jobs:
             ${{ !matrix.asan && '-d opcache.jit_buffer_size=16M' || '' }}
             ${{ matrix.asan && '--asan -x' || '' }}
       - name: Verify generated files are up to date
+        if: ${{ !matrix.asan }}
         uses: ./.github/actions/verify-generated-files
   MACOS_DEBUG_NTS:
     runs-on: macos-11

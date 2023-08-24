@@ -73,6 +73,9 @@ PHP 8.3 UPGRADE NOTES
     modifiable pointers but was rejected due to complexity. For this reason, it
     was decided to remove the feature instead.
 
+- Phar:
+  . The type of Phar class constants are now declared.
+
 - Standard:
   . The range() function has had various changes:
     * A TypeError is now thrown when passing objects, resources, or arrays
@@ -345,6 +348,8 @@ PHP 8.3 UPGRADE NOTES
     means that when $decimals is negative, $num is rounded to $decimals
     significant digits before the decimal point. Previously negative $decimals
     got silently ignored and the number got rounded to zero decimal places.
+  . The $before_needle argument added to strrchr() which works in the same way
+    like its counterpart in strstr() or stristr().
 
 ========================================
 6. New Functions
@@ -494,6 +499,9 @@ PHP 8.3 UPGRADE NOTES
 - PCNTL:
   . SIGINFO
 
+- PDO_ODBC
+  . PDO_ODBC_TYPE
+
 - PGSQL:
   . PGSQL_TRACE_SUPPRESS_TIMESTAMPS
   . PGSQL_TRACE_REGRESS_MODE
@@ -524,6 +532,8 @@ PHP 8.3 UPGRADE NOTES
 
 - Sockets:
   . SO_ATTACH_REUSEPORT_CBPF (Linux only).
+  . SO_DETACH_BPF (Linux only).
+  . SO_DETACH_FILTER (Linux only).
   . TCP_QUICKACK (Linux only).
   . IP_DONTFRAG (FreeBSD only).
   . IP_MTU_DISCOVER (Linux only).
