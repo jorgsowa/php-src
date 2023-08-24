@@ -95,24 +95,56 @@ static inline double php_intpow10(int power) {
 static inline double php_round_helper(double value, int mode) {
 	double tmp_value;
 
-	if (value >= 0.0) {
-		tmp_value = floor(value + 0.5);
-		if ((mode == PHP_ROUND_HALF_DOWN && value == (-0.5 + tmp_value)) ||
-			(mode == PHP_ROUND_HALF_EVEN && value == (0.5 + 2 * floor(tmp_value/2.0))) ||
-			(mode == PHP_ROUND_HALF_ODD  && value == (0.5 + 2 * floor(tmp_value/2.0) - 1.0)))
-		{
-			tmp_value = tmp_value - 1.0;
-		}
-	} else {
-		tmp_value = ceil(value - 0.5);
-		if ((mode == PHP_ROUND_HALF_DOWN && value == (0.5 + tmp_value)) ||
-			(mode == PHP_ROUND_HALF_EVEN && value == (-0.5 + 2 * ceil(tmp_value/2.0))) ||
-			(mode == PHP_ROUND_HALF_ODD  && value == (-0.5 + 2 * ceil(tmp_value/2.0) + 1.0)))
-		{
-			tmp_value = tmp_value + 1.0;
-		}
+	switch (mode) {
+		case PHP_ROUND_HALF_UP:
+			if (value >= 0.0) {
+				tmp_value = floor(value + 0.5);
+			} else {
+				tmp_value = ceil(value - 0.5);
+			}
+			break;
+		case PHP_ROUND_HALF_DOWN:
+			if (value >= 0.0) {
+				tmp_value = ceil(value - 0.5);
+			} else {
+				tmp_value = floor(value + 0.5);
+			}
+			break;
+		case PHP_ROUND_CEILING:
+			tmp_value = ceil(value);
+			break;
+		case PHP_ROUND_FLOOR:
+			tmp_value = floor(value);
+			break;
+		case PHP_ROUND_TOWARD_ZERO:
+			if(value >= 0.0) {
+				tmp_value = floor(value);
+			} else {
+				tmp_value = ceil(value);
+			}
+			break;
+		case PHP_ROUND_AWAY_FROM_ZERO:
+			if(value >= 0.0) {
+				tmp_value = ceil(value);
+			} else {
+				tmp_value = floor(value);
+			}
+			break;
+		case PHP_ROUND_HALF_EVEN:
+			tmp_value = floor(value + 0.5);
+			if (tmp_value == value + 0.5 && value == (0.5 + 2 * floor(tmp_value / 2.0))) {
+				tmp_value = tmp_value - 1.0;
+			}
+			break;
+		case PHP_ROUND_HALF_ODD:
+			tmp_value = floor(value + 0.5);
+			if (tmp_value == value + 0.5 && value == (0.5 + 2 * floor(tmp_value / 2.0) - 1.0)) {
+				tmp_value = tmp_value - 1.0;
+			}
+			break;
+		default:
+			ZEND_ASSERT(0 && "Unexpected type");
 	}
-
 	return tmp_value;
 }
 /* }}} */
