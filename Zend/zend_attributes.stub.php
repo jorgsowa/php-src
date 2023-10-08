@@ -39,9 +39,7 @@ final class AllowDynamicProperties
     public function __construct() {}
 }
 
-/**
- * @strict-properties
- */
+/** @strict-properties */
 #[Attribute(Attribute::TARGET_PARAMETER)]
 final class SensitiveParameter
 {
@@ -63,9 +61,7 @@ final class SensitiveParameterValue
     public function __debugInfo(): array {}
 }
 
-/**
- * @strict-properties
- */
+/** @strict-properties */
 #[Attribute(Attribute::TARGET_METHOD)]
 final class Override
 {
