@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 0f204ac6646be79b515189a384fce9bcea9a4f42 */
+ * Stub hash: f085accd2fb5fa802c2dfb58fcd131abedf0e3b3 */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_MASK_EX(arginfo_strtotime, 0, 1, MAY_BE_LONG|MAY_BE_FALSE)
 	ZEND_ARG_TYPE_INFO(0, datetime, IS_STRING, 0)

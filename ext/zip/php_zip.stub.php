@@ -66,44 +66,26 @@ function zip_entry_compressionmethod($zip_entry): string|false {}
 
 class ZipArchive implements Countable
 {
-    /**
-     * @cvalue ZIP_CREATE
-     */
+    /** @cvalue ZIP_CREATE */
     public const int CREATE = UNKNOWN;
-    /**
-     * @cvalue ZIP_EXCL
-     */
+    /** @cvalue ZIP_EXCL */
     public const int EXCL = UNKNOWN;
-    /**
-     * @cvalue ZIP_CHECKCONS
-     */
+    /** @cvalue ZIP_CHECKCONS */
     public const int CHECKCONS = UNKNOWN;
-    /**
-     * @cvalue ZIP_OVERWRITE
-     */
+    /** @cvalue ZIP_OVERWRITE */
     public const int OVERWRITE = UNKNOWN;
 #ifdef ZIP_RDONLY
-    /**
-     * @cvalue ZIP_RDONLY
-     */
+    /** @cvalue ZIP_RDONLY */
     public const int RDONLY = UNKNOWN;
 #endif
 
-    /**
-     * @cvalue ZIP_FL_NOCASE
-     */
+    /** @cvalue ZIP_FL_NOCASE */
     public const int FL_NOCASE = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_NODIR
-     */
+    /** @cvalue ZIP_FL_NODIR */
     public const int FL_NODIR = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_COMPRESSED
-     */
+    /** @cvalue ZIP_FL_COMPRESSED */
     public const int FL_COMPRESSED = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_UNCHANGED
-     */
+    /** @cvalue ZIP_FL_UNCHANGED */
     public const int FL_UNCHANGED = UNKNOWN;
 /* deprecated in libzip 1.10.0 */
 #ifdef ZIP_FL_RECOMPRESS
@@ -113,44 +95,26 @@ class ZipArchive implements Countable
      */
     public const int FL_RECOMPRESS = UNKNOWN;
 #endif
-    /**
-     * @cvalue ZIP_FL_ENCRYPTED
-     */
+    /** @cvalue ZIP_FL_ENCRYPTED */
     public const int FL_ENCRYPTED = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_OVERWRITE
-     */
+    /** @cvalue ZIP_FL_OVERWRITE */
     public const int FL_OVERWRITE = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_LOCAL
-     */
+    /** @cvalue ZIP_FL_LOCAL */
     public const int FL_LOCAL = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_CENTRAL
-     */
+    /** @cvalue ZIP_FL_CENTRAL */
     public const int FL_CENTRAL = UNKNOWN;
 
     /* Default filename encoding policy. */
 
-    /**
-     * @cvalue ZIP_FL_ENC_GUESS
-     */
+    /** @cvalue ZIP_FL_ENC_GUESS */
     public const int FL_ENC_GUESS = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_ENC_RAW
-     */
+    /** @cvalue ZIP_FL_ENC_RAW */
     public const int FL_ENC_RAW = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_ENC_STRICT
-     */
+    /** @cvalue ZIP_FL_ENC_STRICT */
     public const int FL_ENC_STRICT = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_ENC_UTF_8
-     */
+    /** @cvalue ZIP_FL_ENC_UTF_8 */
     public const int FL_ENC_UTF_8 = UNKNOWN;
-    /**
-     * @cvalue ZIP_FL_ENC_CP437
-     */
+    /** @cvalue ZIP_FL_ENC_CP437 */
     public const int FL_ENC_CP437 = UNKNOWN;
 
     /**
@@ -159,92 +123,52 @@ class ZipArchive implements Countable
      */
     public const int FL_OPEN_FILE_NOW = UNKNOWN;
 
-    /**
-     * @cvalue ZIP_CM_DEFAULT
-     */
+    /** @cvalue ZIP_CM_DEFAULT */
     public const int CM_DEFAULT = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_STORE
-     */
+    /** @cvalue ZIP_CM_STORE */
     public const int CM_STORE = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_SHRINK
-     */
+    /** @cvalue ZIP_CM_SHRINK */
     public const int CM_SHRINK = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_REDUCE_1
-     */
+    /** @cvalue ZIP_CM_REDUCE_1 */
     public const int CM_REDUCE_1 = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_REDUCE_2
-     */
+    /** @cvalue ZIP_CM_REDUCE_2 */
     public const int CM_REDUCE_2 = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_REDUCE_3
-     */
+    /** @cvalue ZIP_CM_REDUCE_3 */
     public const int CM_REDUCE_3 = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_REDUCE_4
-     */
+    /** @cvalue ZIP_CM_REDUCE_4 */
     public const int CM_REDUCE_4 = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_IMPLODE
-     */
+    /** @cvalue ZIP_CM_IMPLODE */
     public const int CM_IMPLODE = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_DEFLATE
-     */
+    /** @cvalue ZIP_CM_DEFLATE */
     public const int CM_DEFLATE = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_DEFLATE64
-     */
+    /** @cvalue ZIP_CM_DEFLATE64 */
     public const int CM_DEFLATE64 = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_PKWARE_IMPLODE
-     */
+    /** @cvalue ZIP_CM_PKWARE_IMPLODE */
     public const int CM_PKWARE_IMPLODE = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_BZIP2
-     */
+    /** @cvalue ZIP_CM_BZIP2 */
     public const int CM_BZIP2 = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_LZMA
-     */
+    /** @cvalue ZIP_CM_LZMA */
     public const int CM_LZMA = UNKNOWN;
 #ifdef ZIP_CM_LZMA2
-    /**
-     * @cvalue ZIP_CM_LZMA2
-     */
+    /** @cvalue ZIP_CM_LZMA2 */
     public const int CM_LZMA2 = UNKNOWN;
 #endif
 
 #ifdef ZIP_CM_ZSTD
-    /**
-     * @cvalue ZIP_CM_ZSTD
-     */
+    /** @cvalue ZIP_CM_ZSTD */
     public const int CM_ZSTD = UNKNOWN;
 #endif
 #ifdef ZIP_CM_XZ
-    /**
-     * @cvalue ZIP_CM_XZ
-     */
+    /** @cvalue ZIP_CM_XZ */
     public const int CM_XZ = UNKNOWN;
 #endif
-    /**
-     * @cvalue ZIP_CM_TERSE
-     */
+    /** @cvalue ZIP_CM_TERSE */
     public const int CM_TERSE = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_LZ77
-     */
+    /** @cvalue ZIP_CM_LZ77 */
     public const int CM_LZ77 = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_WAVPACK
-     */
+    /** @cvalue ZIP_CM_WAVPACK */
     public const int CM_WAVPACK = UNKNOWN;
-    /**
-     * @cvalue ZIP_CM_PPMD
-     */
+    /** @cvalue ZIP_CM_PPMD */
     public const int CM_PPMD = UNKNOWN;
 
     /* Error code */
@@ -581,47 +505,29 @@ class ZipArchive implements Countable
     public const int OPSYS_DEFAULT = UNKNOWN;
 #endif
 
-    /**
-     * @cvalue ZIP_EM_NONE
-     */
+    /** @cvalue ZIP_EM_NONE */
     public const int EM_NONE = UNKNOWN;
-    /**
-     * @cvalue ZIP_EM_TRAD_PKWARE
-     */
+    /** @cvalue ZIP_EM_TRAD_PKWARE */
     public const int EM_TRAD_PKWARE = UNKNOWN;
 #ifdef HAVE_ENCRYPTION
-    /**
-     * @cvalue ZIP_EM_AES_128
-     */
+    /** @cvalue ZIP_EM_AES_128 */
     public const int EM_AES_128 = UNKNOWN;
-    /**
-     * @cvalue ZIP_EM_AES_192
-     */
+    /** @cvalue ZIP_EM_AES_192 */
     public const int EM_AES_192 = UNKNOWN;
-    /**
-     * @cvalue ZIP_EM_AES_256
-     */
+    /** @cvalue ZIP_EM_AES_256 */
     public const int EM_AES_256 = UNKNOWN;
 #endif
-    /**
-     * @cvalue ZIP_EM_UNKNOWN
-     */
+    /** @cvalue ZIP_EM_UNKNOWN */
     public const int EM_UNKNOWN = UNKNOWN;
 
-    /**
-     * @cvalue LIBZIP_VERSION_STR
-     */
+    /** @cvalue LIBZIP_VERSION_STR */
     public const string LIBZIP_VERSION = UNKNOWN;
 
-    /**
-     * @cvalue ZIP_LENGTH_TO_END
-     */
+    /** @cvalue ZIP_LENGTH_TO_END */
     public const int LENGTH_TO_END = UNKNOWN;
     /* since 1.10.1 */
 #ifdef ZIP_LENGTH_UNCHECKED
-    /**
-     * @cvalue ZIP_LENGTH_UNCHECKED
-     */
+    /** @cvalue ZIP_LENGTH_UNCHECKED */
     public const int LENGTH_UNCHECKED = UNKNOWN;
 #endif
 
@@ -641,9 +547,7 @@ class ZipArchive implements Countable
     /** @tentative-return-type */
     public function open(string $filename, int $flags = 0): bool|int {}
 
-    /**
-     * @tentative-return-type
-     */
+    /** @tentative-return-type */
     public function setPassword(#[\SensitiveParameter] string $password): bool {}
 
     /** @tentative-return-type */
@@ -788,14 +692,10 @@ class ZipArchive implements Countable
     public function setCompressionIndex(int $index, int $method, int $compflags = 0): bool {}
 
 #ifdef HAVE_ENCRYPTION
-    /**
-     * @tentative-return-type
-     */
+    /** @tentative-return-type */
     public function setEncryptionName(string $name, int $method, #[\SensitiveParameter] ?string $password = null): bool {}
 
-    /**
-     * @tentative-return-type
-     */
+    /** @tentative-return-type */
     public function setEncryptionIndex(int $index, int $method, #[\SensitiveParameter] ?string $password = null): bool {}
 #endif
 
