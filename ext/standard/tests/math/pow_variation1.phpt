@@ -123,9 +123,13 @@ float(1.881676371789%dE-27)
 float(0.125)
 
 -- Iteration 11 --
+
+Deprecated: pow(): Passing null to parameter #2 ($exponent) of type int|float is deprecated in %s on line %d
 int(0)
 
 -- Iteration 12 --
+
+Deprecated: pow(): Passing null to parameter #2 ($exponent) of type int|float is deprecated in %s on line %d
 int(0)
 
 -- Iteration 13 --
@@ -141,31 +145,35 @@ int(1)
 int(0)
 
 -- Iteration 17 --
-Unsupported operand types: string ** int
+pow(): Argument #2 ($exponent) must be of type int|float, string given
 
 -- Iteration 18 --
-Unsupported operand types: string ** int
+pow(): Argument #2 ($exponent) must be of type int|float, string given
 
 -- Iteration 19 --
-Unsupported operand types: array ** int
+pow(): Argument #2 ($exponent) must be of type int|float, array given
 
 -- Iteration 20 --
-Unsupported operand types: string ** int
+pow(): Argument #2 ($exponent) must be of type int|float, string given
 
 -- Iteration 21 --
-Unsupported operand types: string ** int
+pow(): Argument #2 ($exponent) must be of type int|float, string given
 
 -- Iteration 22 --
-Unsupported operand types: string ** int
+pow(): Argument #2 ($exponent) must be of type int|float, string given
 
 -- Iteration 23 --
-Unsupported operand types: classA ** int
+pow(): Argument #2 ($exponent) must be of type int|float, classA given
 
 -- Iteration 24 --
+
+Deprecated: pow(): Passing null to parameter #2 ($exponent) of type int|float is deprecated in %s on line %d
 int(0)
 
 -- Iteration 25 --
+
+Deprecated: pow(): Passing null to parameter #2 ($exponent) of type int|float is deprecated in %s on line %d
 int(0)
 
 -- Iteration 26 --
-Unsupported operand types: resource ** int
+pow(): Argument #2 ($exponent) must be of type int|float, resource given

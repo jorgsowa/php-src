@@ -570,8 +570,8 @@ PHP_FUNCTION(pow)
 	zval *zbase, *zexp;
 
 	ZEND_PARSE_PARAMETERS_START(2, 2)
-		Z_PARAM_ZVAL(zbase)
-		Z_PARAM_ZVAL(zexp)
+		Z_PARAM_NUMBER(zbase)
+		Z_PARAM_NUMBER(zexp)
 	ZEND_PARSE_PARAMETERS_END();
 
 	pow_function(return_value, zbase, zexp);
