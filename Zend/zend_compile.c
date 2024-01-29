@@ -5677,14 +5677,43 @@ static void zend_compile_foreach(zend_ast *ast) /* {{{ */
 	zend_ast *value_ast = ast->child[1];
 	zend_ast *key_ast = ast->child[2];
 	zend_ast *stmt_ast = ast->child[3];
+	znode expr_node, reset_node, value_node, key_node;
+	zend_op *opline;
+	uint32_t opnum_reset, opnum_fetch;
 
-	if(!value_ast && !key_ast) {
-		bool by_ref = value_ast && value_ast->kind == ZEND_AST_REF;
+	if(!value_ast) {
+
+		zend_compile_expr(&expr_node, expr_ast);
+		opnum_reset = get_next_op_number();
+		opline = zend_emit_op(&reset_node,  ZEND_FE_RESET_R, &expr_node, NULL);
+
+		zend_begin_loop(ZEND_FE_FREE, &reset_node, 0);
+
+		opnum_fetch = get_next_op_number();
+		opline = zend_emit_op(NULL,  ZEND_FE_FETCH_R, &reset_node, NULL);
+
+		opline->op2_type = IS_VAR;
+		opline->op2.var = get_temporary_variable();
+		GET_NODE(&value_node, opline->op2);
+
+		zend_compile_stmt(stmt_ast);
+
+		CG(zend_lineno) = ast->lineno;
+		zend_emit_jump(opnum_fetch);
+
+		opline = &CG(active_op_array)->opcodes[opnum_reset];
+		opline->op2.opline_num = get_next_op_number();
+
+		opline = &CG(active_op_array)->opcodes[opnum_fetch];
+		opline->extended_value = get_next_op_number();
+
+		zend_end_loop(opnum_fetch, &reset_node);
+
+		opline = zend_emit_op(NULL, ZEND_FE_FREE, &reset_node, NULL);
+
+	} else {
+		bool by_ref = value_ast->kind == ZEND_AST_REF;
 		bool is_variable = zend_is_variable(expr_ast) && zend_can_write_to_variable(expr_ast);
-
-		znode expr_node, reset_node, value_node, key_node;
-		zend_op * opline;
-		uint32_t opnum_reset, opnum_fetch;
 
 		if (key_ast) {
 			if (key_ast->kind == ZEND_AST_REF) {
@@ -5699,7 +5728,7 @@ static void zend_compile_foreach(zend_ast *ast) /* {{{ */
 			value_ast = value_ast->child[0];
 		}
 
-		if (value_ast && value_ast->kind == ZEND_AST_ARRAY && zend_propagate_list_refs(value_ast)) {
+		if (value_ast->kind == ZEND_AST_ARRAY && zend_propagate_list_refs(value_ast)) {
 			by_ref = 1;
 		}
 
@@ -5720,10 +5749,10 @@ static void zend_compile_foreach(zend_ast *ast) /* {{{ */
 
 		opnum_fetch = get_next_op_number();
 		opline = zend_emit_op(NULL, by_ref ? ZEND_FE_FETCH_RW : ZEND_FE_FETCH_R, &reset_node, NULL);
-
-		if (value_ast && is_this_fetch(value_ast)) {
+		if (is_this_fetch(value_ast)) {
 			zend_error_noreturn(E_COMPILE_ERROR, "Cannot re-assign $this");
-		} else if (value_ast && value_ast->kind == ZEND_AST_VAR && zend_try_compile_cv(&value_node, value_ast) == SUCCESS) {
+		} else if (value_ast->kind == ZEND_AST_VAR &&
+				   zend_try_compile_cv(&value_node, value_ast) == SUCCESS) {
 			SET_NODE(opline->op2, &value_node);
 		} else {
 			opline->op2_type = IS_VAR;
@@ -5735,93 +5764,6 @@ static void zend_compile_foreach(zend_ast *ast) /* {{{ */
 				zend_emit_assign_ref_znode(value_ast, &value_node);
 			} else {
 				zend_emit_assign_znode(value_ast, &value_node);
-			}
-		}
-
-		if (key_ast) {
-			opline = &CG(active_op_array)->opcodes[opnum_fetch];
-			zend_make_tmp_result(&key_node, opline);
-			zend_emit_assign_znode(key_ast, &key_node);
-		}
-
-		zend_compile_stmt(stmt_ast);
-
-		/* Place JMP and FE_FREE on the line where foreach starts. It would be
-		 * better to use the end line, but this information is not available
-		 * currently. */
-		CG(zend_lineno) = ast->lineno;
-		zend_emit_jump(opnum_fetch);
-
-		opline = &CG(active_op_array)->opcodes[opnum_reset];
-		opline->op2.opline_num = get_next_op_number();
-
-		opline = &CG(active_op_array)->opcodes[opnum_fetch];
-		opline->extended_value = get_next_op_number();
-
-		zend_end_loop(opnum_fetch, &reset_node);
-
-		opline = zend_emit_op(NULL, ZEND_FE_FREE, &reset_node, NULL);
-	} else {
-		bool by_ref = value_ast && value_ast->kind == ZEND_AST_REF;
-		bool is_variable = zend_is_variable(expr_ast) && zend_can_write_to_variable(expr_ast);
-
-		znode expr_node, reset_node, value_node, key_node;
-		zend_op * opline;
-		uint32_t opnum_reset, opnum_fetch;
-
-		if (key_ast) {
-			if (key_ast->kind == ZEND_AST_REF) {
-				zend_error_noreturn(E_COMPILE_ERROR, "Key element cannot be a reference");
-			}
-			if (key_ast->kind == ZEND_AST_ARRAY) {
-				zend_error_noreturn(E_COMPILE_ERROR, "Cannot use list as key element");
-			}
-		}
-
-		if (by_ref) {
-			value_ast = value_ast->child[0];
-		}
-
-		if (value_ast && value_ast->kind == ZEND_AST_ARRAY && zend_propagate_list_refs(value_ast)) {
-			by_ref = 1;
-		}
-
-		if (by_ref && is_variable) {
-			zend_compile_var(&expr_node, expr_ast, BP_VAR_W, 1);
-		} else {
-			zend_compile_expr(&expr_node, expr_ast);
-		}
-
-		if (by_ref) {
-			zend_separate_if_call_and_write(&expr_node, expr_ast, BP_VAR_W);
-		}
-
-		opnum_reset = get_next_op_number();
-		opline = zend_emit_op(&reset_node,  ZEND_FE_RESET_R, &expr_node, NULL);
-
-		zend_begin_loop(ZEND_FE_FREE, &reset_node, 0);
-
-		opnum_fetch = get_next_op_number();
-		opline = zend_emit_op(NULL,  ZEND_FE_FETCH_R, &reset_node, NULL);
-		if (value_ast) {
-			if (is_this_fetch(value_ast)) {
-				zend_error_noreturn(E_COMPILE_ERROR, "Cannot re-assign $this");
-			} else
-				if (value_ast->kind == ZEND_AST_VAR && zend_try_compile_cv(&value_node, value_ast) == SUCCESS) {
-				SET_NODE(opline->op2, &value_node);
-			}
-			else {
-				opline->op2_type = IS_VAR;
-				opline->op2.var = get_temporary_variable();
-				GET_NODE(&value_node, opline->op2);
-				if (value_ast->kind == ZEND_AST_ARRAY) {
-					zend_compile_list_assign(NULL, value_ast, &value_node, value_ast->attr);
-				} else
-					if (by_ref) {
-					zend_emit_assign_ref_znode(value_ast, &value_node);
-				} else {
-					zend_emit_assign_znode(value_ast, &value_node);
-				}
 			}
 		}
 
