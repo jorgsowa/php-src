@@ -356,6 +356,7 @@ static zend_never_inline zend_result ZEND_FASTCALL _zendi_try_convert_scalar_to_
 			}
 			ZEND_ASSERT(Z_TYPE_P(holder) == IS_LONG || Z_TYPE_P(holder) == IS_DOUBLE);
 			return SUCCESS;
+		case IS_UNDEF:
 		case IS_RESOURCE:
 		case IS_ARRAY:
 			return FAILURE;
