@@ -12,7 +12,7 @@ foreach(generator()) {
 }
 
 function generator2() {
-    for($i=0;$i<0;$i++) {
+    for($i=0;$i<4;$i++) {
         yield $i;
     }
 }
@@ -24,4 +24,4 @@ foreach(generator2()) {
 
 ?>
 --EXPECT--
-
+aaaabbbb
