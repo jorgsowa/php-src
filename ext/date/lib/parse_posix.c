@@ -26,7 +26,7 @@
 #include "timelib_private.h"
 
 // This section adds the missing 'strndup' implementation on Windows.
-#if TIMELIB_USE_BUILTIN_STRNDUP == 1
+#ifdef TIMELIB_USE_BUILTIN_STRNDUP
 # include <stdlib.h>
 # include <string.h>
 
@@ -56,7 +56,7 @@ static char* timelib_strndup(const char* s, size_t n)
 }
 #endif
 
-/* Forwards declrations */
+/* Forwards declarations */
 static timelib_posix_trans_info *timelib_posix_trans_info_ctor(void);
 static void timelib_posix_trans_info_dtor(timelib_posix_trans_info* ts);
 

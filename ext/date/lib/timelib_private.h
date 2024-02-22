@@ -53,11 +53,11 @@
 # include <unistd.h>
 #endif
 
-#if HAVE_IO_H
+#ifdef HAVE_IO_H
 # include <io.h>
 #endif
 
-#if HAVE_DIRENT_H
+#ifdef HAVE_DIRENT_H
 # include <dirent.h>
 #endif
 
