@@ -773,7 +773,7 @@ PHPAPI int php_parse_user_ini_file(const char *dirname, const char *ini_filename
 				/* Reset active ini section */
 				RESET_ACTIVE_INI_HASH();
 
-#if ZEND_RC_DEBUG
+#ifdef ZEND_RC_DEBUG
 				/* User inis are parsed during SAPI activate (part of the request),
 				 * but persistently allocated to allow caching. This is fine as long as
 				 * strings are duplicated in php_ini_activate_config(). */
@@ -781,7 +781,7 @@ PHPAPI int php_parse_user_ini_file(const char *dirname, const char *ini_filename
 				zend_rc_debug = false;
 #endif
 				ret = zend_parse_ini_file(&fh, 1, ZEND_INI_SCANNER_NORMAL, (zend_ini_parser_cb_t) php_ini_parser_cb, target_hash);
-#if ZEND_RC_DEBUG
+#ifdef ZEND_RC_DEBUG
 				zend_rc_debug = orig_rc_debug;
 #endif
 				if (ret == SUCCESS) {
