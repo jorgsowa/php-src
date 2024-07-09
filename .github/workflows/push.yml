@@ -4,7 +4,7 @@ on:
     paths-ignore:
       - docs/**
       - NEWS
-      - UPGRADING
+      - 'UPGRADING'
       - UPGRADING.INTERNALS
       - '**/README.*'
       - CONTRIBUTING.md
