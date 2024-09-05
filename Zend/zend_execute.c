@@ -4888,6 +4888,44 @@ static void cleanup_unfinished_calls(zend_execute_data *execute_data, uint32_t o
 }
 /* }}} */
 
+/* Replace optional parameters that weren't passed with their declared default values,
+ * which allows us to check that this does not change the behavior of the function. */
+#define ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS 1
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+static void zend_verify_internal_param_defaults(zend_execute_data **call_ptr) {
+	zend_function *fbc = (*call_ptr)->func;
+	uint32_t num_passed_args = ZEND_CALL_NUM_ARGS(*call_ptr);
+	if (num_passed_args < fbc->common.required_num_args) {
+		/* This is an error anyway. */
+		return;
+	}
+
+	uint32_t num_declared_args = fbc->common.num_args;
+	while (num_passed_args < num_declared_args) {
+		zend_internal_arg_info *arg_info = (zend_internal_arg_info *)&fbc->internal_function.arg_info[num_passed_args];
+		zval default_value;
+		if (zend_get_default_from_internal_arg_info(&default_value, (zend_arg_info *)arg_info) == FAILURE) {
+			/* Default value not available, so we can't pass any further defaults either. */
+			return;
+		}
+
+		if (Z_TYPE(default_value) == IS_CONSTANT_AST) {
+			zval_update_constant_ex(&default_value, fbc->common.scope);
+		}
+
+		zend_vm_stack_extend_call_frame(call_ptr, num_passed_args, 1);
+		zval *arg = ZEND_CALL_VAR_NUM(*call_ptr, num_passed_args);
+		ZVAL_COPY_VALUE(arg, &default_value);
+		if (ARG_SHOULD_BE_SENT_BY_REF(fbc, num_passed_args + 1)) {
+			ZVAL_MAKE_REF(arg);
+		}
+
+		num_passed_args++;
+		ZEND_CALL_NUM_ARGS(*call_ptr)++;
+	}
+}
+#endif
+
 static void cleanup_live_vars(zend_execute_data *execute_data, uint32_t op_num, uint32_t catch_op_num) /* {{{ */
 {
 	int i;
