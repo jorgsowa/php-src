@@ -19,16 +19,6 @@ PHP 8.5 UPGRADE NOTES
 1. Backward Incompatible Changes
 ========================================
 
-- BZ2:
-  . bzcompress() now throws a ValueError when $block_size is not between
-    1 and 9.
-  . bzcompress() now throws a ValueError when work_factor is not between
-    0 and 250.
-
-- LDAP:
-  . ldap_get_option() and ldap_set_option() now throw a ValueError when
-    passing an invalid option.
-
 - SPL:
   . ArrayObject no longer accepts enums, as modifying the $name or $value
     properties can break engine assumptions.
@@ -36,14 +26,6 @@ PHP 8.5 UPGRADE NOTES
 ========================================
 2. New Features
 ========================================
-
-- XSL:
-  . The $namespace argument of XSLTProcessor::getParameter(),
-    XSLTProcessor::setParameter() and XSLTProcessor::removeParameter()
-    now actually works instead of being treated as empty.
-    This only works if the $name argument does not use Clark notation
-    and is not a QName because in those cases the namespace is taken
-    from the namespace href or prefix respectively.
 
 ========================================
 3. Changes in SAPI modules
@@ -59,21 +41,10 @@ PHP 8.5 UPGRADE NOTES
 
 - PDO_PGSQL:
   . PDO::pgsqlCopyFromArray also supports inputs as Iterable.
-  . Pdo\Pgsql::setAttribute and Pdo\Pgsql::prepare supports
-    PDO::ATTR_PREFETCH sets to 0 which set to lazy fetch mode.
-    In this mode, statements cannot be run parallely.
-
-- PGSQL:
-  . pg_copy_from also supports inputs as Iterable.
 
 ========================================
 6. New Functions
 ========================================
-
-- PGSQL:
-  . pg_close_stmt offers an alternative way to close a prepared
-    statement from the DEALLOCATE sql command in that we can reuse
-    its name afterwards.
 
 ========================================
 7. New Classes and Interfaces
@@ -106,6 +77,3 @@ PHP 8.5 UPGRADE NOTES
 ========================================
 14. Performance Improvements
 ========================================
-
-- XMLWriter:
-  . Improved performance and reduce memory consumption.
