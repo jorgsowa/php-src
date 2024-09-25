@@ -4,13 +4,13 @@ SOAP Bug #71610 - Type Confusion Vulnerability - SOAP / make_http_soap_request()
 soap
 --SKIPIF--
 <?php
-if (!file_exists(__DIR__ . "/../../../../sapi/cli/tests/php_cli_server.inc")) {
+if (!file_exists(__DIR__ . "/../../../sapi/cli/tests/php_cli_server.inc")) {
     echo "skip sapi/cli/tests/php_cli_server.inc required but not found";
 }
 ?>
 --FILE--
 <?php
-include __DIR__ . "/../../../../sapi/cli/tests/php_cli_server.inc";
+include __DIR__ . "/../../../sapi/cli/tests/php_cli_server.inc";
 php_cli_server_start();
 
 $url = "http://" . PHP_CLI_SERVER_ADDRESS;
