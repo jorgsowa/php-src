@@ -78,7 +78,6 @@ jobs:
             asan: true
     name: "LINUX_X64_${{ matrix.debug && 'DEBUG' || 'RELEASE' }}_${{ matrix.zts && 'ZTS' || 'NTS' }}${{ matrix.asan && '_ASAN' || '' }}"
     runs-on: ubuntu-${{ !matrix.asan && '22' || '24' }}.04
-    timeout-minutes: 50
     steps:
       - name: git checkout
         uses: actions/checkout@v4
