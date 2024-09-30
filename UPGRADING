@@ -19,6 +19,191 @@ PHP 8.5 UPGRADE NOTES
 1. Backward Incompatible Changes
 ========================================
 
+- BZ2:
+  . bzcompress() now throws a ValueError when $block_size is not between
+    1 and 9.
+  . bzcompress() now throws a ValueError when work_factor is not between
+    0 and 250.
+
+- Core:
+  . The type of PHP_DEBUG and PHP_ZTS constants changed to bool.
+  . The name of uploaded files and files created by the tempnam() function are
+    now 13 bytes longer. Total length is platform-dependent.
+  . Encountering recursion during comparison now results in a Error exception,
+    rather than a fatal error.
+  . Indirect modification of readonly properties within __clone() is no longer
+    allowed, e.g. $ref = &$this->readonly. This was already forbidden for
+    readonly initialization, and was an oversight in the "readonly
+    reinitialization during cloning" implementation.
+  . The exit (and die) language constructs now behave more like a function.
+    They can be passed like callables, are affected by the strict_types
+    declare statement, and now perform the usual type coercions instead of
+    casting any non-integer value to a string.
+    As such, passing invalid types to exit/die may now result in a TypeError
+    being thrown.
+    RFC: https://wiki.php.net/rfc/exit-as-function
+  . The E_STRICT constant was deprecated and its corresponding error level was
+    removed.
+    RFC: https://wiki.php.net/rfc/deprecations_php_8_4#remove_e_strict_error_level_and_deprecate_e_strict_constant
+
+- DBA:
+  . dba_open() and dba_popen() will now return a Dba\Connection
+    object rather than a resource. Return value checks using is_resource()
+    should be replaced with checks for `false`.
+
+- DOM:
+  . Added DOMNode::compareDocumentPosition() and DOMNode::DOCUMENT_POSITION_*
+    constants.
+    If you have a method or constant with the same name, you might encounter errors
+    if the declaration is incompatible.
+  . Some DOM methods previously returned false or a PHP_ERR DOMException if a new
+    node could not be allocated. They consistently throw an INVALID_STATE_ERR
+    DOMException now. This situation is extremely unlikely though and probably
+    will not affect you. As a result DOMImplementation::createDocument() now has
+    a tentative return type of DOMDocument instead of DOMDocument|false.
+  . Previously, DOMXPath objects could be cloned, but resulted in an unusable
+    object. This is no longer possible, and cloning a DOMXPath object now throws
+    an error.
+  . DOMDocument::$actualEncoding, DOMDocument::config, DOMEntity::$actualEncoding,
+    DOMEntity::$encoding, DOMEntity::$version have been deprecated.
+    RFC: https://wiki.php.net/rfc/deprecations_php_8_4#formally_deprecate_soft-deprecated_domdocument_and_domentity_properties
+
+- GMP:
+  . The GMP class is now final and cannot be extended anymore.
+    RFC: https://wiki.php.net/rfc/gmp-final
+  . Casting a GMP object to bool changed so that 0 becomes false and everything else
+    becomes true.
+    RFC: https://wiki.php.net/rfc/fix_up_bcmath_number_class
+
+- Intl:
+  . resourcebundle_get(), ResourceBundle::get(), and accessing offsets on a
+    ResourceBundle object now throw:
+    - TypeError for invalid offset types
+    - ValueError for an empty string
+    - ValueError if the integer index does not fit in a signed 32 bit integer
+
+- MBString:
+  . mb_encode_numericentity() and mb_decode_numericentity() now check that
+    the $map is only composed of integers, if not a ValueError is thrown.
+  . mb_http_input() now always throws a ValueError if the $type is invalid.
+  . mb_http_output() now checks that the $encoding parameter does not
+    contain any null bytes. If it does, a ValueError is now thrown.
+  . On invalid strings (those with encoding errors), mb_substr() now interprets
+    character indices in the same manner as most other mbstring functions. This
+    means that character indices returned by mb_strpos() can be passed to mb_substr().
+  . For SJIS-Mac (MacJapanese) strings, character indices passed to mb_substr() now
+    refer to the indices of the Unicode codepoints which are produced when the string
+    is converted to Unicode. This is significant because around 40 SJIS-Mac characters
+    convert to a sequence of multiple Unicode codepoints.
+
+- MySQLnd:
+  . The error code reported for MySQL server wait timeouts has been changed from 2006
+    to 4031 for MySQL server versions 8.0.24 and above.
+
+- ODBC:
+  . odbc_fetch_row() returns false when a value less than or equal to 0 is
+    passed for parameter $row. Now, a warning is emitted in this case.
+  . odbc_connect() and odbc_pconnect() will now return an Odbc\Connection
+    object rather than a resource. Return value checks using is_resource()
+    should be replaced with checks for `false`.
+  . odbc_prepare(), odbc_exec(), and various other functions will now return
+    an Odbc\Result object rather than a resource. Return value checks using
+    is_resource() should be replaced with checks for `false`.
+
+- Opcache:
+  . The JIT config defaults changed from opcache.jit=tracing and
+    opcache.jit_buffer_size=0 to opcache.jit=disable and
+    opcache.jit_buffer_size=64M, respectively. This does not affect the default
+    behavior, the JIT is still disabled by default. However, it is now disabled
+    through the opcache.jit setting, rather than opcache.jit_buffer_size. This
+    may affect users who previously enabled JIT through opcache.jit_buffer_size
+    exclusively, without also specifying a JIT mode using opcache.jit. To enable
+    JIT, set the opcache.jit config value accordingly.
+  . The maximum value of the opcache.interned_strings_buffer setting on 64bit
+    architectures is now 32767 (it was previously 4095).
+  . If JIT is enabled, PHP will now exit with a fatal error on startup in case
+    of JIT startup initialization issues.
+
+- PCNTL:
+  . The functions pcntl_sigprocmask(), pcntl_sigwaitinfo() and
+    pcntl_sigtimedwait() now throw:
+    - A ValueError if the $signals array is empty (except for
+      pcntl_sigprocmask() if the $mode is SIG_SETMASK).
+    - A TypeError if a value of the $signals array is not an integer
+    - A ValueError if a value of the $signals array is not a valid signal number
+    Moreover, those functions now always return false on failure.
+    In some case previously it could return the value -1.
+  . The function pcntl_sigprocmask() will also now throw:
+    - A ValueError if $mode is not one of SIG_BLOCK, SIG_UNBLOCK, or SIG_SETMASK
+  . The function pcntl_sigtimedwait() will also now throw:
+    - A ValueError if $seconds is less than 0
+    - A ValueError if $nanoseconds is less than 0 or greater than 1e9
+    - A ValueError if both $seconds and $nanoseconds are 0
+
+- PCRE:
+  . The bundled pcre2lib has been updated to version 10.44.
+    As a consequence, this means {,3} is now recognized as a quantifier instead
+    of as text. Furthermore, the meaning of some character classes in UCP mode
+    has changed. Consult https://github.com/PCRE2Project/pcre2/blob/master/NEWS
+    for a full changelog.
+
+- PDO_DBLIB:
+  . setAttribute, DBLIB_ATTR_STRINGIFY_UNIQUEIDENTIFIER and DBLIB_ATTR_DATETIME_CONVERT
+    have been changed to set value as a bool.
+
+- PDO_FIREBIRD:
+  . Since some Firebird C++ APIs are used now, this extension requires a C++
+    compiler to be built. This also implies that the extension has to be built
+    against fbclient 3.0 or higher.
+  . getAttribute, ATTR_AUTOCOMMIT has been changed to get the value as a bool.
+
+- PDO_MYSQL:
+  . getAttribute, ATTR_AUTOCOMMIT, ATTR_EMULATE_PREPARES, MYSQL_ATTR_DIRECT_QUERY have
+    been changed to get values as bool.
+
+- PDO_PGSQL:
+  . The DSN's credentials, when set, are given priority over their PDO
+    constructor counterparts, being closer to the documentation states.
+
+- Reflection:
+  . Added methods ReflectionClass::newLazyGhost(),
+    ReflectionClass::newLazyProxy(), ReflectionClass::resetAsLazyGhost(),
+    ReflectionClass::resetAsLazyProxy(),
+    ReflectionClass::isUninitializedLazyObject(),
+    ReflectionClass::initializeLazyObject(),
+    ReflectionClass::markLazyObjectAsInitialized(),
+    ReflectionClass::getLazyInitializer(),
+    ReflectionProperty::skipLazyInitialization(),
+    ReflectionProperty::setRawValueWithoutLazyInitialization() and constants
+    ReflectionClass::SKIP_*.
+    If you have a method or constant with the same name, you might encounter
+    errors if the declaration is incompatible.
+
+- SimpleXML:
+  . Get methods called, or casting to a string on a SimpleXMLElement will no
+    longer implicitly reset the iterator data, unless explicitly rewound.
+    For example, casting an element to a string within a foreach loop would
+    cause an infinite loop because it destroyed the current iterator data.
+    This is no longer the case as a consequence of the bugfixes for GH-12192,
+    GH-12208, #55098.
+  . Calling simplexml_import_dom() with a non-XML object now throws a TypeError
+    instead of a ValueError.
+
+- SOAP:
+  . SoapClient::$httpurl is now a Soap\Url object rather than a resource.
+    Checks using is_resource() (i.e. is_resource($client->httpurl)) should be
+    replaced with checks for null (i.e. $client->httpurl !== null).
+  . SoapClient::$sdl is now a Soap\Sdl object rather than a resource.
+    Checks using is_resource() (i.e. is_resource($client->sdl)) should be
+    replaced with checks for null (i.e. $client->sdl !== null).
+  . SoapClient::$typemap is now an array rather than a resource.
+    Checks using is_resource() (i.e. is_resource($client->typemap)) should be
+    replaced with checks for null (i.e. $client->typemap !== null).
+  . The SOAP extension gained an optional dependency on the session extension.
+    If you build PHP without the session extension and with --enable-rtld-now,
+    you will experience errors on startup if you also use the SOAP extension.
+    To solve this, either don't use rtld-now or load the session extension.
+
 - SPL:
   . ArrayObject no longer accepts enums, as modifying the $name or $value
     properties can break engine assumptions.
@@ -26,6 +211,14 @@ PHP 8.5 UPGRADE NOTES
 ========================================
 2. New Features
 ========================================
+
+- XSL:
+  . The $namespace argument of XSLTProcessor::getParameter(),
+    XSLTProcessor::setParameter() and XSLTProcessor::removeParameter()
+    now actually works instead of being treated as empty.
+    This only works if the $name argument does not use Clark notation
+    and is not a QName because in those cases the namespace is taken
+    from the namespace href or prefix respectively.
 
 ========================================
 3. Changes in SAPI modules
@@ -48,6 +241,11 @@ PHP 8.5 UPGRADE NOTES
 ========================================
 6. New Functions
 ========================================
+
+- PGSQL:
+  . pg_close_stmt offers an alternative way to close a prepared
+    statement from the DEALLOCATE sql command in that we can reuse
+    its name afterwards.
 
 ========================================
 7. New Classes and Interfaces
@@ -80,3 +278,6 @@ PHP 8.5 UPGRADE NOTES
 ========================================
 14. Performance Improvements
 ========================================
+
+- XMLWriter:
+  . Improved performance and reduce memory consumption.
