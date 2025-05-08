@@ -28,11 +28,11 @@ PHPAPI void make_digest_ex(char *md5str, const unsigned char *digest, size_t len
 {
 	static const char hexits[17] = "0123456789abcdef";
 
-	for (size_t i = 0; i < len; i++) {
-		md5str[i * 2]       = hexits[digest[i] >> 4];
-		md5str[(i * 2) + 1] = hexits[digest[i] &  0x0F];
+	for (size_t i = 0; i < len; ++i) {
+		*md5str++ = hexits[digest[i] >> 4];
+		*md5str++ = hexits[digest[i] & 0x0F];
 	}
-	md5str[len * 2] = '\0';
+	*md5str = '\0';
 }
 
 /* Calculate the md5 hash of a string */
