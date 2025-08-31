@@ -4108,6 +4108,9 @@ ZEND_VM_HOT_HANDLER(129, ZEND_DO_ICALL, ANY, ANY, SPEC(RETVAL,OBSERVER))
 	zval retval;
 
 	SAVE_OPLINE();
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+zend_verify_internal_param_defaults(&call);
+#endif
 	EX(call) = call->prev_execute_data;
 
 	call->prev_execute_data = execute_data;
