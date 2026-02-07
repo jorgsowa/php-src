@@ -6494,42 +6494,71 @@ PHP_FUNCTION(array_filter)
 		}
 	}
 
-	ZEND_HASH_FOREACH_KEY_VAL(Z_ARRVAL_P(array), num_key, string_key, operand) {
-		if (have_callback) {
-			if (use_type != ARRAY_FILTER_USE_VALUE) {
-				/* Set up the key */
-				if (!string_key) {
+	if (HT_IS_PACKED(Z_ARRVAL_P(array))) {
+		ZEND_HASH_PACKED_FOREACH_KEY_VAL(Z_ARRVAL_P(array), num_key, operand) {
+			if (have_callback) {
+				if (use_type != ARRAY_FILTER_USE_VALUE) {
 					ZVAL_LONG(key, num_key);
-				} else {
-					ZVAL_STR(key, string_key);
 				}
-			}
-			if (use_type != ARRAY_FILTER_USE_KEY) {
-				ZVAL_COPY_VALUE(&args[0], operand);
-			}
-			fci.params = args;
+				if (use_type != ARRAY_FILTER_USE_KEY) {
+					ZVAL_COPY_VALUE(&args[0], operand);
+				}
+				fci.params = args;
 
-			zend_result result = zend_call_function(&fci, &fci_cache);
-			ZEND_ASSERT(result == SUCCESS);
+				zend_result result = zend_call_function(&fci, &fci_cache);
+				ZEND_ASSERT(result == SUCCESS);
 
-			if (UNEXPECTED(EG(exception))) {
-				RETURN_THROWS();
-			}
+				if (UNEXPECTED(EG(exception))) {
+					RETURN_THROWS();
+				}
 
-			if (!php_is_true(&retval)) {
+				if (!php_is_true(&retval)) {
+					continue;
+				}
+			} else if (!zend_is_true(operand)) {
 				continue;
 			}
-		} else if (!zend_is_true(operand)) {
-			continue;
-		}
 
-		if (string_key) {
-			operand = zend_hash_add_new(Z_ARRVAL_P(return_value), string_key, operand);
-		} else {
 			operand = zend_hash_index_add_new(Z_ARRVAL_P(return_value), num_key, operand);
-		}
-		zval_add_ref(operand);
-	} ZEND_HASH_FOREACH_END();
+			zval_add_ref(operand);
+		} ZEND_HASH_FOREACH_END();
+	} else {
+		ZEND_HASH_MAP_FOREACH_KEY_VAL(Z_ARRVAL_P(array), num_key, string_key, operand) {
+			if (have_callback) {
+				if (use_type != ARRAY_FILTER_USE_VALUE) {
+					if (!string_key) {
+						ZVAL_LONG(key, num_key);
+					} else {
+						ZVAL_STR(key, string_key);
+					}
+				}
+				if (use_type != ARRAY_FILTER_USE_KEY) {
+					ZVAL_COPY_VALUE(&args[0], operand);
+				}
+				fci.params = args;
+
+				zend_result result = zend_call_function(&fci, &fci_cache);
+				ZEND_ASSERT(result == SUCCESS);
+
+				if (UNEXPECTED(EG(exception))) {
+					RETURN_THROWS();
+				}
+
+				if (!php_is_true(&retval)) {
+					continue;
+				}
+			} else if (!zend_is_true(operand)) {
+				continue;
+			}
+
+			if (string_key) {
+				operand = zend_hash_add_new(Z_ARRVAL_P(return_value), string_key, operand);
+			} else {
+				operand = zend_hash_index_add_new(Z_ARRVAL_P(return_value), num_key, operand);
+			}
+			zval_add_ref(operand);
+		} ZEND_HASH_FOREACH_END();
+	}
 }
 /* }}} */
 
