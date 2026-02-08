@@ -49,6 +49,9 @@ on:
         type: boolean
 permissions:
   contents: read
+env:
+  CC: ccache gcc
+  CXX: ccache g++
 jobs:
   LINUX_PPC64:
     if: inputs.run_linux_ppc64
@@ -216,6 +219,11 @@ jobs:
           echo "::group::Show installed package versions"
           dpkg -l
           echo "::endgroup::"
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "LINUX_X64${{ matrix.name }}_${{ matrix.debug && 'DEBUG' || 'RELEASE' }}_${{ matrix.zts && 'ZTS' || 'NTS' }}-${{hashFiles('main/php_version.h')}}"
+          append-timestamp: false
       - name: ./configure
         uses: ./.github/actions/configure-x64
         with:
@@ -307,6 +315,11 @@ jobs:
           echo "::group::Show installed package versions"
           dpkg -l
           echo "::endgroup::"
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "LINUX_X32_${{ matrix.debug && 'DEBUG' || 'RELEASE' }}_${{ matrix.zts && 'ZTS' || 'NTS' }}-${{hashFiles('main/php_version.h')}}"
+          append-timestamp: false
       - name: ./configure
         uses: ./.github/actions/configure-x32
         with:
@@ -365,6 +378,11 @@ jobs:
       - name: brew
         timeout-minutes: 10
         uses: ./.github/actions/brew
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "MACOS_${{ matrix.arch }}_${{ matrix.debug && 'DEBUG' || 'RELEASE' }}_${{ matrix.zts && 'ZTS' || 'NTS' }}-${{hashFiles('main/php_version.h')}}"
+          append-timestamp: false
       - name: ./configure
         uses: ./.github/actions/configure-macos
         with:
@@ -439,6 +457,11 @@ jobs:
         uses: ./.github/actions/apt-x64
       - name: Install gcovr
         run: sudo -H pip install gcovr
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "${{github.job}}-${{hashFiles('main/php_version.h')}}"
+          append-timestamp: false
       - name: ./configure
         uses: ./.github/actions/configure-x64
         with:
@@ -483,6 +506,11 @@ jobs:
           ref: ${{ inputs.branch }}
       - name: apt
         uses: ./.github/actions/apt-x64
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "${{github.job}}_${{ matrix.type }}-${{hashFiles('main/php_version.h')}}"
+          append-timestamp: false
       - name: ./configure
         uses: ./.github/actions/configure-x64
         with:
@@ -684,6 +712,11 @@ jobs:
         uses: ./.github/actions/setup-mssql
       - name: apt
         uses: ./.github/actions/apt-x64
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "${{github.job}}-${{hashFiles('main/php_version.h')}}"
+          append-timestamp: false
       - name: ./configure
         uses: ./.github/actions/configure-x64
         with:
@@ -740,6 +773,11 @@ jobs:
           ref: ${{ inputs.branch }}
       - name: apt
         uses: ./.github/actions/apt-x64
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "${{github.job}}-${{hashFiles('main/php_version.h')}}"
+          append-timestamp: false
       - name: ./configure
         run: |
           export CC=clang
@@ -828,6 +866,11 @@ jobs:
         run: |
           sudo apt-get update -y | true
           sudo apt install bison re2c
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: "${{github.job}}-${{hashFiles('main/php_version.h')}}"
+          append-timestamp: false
       - name: Setup
         run: |
           sudo service mysql start
