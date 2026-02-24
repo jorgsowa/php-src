@@ -82,8 +82,8 @@ jobs:
           configurationParameters: >-
             CFLAGS="-fsanitize=undefined,address -fno-sanitize=function -DZEND_TRACK_ARENA_ALLOC"
             LDFLAGS="-fsanitize=undefined,address -fno-sanitize=function"
-            CC=clang-20
-            CXX=clang++-20
+            CC="ccache clang-20"
+            CXX="ccache clang++-20"
             --enable-debug
             --enable-zts
           skipSlow: true # FIXME: This should likely include slow extensions
