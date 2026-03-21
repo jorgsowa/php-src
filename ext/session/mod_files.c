@@ -276,7 +276,7 @@ static zend_result ps_files_write(ps_files *data, zend_string *key, zend_string 
 	return SUCCESS;
 }
 
-static int ps_files_cleanup_dir(const zend_string *dirname, zend_long maxlifetime)
+static int ps_files_cleanup_dir(const zend_string *dirname, zend_long maxlifetime, size_t remaining_depth)
 {
 	DIR *dir;
 	struct dirent *entry;
@@ -291,44 +291,56 @@ static int ps_files_cleanup_dir(const zend_string *dirname, zend_long maxlifetim
 		return -1;
 	}
 
-	time(&now);
-
 	if (ZSTR_LEN(dirname) >= MAXPATHLEN) {
 		php_error_docref(NULL, E_NOTICE, "ps_files_cleanup_dir: dirname(%s) is too long", ZSTR_VAL(dirname));
 		closedir(dir);
 		return -1;
 	}
 
-	/* Prepare buffer (dirname never changes) */
 	memcpy(buf, ZSTR_VAL(dirname), ZSTR_LEN(dirname));
 	buf[ZSTR_LEN(dirname)] = PHP_DIR_SEPARATOR;
 
-	while ((entry = readdir(dir))) {
-		/* does the file start with our prefix? */
-		if (!strncmp(entry->d_name, FILE_PREFIX, sizeof(FILE_PREFIX) - 1)) {
+	if (remaining_depth == 0) {
+		time(&now);
+		while ((entry = readdir(dir))) {
+			if (!strncmp(entry->d_name, FILE_PREFIX, sizeof(FILE_PREFIX) - 1)) {
+				size_t entry_len = strlen(entry->d_name);
+				if (entry_len + ZSTR_LEN(dirname) + 2 < MAXPATHLEN) {
+					memcpy(buf + ZSTR_LEN(dirname) + 1, entry->d_name, entry_len);
+					buf[ZSTR_LEN(dirname) + entry_len + 1] = '\0';
+					if (VCWD_STAT(buf, &sbuf) == 0 &&
+							(now - sbuf.st_mtime) > maxlifetime) {
+						VCWD_UNLINK(buf);
+						nrdels++;
+					}
+				}
+			}
+		}
+	} else {
+		while ((entry = readdir(dir))) {
+			if (entry->d_name[0] == '.' &&
+					(entry->d_name[1] == '\0' ||
+					 (entry->d_name[1] == '.' && entry->d_name[2] == '\0'))) {
+				continue;
+			}
 			size_t entry_len = strlen(entry->d_name);
-
-			/* does it fit into our buffer? */
-			if (entry_len + ZSTR_LEN(dirname) + 2 < MAXPATHLEN) {
-				/* create the full path.. */
+			if (ZSTR_LEN(dirname) + 1 + entry_len < MAXPATHLEN) {
 				memcpy(buf + ZSTR_LEN(dirname) + 1, entry->d_name, entry_len);
-
-				/* NUL terminate it and */
-				buf[ZSTR_LEN(dirname) + entry_len + 1] = '\0';
-
-				/* check whether its last access was more than maxlifetime ago */
-				if (VCWD_STAT(buf, &sbuf) == 0 &&
-						(now - sbuf.st_mtime) > maxlifetime) {
-					VCWD_UNLINK(buf);
-					nrdels++;
+				buf[ZSTR_LEN(dirname) + 1 + entry_len] = '\0';
+				if (VCWD_STAT(buf, &sbuf) == 0 && S_ISDIR(sbuf.st_mode)) {
+					zend_string *subdir = zend_string_init(buf, ZSTR_LEN(dirname) + 1 + entry_len, 0);
+					int n = ps_files_cleanup_dir(subdir, maxlifetime, remaining_depth - 1);
+					zend_string_release(subdir);
+					if (n >= 0) {
+						nrdels += n;
+					}
 				}
 			}
 		}
 	}
 
 	closedir(dir);
-
-	return (nrdels);
+	return nrdels;
 }
 
 static zend_result ps_files_key_exists(ps_files *data, const zend_string *key)
@@ -624,15 +636,7 @@ PS_GC_FUNC(files)
 {
 	PS_FILES_DATA;
 
-	/* We don't perform any cleanup, if dirdepth is larger than 0.
-	   we return SUCCESS, since all cleanup should be handled by
-	   an external entity (i.e. find -ctime x | xargs rm) */
-
-	if (data->dirdepth == 0) {
-		*nrdels = ps_files_cleanup_dir(data->basedir, maxlifetime);
-	} else {
-		*nrdels = -1; // Cannot process multiple depth save dir
-	}
+	*nrdels = ps_files_cleanup_dir(data->basedir, maxlifetime, data->dirdepth);
 
 	return *nrdels;
 }
