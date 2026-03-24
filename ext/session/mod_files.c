@@ -302,39 +302,37 @@ static int ps_files_cleanup_dir(const zend_string *dirname, zend_long maxlifetim
 
 	if (remaining_depth == 0) {
 		time(&now);
-		while ((entry = readdir(dir))) {
-			if (!strncmp(entry->d_name, FILE_PREFIX, sizeof(FILE_PREFIX) - 1)) {
-				size_t entry_len = strlen(entry->d_name);
-				if (entry_len + ZSTR_LEN(dirname) + 2 < MAXPATHLEN) {
-					memcpy(buf + ZSTR_LEN(dirname) + 1, entry->d_name, entry_len);
-					buf[ZSTR_LEN(dirname) + entry_len + 1] = '\0';
-					if (VCWD_STAT(buf, &sbuf) == 0 &&
-							(now - sbuf.st_mtime) > maxlifetime) {
-						VCWD_UNLINK(buf);
-						nrdels++;
-					}
-				}
-			}
+	}
+
+	while ((entry = readdir(dir))) {
+		if (entry->d_name[0] == '.' &&
+				(entry->d_name[1] == '\0' ||
+				 (entry->d_name[1] == '.' && entry->d_name[2] == '\0'))) {
+			continue;
 		}
-	} else {
-		while ((entry = readdir(dir))) {
-			if (entry->d_name[0] == '.' &&
-					(entry->d_name[1] == '\0' ||
-					 (entry->d_name[1] == '.' && entry->d_name[2] == '\0'))) {
-				continue;
+		if (remaining_depth == 0 && strncmp(entry->d_name, FILE_PREFIX, sizeof(FILE_PREFIX) - 1) != 0) {
+			continue;
+		}
+		size_t entry_len = strlen(entry->d_name);
+		if (ZSTR_LEN(dirname) + 1 + entry_len >= MAXPATHLEN) {
+			continue;
+		}
+		memcpy(buf + ZSTR_LEN(dirname) + 1, entry->d_name, entry_len);
+		buf[ZSTR_LEN(dirname) + 1 + entry_len] = '\0';
+		if (VCWD_STAT(buf, &sbuf) != 0) {
+			continue;
+		}
+		if (remaining_depth == 0) {
+			if ((now - sbuf.st_mtime) > maxlifetime) {
+				VCWD_UNLINK(buf);
+				nrdels++;
 			}
-			size_t entry_len = strlen(entry->d_name);
-			if (ZSTR_LEN(dirname) + 1 + entry_len < MAXPATHLEN) {
-				memcpy(buf + ZSTR_LEN(dirname) + 1, entry->d_name, entry_len);
-				buf[ZSTR_LEN(dirname) + 1 + entry_len] = '\0';
-				if (VCWD_STAT(buf, &sbuf) == 0 && S_ISDIR(sbuf.st_mode)) {
-					zend_string *subdir = zend_string_init(buf, ZSTR_LEN(dirname) + 1 + entry_len, 0);
-					int n = ps_files_cleanup_dir(subdir, maxlifetime, remaining_depth - 1);
-					zend_string_release(subdir);
-					if (n >= 0) {
-						nrdels += n;
-					}
-				}
+		} else if (S_ISDIR(sbuf.st_mode)) {
+			zend_string *subdir = zend_string_init(buf, ZSTR_LEN(dirname) + 1 + entry_len, 0);
+			int n = ps_files_cleanup_dir(subdir, maxlifetime, remaining_depth - 1);
+			zend_string_release(subdir);
+			if (n >= 0) {
+				nrdels += n;
 			}
 		}
 	}
