@@ -56,6 +56,8 @@ rmdir($path);
 ?>
 --EXPECTF--
 *** Testing session_set_save_handler() : variation ***
+
+Deprecated: Calling DEFINE() is deprecated, use the correct casing define() instead in %s on line %d
 string(0) ""
 *** Without lazy_write ***
 

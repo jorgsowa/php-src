@@ -12,5 +12,6 @@ $reader->xml($xml);
 $reader->read();
 echo $reader->readString();
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling xml() is deprecated, use the correct casing XMLReader::XML() instead in %s on line %d
 Book1Book2

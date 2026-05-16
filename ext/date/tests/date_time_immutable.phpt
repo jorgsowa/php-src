@@ -98,7 +98,7 @@ $z = $v;
 $x = $z->setTimestamp(2012234222);
 dump($v, $z, $x);
 ?>
---EXPECT--
+--EXPECTF--
 modify():
 orig:    2012-12-27 16:24:08 Europe/London
 copy:    2012-12-27 16:24:08 Europe/London
@@ -151,9 +151,13 @@ copy:    0005-07-19 16:24:08 Europe/London
 changed: 0005-07-19 16:24:08 Europe/London
 
 setIsoDate():
+
+Deprecated: Calling setIsoDate() is deprecated, use the correct casing DateTimeImmutable::setISODate() instead in %s on line %d
 orig:    2012-12-27 16:24:08 Europe/London
 copy:    2012-12-27 16:24:08 Europe/London
 changed: 2012-01-14 16:24:08 Europe/London
+
+Deprecated: Calling setIsoDate() is deprecated, use the correct casing DateTime::setISODate() instead in %s on line %d
 orig:    2012-01-14 16:24:08 Europe/London
 copy:    2012-01-14 16:24:08 Europe/London
 changed: 2012-01-14 16:24:08 Europe/London

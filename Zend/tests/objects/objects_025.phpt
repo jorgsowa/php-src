@@ -34,6 +34,7 @@ $a->$b();
 
 ?>
 --EXPECTF--
+Deprecated: Declaring foo::__callstatic() with incorrect case is deprecated, use the correct casing __callStatic() instead in %s on line %d
 non-static - ok
 static - ok
 non-static - ok

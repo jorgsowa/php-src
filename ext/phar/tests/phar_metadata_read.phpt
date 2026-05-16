@@ -46,16 +46,28 @@ foreach($files as $name => $cont) {
 ?>
 --CLEAN--
 <?php unlink(__DIR__ . '/' . basename(__FILE__, '.clean.php') . '.phar.php'); ?>
---EXPECT--
+--EXPECTF--
 string(1) "a"
 string(1) "b"
 string(1) "c"
 string(1) "d"
+
+Deprecated: Calling hasMetaData() is deprecated, use the correct casing Phar::hasMetadata() instead in %s on line %d
 bool(true)
+
+Deprecated: Calling getMetaData() is deprecated, use the correct casing Phar::getMetadata() instead in %s on line %d
 string(8) "hi there"
+
+Deprecated: Calling delMetaData() is deprecated, use the correct casing Phar::delMetadata() instead in %s on line %d
 bool(true)
+
+Deprecated: Calling getMetaData() is deprecated, use the correct casing Phar::getMetadata() instead in %s on line %d
 NULL
+
+Deprecated: Calling delMetaData() is deprecated, use the correct casing Phar::delMetadata() instead in %s on line %d
 bool(true)
+
+Deprecated: Calling getMetaData() is deprecated, use the correct casing Phar::getMetadata() instead in %s on line %d
 NULL
   meta a
 bool(false)

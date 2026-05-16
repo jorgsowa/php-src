@@ -18,5 +18,6 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling xml() is deprecated, use the correct casing XMLReader::XML() instead in %s on line %d
 Error: Trying to clone an uncloneable object of class XMLReader

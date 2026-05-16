@@ -59,7 +59,7 @@ var_dump($url->toAsciiString());
 var_dump($url->getPath());
 
 ?>
---EXPECT--
+--EXPECTF--
 string(26) "mailto:johndoe@example.com"
 string(19) "johndoe@example.com"
 string(19) "johndoe@example.com"
@@ -81,9 +81,15 @@ string(0) ""
 string(20) "https://example.com/"
 string(1) "/"
 string(1) "/"
+
+Deprecated: Using Uri\Whatwg\Url as a class name with incorrect case is deprecated, use the correct casing Uri\WhatWg\Url instead in %s on line %d
 string(26) "mailto:johndoe@example.com"
 string(19) "johndoe@example.com"
+
+Deprecated: Using Uri\Whatwg\Url as a class name with incorrect case is deprecated, use the correct casing Uri\WhatWg\Url instead in %s on line %d
 string(20) "https://example.com/"
 string(1) "/"
+
+Deprecated: Using Uri\Whatwg\Url as a class name with incorrect case is deprecated, use the correct casing Uri\WhatWg\Url instead in %s on line %d
 string(20) "https://example.com/"
 string(1) "/"

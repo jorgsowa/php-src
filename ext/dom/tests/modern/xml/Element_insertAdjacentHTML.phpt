@@ -35,9 +35,11 @@ test('<?pi node?><!-- comment -->&amp;');
 test('text node');
 
 ?>
---EXPECT--
+--EXPECTF--
 === XML (<x:x><y xmlns:x="urn:x2"/></x:x><nons/>) ===
 --- Position BeforeBegin ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:x="urn:x"><x:x><y xmlns:x="urn:x2"/></x:x><nons/><div>Sample text</div></root>
 int(1)

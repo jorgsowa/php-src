@@ -15,6 +15,10 @@ $d->loadXML($xml);
 var_dump($d);
 ?>
 --EXPECTF--
+Deprecated: Using domdocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
 Deprecated: Creation of dynamic property DOMDocument::$dynamicProperty is deprecated in %s on line %d
 object(DOMDocument)#1 (41) {
   ["dynamicProperty"]=>

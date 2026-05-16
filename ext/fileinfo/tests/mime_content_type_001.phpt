@@ -43,6 +43,8 @@ try {
 --EXPECTF--
 mime_content_type(): Argument #1 ($filename) must be of type resource|string, int given
 mime_content_type(): Argument #1 ($filename) must be of type resource|string, null given
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 mime_content_type(): Argument #1 ($filename) must be of type resource|string, stdClass given
 mime_content_type(): Argument #1 ($filename) must be of type resource|string, array given
 

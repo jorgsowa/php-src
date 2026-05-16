@@ -9,5 +9,6 @@ opcache.optimization_level=-1
 [!![[new ERROR]]];
 ?>
 DONE
---EXPECT--
+--EXPECTF--
+Deprecated: Using ERROR as a class name with incorrect case is deprecated, use the correct casing Error instead in %s on line %d
 DONE

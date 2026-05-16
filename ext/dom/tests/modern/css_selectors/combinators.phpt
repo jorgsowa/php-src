@@ -61,9 +61,14 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\HTMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\HTMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: nonsense ---
 --- Selector: p ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <p xmlns="http://www.w3.org/1999/xhtml">First p</p>
 <p xmlns="http://www.w3.org/1999/xhtml">Second p</p>
 <p xmlns="http://www.w3.org/1999/xhtml">Third p</p>

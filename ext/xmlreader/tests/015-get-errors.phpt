@@ -46,6 +46,10 @@ $reader->close();
 unlink(__DIR__.'/015-get-errors.xml');
 ?>
 --EXPECTF--
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
+
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
+
 Deprecated: XMLReader::getAttributeNs(): Passing null to parameter #2 ($namespace) of type string is deprecated in %s on line %d
 XMLReader::getAttributeNs(): Argument #2 ($namespace) must not be empty
 ns1:num: 1

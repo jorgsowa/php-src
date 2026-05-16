@@ -40,7 +40,7 @@ foreach ($attrs as $attr) {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
 <container foo:bar="&amp;hello1"></container>
 <container foo:bar="&amp;hello2"></container>
 <container foo:bar="&amp;hello2" bar="&amp;hello3"></container>
@@ -48,6 +48,8 @@ foreach ($attrs as $attr) {
 <container foo:bar="&amp;hello2" bar="&amp;hello3" xmlns="&amp;hello4" XMLns="&amp;hello5"></container>
 <container foo:bar="&amp;hello2" bar="&amp;hello3" xmlns="&amp;hello4" XMLns="&amp;hello5" BAR="&amp;hello6"></container>
 <container foo:bar="&amp;hello2" bar="&amp;hello3" xmlns="&amp;hello4" XMLns="&amp;hello5" BAR="&amp;hello6" in:ns="&amp;hello7"></container>
+
+Deprecated: Using DOM\Attr as a class name with incorrect case is deprecated, use the correct casing Dom\Attr instead in %s on line %d
 Attr: foo:bar
 NULL
 string(7) "foo:bar"

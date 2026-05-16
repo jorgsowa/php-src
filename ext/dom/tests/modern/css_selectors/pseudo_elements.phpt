@@ -28,7 +28,10 @@ test_failure($dom, 'a::spelling-error');
 test_failure($dom, 'a::target-text');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: a::after ---
 Code 12 Invalid selector (Selectors. Not supported: after)
 --- Selector: a::before ---

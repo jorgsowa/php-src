@@ -22,6 +22,8 @@ foreach($parameters as $parameter)
 echo "ok\n";
 ?>
 --EXPECTF--
+Deprecated: Using reflectionMethod as a class name with incorrect case is deprecated, use the correct casing ReflectionMethod instead in %s on line %d
+
 Deprecated: Method ReflectionParameter::getClass() is deprecated since 8.0, use ReflectionParameter::getType() instead in %s on line %d
 __autoload(A)
 A

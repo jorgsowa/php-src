@@ -35,6 +35,7 @@ ob_start();
 
 ?>
 --EXPECTF--
+Deprecated: Using domexception as a class name with incorrect case is deprecated, use the correct casing DOMException instead in %s on line %d
 object(DOMException)#%d (7) {
   ["message":protected]=>
   string(20) "Wrong Document Error"

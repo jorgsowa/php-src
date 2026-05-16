@@ -206,6 +206,8 @@ object(ReflectionProperty)#%d (2) {
 }
 string(10) "privC in B"
 --- (Reflecting on c::pubC) ---
+
+Deprecated: Using c as a class name with incorrect case is deprecated, use the correct casing C instead in %s on line %d
 object(ReflectionProperty)#%d (2) {
   ["name"]=>
   string(4) "pubC"
@@ -214,6 +216,8 @@ object(ReflectionProperty)#%d (2) {
 }
 string(9) "pubC in C"
 --- (Reflecting on c::PUBC) ---
+
+Deprecated: Using c as a class name with incorrect case is deprecated, use the correct casing C instead in %s on line %d
 Property C::$PUBC does not exist
 --- (Reflecting on C::pubC) ---
 object(ReflectionProperty)#%d (2) {

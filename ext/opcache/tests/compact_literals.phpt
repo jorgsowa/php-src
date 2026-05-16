@@ -158,7 +158,10 @@ $h->H();
 var_dump($h::H);
 var_dump(CI::H);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling var_dumP() is deprecated, use the correct casing var_dump() instead in %s on line %d
+
+Deprecated: Calling var_dumP() is deprecated, use the correct casing var_dump() instead in %s on line %d
 array key hash:
 Array
 (
@@ -169,6 +172,8 @@ function define:
 string(5) "dummy"
 string(11) "lambdadummy"
 string(1) "A"
+
+Deprecated: Calling Say() is deprecated, use the correct casing A::say() instead in %s on line %d
 string(1) "B"
 string(1) "A"
 string(1) "B"
@@ -186,30 +191,46 @@ string(2) "FP"
 string(3) "FEP"
 propertes and methods
 -->H
+
+Deprecated: Calling H() is deprecated, use the correct casing CH::h() instead in %s on line %d
 string(1) "H"
 string(1) "H"
 string(1) "H"
+
+Deprecated: Calling H() is deprecated, use the correct casing CH::h() instead in %s on line %d
 string(1) "H"
 string(1) "H"
 string(1) "H"
 -->I
+
+Deprecated: Calling H() is deprecated, use the correct casing CI::h() instead in %s on line %d
 string(1) "I"
 string(1) "I"
 string(1) "I"
+
+Deprecated: Calling H() is deprecated, use the correct casing CI::h() instead in %s on line %d
 string(1) "I"
 string(1) "I"
 string(1) "I"
 -->H
+
+Deprecated: Calling H() is deprecated, use the correct casing CH::h() instead in %s on line %d
 string(1) "H"
 string(1) "H"
 string(1) "H"
+
+Deprecated: Calling H() is deprecated, use the correct casing CH::h() instead in %s on line %d
 string(1) "H"
 string(1) "H"
 string(1) "H"
 -->I
+
+Deprecated: Calling H() is deprecated, use the correct casing CI::h() instead in %s on line %d
 string(1) "I"
 string(1) "I"
 string(1) "I"
+
+Deprecated: Calling H() is deprecated, use the correct casing CI::h() instead in %s on line %d
 string(1) "I"
 string(1) "I"
 string(1) "I"

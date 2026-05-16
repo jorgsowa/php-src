@@ -25,6 +25,8 @@ foreach ($files as $file) {
 ?>
 --EXPECTF--
 ossfuzz-55589.txt: 
+Deprecated: Using DaTeInterval as a class name with incorrect case is deprecated, use the correct casing DateInterval instead in %s on line %d
+
 %s: unserialize(): Error at offset 39 of 39 bytes in %sunserialize-test.php on line %d
 bool(false)
 

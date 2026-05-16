@@ -7,6 +7,7 @@ var_dump(trait_exists('casesensitivitytest'));
 
 echo "Done"
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using casesensitivitytest as a class name with incorrect case is deprecated, use the correct casing caseSensitivityTest instead in %s on line %d
 bool(true)
 Done

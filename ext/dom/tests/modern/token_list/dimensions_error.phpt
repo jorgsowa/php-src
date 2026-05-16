@@ -42,6 +42,7 @@ try {
 
 ?>
 --EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 Cannot access offset of type stdClass on Dom\TokenList
 Cannot access offset of type stdClass in isset or empty
 Cannot access offset of type stdClass in isset or empty

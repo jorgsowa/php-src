@@ -5,6 +5,8 @@ Bug #13213 (GetImageSize and wrong JPEG Comments)
 var_dump(GetImageSize(__DIR__.'/bug13213.jpg'));
 ?>
 --EXPECTF--
+Deprecated: Calling GetImageSize() is deprecated, use the correct casing getimagesize() instead in %s on line %d
+
 Warning: getimagesize(): Corrupt JPEG data: 2 extraneous bytes before marker in %s%ebug13213.php on line %d
 array(9) {
   [0]=>

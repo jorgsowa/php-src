@@ -17,9 +17,11 @@ var_dump($url->toAsciiString());
 var_dump($url->getPath());
 
 ?>
---EXPECT--
+--EXPECTF--
 string(33) "https://example.com/foo/bar%2Fbaz"
 string(14) "/foo/bar%2Fbaz"
 string(14) "/foo/bar%2Fbaz"
+
+Deprecated: Using Uri\Whatwg\Url as a class name with incorrect case is deprecated, use the correct casing Uri\WhatWg\Url instead in %s on line %d
 string(33) "https://example.com/foo/bar%2Fbaz"
 string(14) "/foo/bar%2Fbaz"

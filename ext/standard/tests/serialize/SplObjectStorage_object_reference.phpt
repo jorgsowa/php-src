@@ -11,7 +11,8 @@ STR;
 var_dump(unserialize($str));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using SPlObjectStorage as a class name with incorrect case is deprecated, use the correct casing SplObjectStorage instead in %s on line %d
 array(2) {
   [0]=>
   object(SplObjectStorage)#1 (1) {

@@ -82,10 +82,12 @@ require_once getenv('REDIR_TEST_DIR') . 'pdo_test.inc';
 $db = PDOTest::factory();
 PDOTest::dropTableIfExists($db, "test026");
 ?>
---EXPECT--
+--EXPECTF--
 string(11) "PDODatabase"
 string(12) "PDOStatement"
 PDODatabase::query()
+
+Deprecated: Using PDOStatementx as a class name with incorrect case is deprecated, use the correct casing PDOStatementX instead in %s on line %d
 PDOStatementX::__construct()
 string(13) "PDOStatementX"
 string(11) "PDODatabase"

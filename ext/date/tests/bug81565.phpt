@@ -11,10 +11,12 @@ var_export(
 
 echo "\n", (new DatetimeZone('+01:45:30'))->getName();
 ?>
---EXPECT--
+--EXPECTF--
 \DateTime::__set_state(array(
    'date' => '0021-08-21 00:00:00.000000',
    'timezone_type' => 1,
    'timezone' => '+00:49:56',
 ))
+
+Deprecated: Using DatetimeZone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
 +01:45:30

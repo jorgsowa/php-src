@@ -43,10 +43,19 @@ try {
 var_dump($db->createfunction('strtoupper', $callback));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 bool(false)
+
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 TypeError: SQLite3::createFunction(): Argument #1 ($name) must be of type string, stdClass given
+
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 TypeError: SQLite3::createFunction(): Argument #3 ($argCount) must be of type int, stdClass given
 Invalid SQLite3 object:
+
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 Error: The SQLite3 object has not been correctly initialised or is already closed
+
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 bool(true)

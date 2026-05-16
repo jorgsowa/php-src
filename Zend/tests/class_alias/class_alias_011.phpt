@@ -21,6 +21,7 @@ $a = new bar;
 call_user_func(array($a, 'test2'));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using FOO as a class name with incorrect case is deprecated, use the correct casing foo instead in %s on line %d
 hello
 foobar!

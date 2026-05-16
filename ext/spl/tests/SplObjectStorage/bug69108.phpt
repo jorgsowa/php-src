@@ -18,5 +18,6 @@ $d = unserialize($c);
 unset($d);
 echo "ok";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 ok

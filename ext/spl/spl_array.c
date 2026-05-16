@@ -21,6 +21,7 @@
 #include "zend_smart_str.h"
 #include "zend_interfaces.h"
 #include "zend_exceptions.h"
+#include "zend_execute.h"
 
 #include "spl_iterators.h"
 #include "spl_array.h"
@@ -1489,6 +1490,7 @@ PHP_METHOD(ArrayObject, __unserialize)
 			RETURN_THROWS();
 		}
 
+		zend_check_class_name_case(Z_STR_P(iterator_class_zv), ce);
 		intern->ce_get_iterator = ce;
 	}
 }

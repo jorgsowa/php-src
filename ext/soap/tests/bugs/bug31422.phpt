@@ -36,7 +36,13 @@ EOF;
 $server->handle($HTTP_RAW_POST_DATA);
 echo "ok\n";
 ?>
---EXPECT--
+--EXPECTF--
+PHP Deprecated:  Calling addfunction() is deprecated, use the correct casing SoapServer::addFunction() instead in %s on line %d
+
+Deprecated: Calling addfunction() is deprecated, use the correct casing SoapServer::addFunction() instead in %s on line %d
+PHP Warning:  Cannot modify header information - headers already sent by (output started at %s:%d) in %s on line %d
+PHP Warning:  Cannot modify header information - headers already sent by (output started at %s:%d) in %s on line %d
+PHP Warning:  Cannot modify header information - headers already sent by (output started at %s:%d) in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Body><SOAP-ENV:Fault><faultcode>SOAP-ENV:Server</faultcode><faultstring>fopen() expects at least 2 arguments, 0 given</faultstring></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>
 ok

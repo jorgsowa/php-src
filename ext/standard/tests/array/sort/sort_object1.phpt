@@ -77,6 +77,7 @@ var_dump($temp_array);
 echo "Done\n";
 ?>
 --EXPECTF--
+Deprecated: Declaring for_string_sort::__tostring() with incorrect case is deprecated, use the correct casing __toString() instead in %s on line %d
 *** Testing sort() : object functionality ***
 
 -- Testing sort() by supplying various object arrays, 'flag' value is default --

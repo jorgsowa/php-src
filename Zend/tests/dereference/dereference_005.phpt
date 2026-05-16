@@ -34,5 +34,6 @@ function x() {
 var_dump(x()['two']);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using arrayaccess as a class name with incorrect case is deprecated, use the correct casing ArrayAccess instead in %s on line %d
 int(2)

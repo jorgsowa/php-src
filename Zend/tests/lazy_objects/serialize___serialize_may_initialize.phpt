@@ -46,6 +46,8 @@ object(C)#%d (1) {
 }
 # Proxy:
 string(11) "initializer"
+
+Deprecated: Using c as a class name with incorrect case is deprecated, use the correct casing C instead in %s on line %d
 string(24) "O:1:"C":1:{s:1:"a";i:1;}"
 object(C)#%d (1) {
   ["a"]=>

@@ -49,6 +49,7 @@ typedef enum {
 	INHERITANCE_SUCCESS = 2,
 } zend_inheritance_status;
 
+ZEND_API void zend_check_namespace_case(const zend_class_entry *ce);
 ZEND_API zend_inheritance_status zend_verify_property_hook_variance(const zend_property_info *prop_info, const zend_function *func);
 ZEND_API ZEND_COLD ZEND_NORETURN void zend_hooked_property_variance_error(const zend_property_info *prop_info);
 ZEND_API ZEND_COLD ZEND_NORETURN void zend_hooked_property_variance_error_ex(zend_string *value_param_name, zend_string *class_name, zend_string *prop_name);

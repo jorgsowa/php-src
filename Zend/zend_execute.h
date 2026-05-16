@@ -630,6 +630,66 @@ static zend_always_inline void *zend_get_bad_ptr(void)
 
 ZEND_API void zend_return_unwrap_ref(zend_execute_data *call, zval *return_value);
 
+static zend_always_inline void zend_check_func_name_case(
+	zend_string *called_name,
+	const zend_function *fbc)
+{
+	if (fbc->common.fn_flags & (ZEND_ACC_CLOSURE | ZEND_ACC_CALL_VIA_TRAMPOLINE)) {
+		return;
+	}
+
+	const char *check_val = ZSTR_VAL(called_name);
+	size_t check_len = ZSTR_LEN(called_name);
+	if (UNEXPECTED(check_val[0] == '\\')) {
+		check_val++;
+		check_len--;
+	}
+
+	if (EXPECTED(check_len == ZSTR_LEN(fbc->common.function_name)
+		&& memcmp(check_val, ZSTR_VAL(fbc->common.function_name), check_len) == 0)) {
+		return;
+	}
+	if (check_len == ZSTR_LEN(fbc->common.function_name)
+		&& zend_binary_strcasecmp(check_val, check_len,
+			ZSTR_VAL(fbc->common.function_name), ZSTR_LEN(fbc->common.function_name)) == 0) {
+		zend_error(E_DEPRECATED,
+			"Calling %.*s() is deprecated, use the correct casing %s%s%s() instead",
+			(int)check_len, check_val,
+			fbc->common.scope ? ZSTR_VAL(fbc->common.scope->name) : "",
+			fbc->common.scope ? "::" : "",
+			ZSTR_VAL(fbc->common.function_name));
+	}
+}
+
+static zend_always_inline void zend_check_class_name_case(
+	zend_string *called_name,
+	const zend_class_entry *ce)
+{
+	if (ce->ce_flags & ZEND_ACC_ANON_CLASS) {
+		return;
+	}
+
+	const char *check_val = ZSTR_VAL(called_name);
+	size_t check_len = ZSTR_LEN(called_name);
+	if (UNEXPECTED(check_val[0] == '\\')) {
+		check_val++;
+		check_len--;
+	}
+
+	if (EXPECTED(check_len == ZSTR_LEN(ce->name)
+		&& memcmp(check_val, ZSTR_VAL(ce->name), check_len) == 0)) {
+		return;
+	}
+	if (check_len == ZSTR_LEN(ce->name)
+		&& zend_binary_strcasecmp(check_val, check_len,
+			ZSTR_VAL(ce->name), ZSTR_LEN(ce->name)) == 0) {
+		zend_error(E_DEPRECATED,
+			"Using %.*s as a class name with incorrect case is deprecated, use the correct casing %s instead",
+			(int)check_len, check_val,
+			ZSTR_VAL(ce->name));
+	}
+}
+
 END_EXTERN_C()
 
 #endif /* ZEND_EXECUTE_H */

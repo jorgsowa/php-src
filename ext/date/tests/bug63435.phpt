@@ -13,5 +13,6 @@ for ($i=1 ; $i<999 ; $i++) {
 }
 echo "Done";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using Datetime as a class name with incorrect case is deprecated, use the correct casing DateTime instead in %s on line %d
 Done

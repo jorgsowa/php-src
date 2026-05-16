@@ -52,6 +52,7 @@ var_dump($headers);
 
 ?>
 --EXPECTF--
+Deprecated: Using soapclient as a class name with incorrect case is deprecated, use the correct casing SoapClient instead in %s on line %d
 Unauthorized
 string(%d) "POST / HTTP/1.1
 Host: %s

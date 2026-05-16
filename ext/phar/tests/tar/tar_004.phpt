@@ -33,5 +33,8 @@ include $fname;
 @unlink(__DIR__ . '/tar_004.phar.tar');
 ?>
 --EXPECTF--
+Deprecated: Calling mkDir() is deprecated, use the correct casing tarmaker::mkdir() instead in %s on line %d
+
+Deprecated: Calling mkDir() is deprecated, use the correct casing tarmaker::mkdir() instead in %s on line %d
 string(9) "it worked"
 string(%d) "phar://%star_004.phar.tar/tar_004.php"

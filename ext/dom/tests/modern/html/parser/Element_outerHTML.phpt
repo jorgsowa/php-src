@@ -21,14 +21,19 @@ echo $dom->saveXML(), "\n";
 echo $dom->saveHtml(), "\n";
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <html xmlns="http://www.w3.org/1999/xhtml"><head></head><body><div></div> <p></p></body></html>
 <html><head></head><body><div></div>&nbsp;<p></p></body></html>
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>invalid�utf-8𐍈𐍈𐍈 <p></p></body></html>
 <html><head></head><body>invalid�utf-8𐍈𐍈𐍈&nbsp;<p></p></body></html>
 NULL
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <html xmlns="http://www.w3.org/1999/xhtml"><head></head><head><template><p>foo</p></template></head><body></body></html>
 <html><head></head><head><template><p>foo</p></template></head><body></body></html>

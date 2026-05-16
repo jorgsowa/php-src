@@ -35,9 +35,12 @@ $prop = $b2->getProperty('a');
 var_dump($prop->getValue(new b2));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using b as a class name with incorrect case is deprecated, use the correct casing B instead in %s on line %d
 bool(false)
 bool(false)
 bool(false)
 string(29) "Property B::$a does not exist"
+
+Deprecated: Using b2 as a class name with incorrect case is deprecated, use the correct casing B2 instead in %s on line %d
 int(2)

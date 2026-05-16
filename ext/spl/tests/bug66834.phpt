@@ -94,6 +94,8 @@ string(34) "Called: ArrayObjectBoth::offsetGet"
 bool(true)
 bool(true)
 bool(true)
+
+Deprecated: Calling offsetexists() is deprecated, use the correct casing ArrayObjectBoth::offsetExists() instead in %s on line %d
 string(37) "Called: ArrayObjectBoth::offsetExists"
 string(37) "Called: ArrayObjectBoth::offsetExists"
 string(37) "Called: ArrayObjectBoth::offsetExists"
@@ -101,6 +103,8 @@ string(34) "Called: ArrayObjectBoth::offsetGet"
 bool(true)
 bool(true)
 bool(false)
+
+Deprecated: Calling offsetexists() is deprecated, use the correct casing ArrayObjectBoth::offsetExists() instead in %s on line %d
 string(37) "Called: ArrayObjectBoth::offsetExists"
 string(37) "Called: ArrayObjectBoth::offsetExists"
 string(37) "Called: ArrayObjectBoth::offsetExists"
@@ -120,12 +124,16 @@ string(39) "Called: ArrayObjectExists::offsetExists"
 bool(true)
 bool(true)
 bool(true)
+
+Deprecated: Calling offsetexists() is deprecated, use the correct casing ArrayObjectExists::offsetExists() instead in %s on line %d
 string(39) "Called: ArrayObjectExists::offsetExists"
 string(39) "Called: ArrayObjectExists::offsetExists"
 string(39) "Called: ArrayObjectExists::offsetExists"
 bool(true)
 bool(true)
 bool(false)
+
+Deprecated: Calling offsetexists() is deprecated, use the correct casing ArrayObjectExists::offsetExists() instead in %s on line %d
 string(39) "Called: ArrayObjectExists::offsetExists"
 string(39) "Called: ArrayObjectExists::offsetExists"
 string(39) "Called: ArrayObjectExists::offsetExists"
@@ -141,10 +149,14 @@ string(33) "Called: ArrayObjectGet::offsetGet"
 bool(true)
 bool(false)
 bool(true)
+
+Deprecated: Calling offsetexists() is deprecated, use the correct casing ArrayObject::offsetExists() instead in %s on line %d
 string(33) "Called: ArrayObjectGet::offsetGet"
 bool(true)
 bool(true)
 bool(false)
+
+Deprecated: Calling offsetexists() is deprecated, use the correct casing ArrayObject::offsetExists() instead in %s on line %d
 bool(false)
 bool(false)
 bool(true)

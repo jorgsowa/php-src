@@ -36,9 +36,13 @@ Done
 --EXPECTF--
 Test
 Internal errors TRUE
+
+Deprecated: Calling xml() is deprecated, use the correct casing XMLReader::XML() instead in %s on line %d
 Internal: Specification mandate%A value for attribute att
 
 Internal errors FALSE
+
+Deprecated: Calling xml() is deprecated, use the correct casing XMLReader::XML() instead in %s on line %d
 
 Warning: XMLReader::read(): %s: parser error : Specification mandate%A value for attribute att in %s on line %d
 

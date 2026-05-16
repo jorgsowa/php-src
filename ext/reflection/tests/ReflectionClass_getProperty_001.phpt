@@ -72,8 +72,12 @@ Reflecting on class pubf:
   ["class"]=>
   string(4) "pubf"
 }
-  --> Check for A: Property pubf::$A does not exist
-  --> Check for doesNotExist: Property pubf::$doesNotExist does not exist
+  --> Check for A: 
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
+Property pubf::$A does not exist
+  --> Check for doesNotExist: 
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
+Property pubf::$doesNotExist does not exist
 Reflecting on class subpubf: 
   --> Check for s: object(ReflectionProperty)#%d (2) {
   ["name"]=>
@@ -141,6 +145,8 @@ Reflecting on class subprivf:
   ["class"]=>
   string(5) "privf"
 }
-  --> Check for a: Property subprivf::$a does not exist
+  --> Check for a: 
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
+Property subprivf::$a does not exist
   --> Check for A: Property subprivf::$A does not exist
   --> Check for doesNotExist: Property subprivf::$doesNotExist does not exist

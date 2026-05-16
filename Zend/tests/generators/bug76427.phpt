@@ -20,5 +20,9 @@ unset($func);
 var_dump(gc_collect_cycles());
 
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 int(2)

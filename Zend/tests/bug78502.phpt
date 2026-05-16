@@ -27,5 +27,12 @@ tree_map($tree, 'children', function ($node) {});
 
 ?>
 ===DONE===
---EXPECT--
+--EXPECTF--
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
+
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
+
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
+
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
 ===DONE===

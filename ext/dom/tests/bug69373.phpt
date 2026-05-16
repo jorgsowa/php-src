@@ -13,5 +13,6 @@ for( $i=0; $i<20; $i++ ) {
 }
 echo 'DONE', PHP_EOL;
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOMXpath as a class name with incorrect case is deprecated, use the correct casing DOMXPath instead in %s on line %d
 DONE

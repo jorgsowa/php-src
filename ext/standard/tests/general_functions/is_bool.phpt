@@ -130,7 +130,7 @@ fclose($fp);
 closedir($dfp);
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing is_bool() with valid boolean values ***
 -- Iteration 1 --
 bool(true)
@@ -142,6 +142,8 @@ bool(true)
 bool(true)
 
 *** Testing is_bool() on non boolean values ***
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 -- Iteration 1 --
 bool(false)
 -- Iteration 2 --

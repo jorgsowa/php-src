@@ -20,6 +20,7 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 It is not possible to move an element out of the HTML namespace because the HTML namespace is tied to the HTMLElement class
 It is not possible to move an element into the HTML namespace because the HTML namespace is tied to the HTMLElement class

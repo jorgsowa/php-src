@@ -66,7 +66,7 @@ foreach ($attrs as $attr) {
 
 echo $dom->saveHtml(), "\n";
 ?>
---EXPECT--
+--EXPECTF--
 --- Error cases ---
 ("", "bar:bar"): Namespace Error
 (null, "bar:bar"): Namespace Error
@@ -77,6 +77,8 @@ echo $dom->saveHtml(), "\n";
 ("http://www.w3.org/2000/xmlns", "xml:foo"): Namespace Error
 
 --- Normal cases ---
+
+Deprecated: Using DOM\Attr as a class name with incorrect case is deprecated, use the correct casing Dom\Attr instead in %s on line %d
 Attr: xmlns:foo
 string(5) "xmlns"
 string(9) "xmlns:foo"

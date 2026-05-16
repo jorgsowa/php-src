@@ -20,6 +20,7 @@ foreach($it as $file)
 
 ?>
 --EXPECTF--
+Deprecated: Calling var_Dump() is deprecated, use the correct casing var_dump() instead in %s on line %d
 First
 string(%d) "%s"
 Second

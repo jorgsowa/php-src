@@ -15,5 +15,6 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 An iterator cannot be used with foreach by reference

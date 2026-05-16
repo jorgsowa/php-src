@@ -42,7 +42,8 @@ catch (Exception $e)
 
 print_R($foo);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling print_R() is deprecated, use the correct casing print_r() instead in %s on line %d
 FooBar::offsetSet(0, 0)
 FooBar::offsetSet(1, 1)
 FooBar::offsetSet(2, 2)

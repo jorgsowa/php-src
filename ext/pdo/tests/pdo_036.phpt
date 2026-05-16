@@ -26,6 +26,9 @@ var_dump($x);
 
 ?>
 --EXPECTF--
+Deprecated: Using reflectionclass as a class name with incorrect case is deprecated, use the correct casing ReflectionClass instead in %s on line %d
+
+Deprecated: Using pdostatement as a class name with incorrect case is deprecated, use the correct casing PDOStatement instead in %s on line %d
 object(PDOStatement)#%d (0) {
   ["queryString"]=>
   uninitialized(string)
@@ -35,6 +38,10 @@ object(PDOStatement)#2 (1) {
   string(8) "SELECT 1"
 }
 Property queryString is read only
+
+Deprecated: Using reflectionclass as a class name with incorrect case is deprecated, use the correct casing ReflectionClass instead in %s on line %d
+
+Deprecated: Using pdorow as a class name with incorrect case is deprecated, use the correct casing PDORow instead in %s on line %d
 
 Fatal error: Uncaught PDOException: You may not create a PDORow manually in %spdo_036.php:%d
 Stack trace:

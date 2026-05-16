@@ -50,8 +50,10 @@ catch(FatalException $e)
 }
 
 ?>
---EXPECT--
+--EXPECTF--
 FailClass::__destruct
+
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 Caught: FailClass
 FatalException::__construct
 FailClass::__destruct

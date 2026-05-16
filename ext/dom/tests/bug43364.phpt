@@ -38,5 +38,8 @@ $count = loopElements(array($doc->documentElement));
 
 var_dump($count == 13 || $count == 11);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
+
+Deprecated: Calling loadXml() is deprecated, use the correct casing DOMDocument::loadXML() instead in %s on line %d
 bool(true)

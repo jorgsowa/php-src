@@ -93,7 +93,10 @@ echo "ReflectionMethod::getModifiers() modifiers:\n";
 printf("0x%08x\n", $a->getModifiers());
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Declaring TestClass::__tostring() with incorrect case is deprecated, use the correct casing __toString() instead in %s on line %d
+
+Deprecated: Using reflectionClass as a class name with incorrect case is deprecated, use the correct casing ReflectionClass instead in %s on line %d
 Modifiers for method TestClass::foo():
 0x00000001
 

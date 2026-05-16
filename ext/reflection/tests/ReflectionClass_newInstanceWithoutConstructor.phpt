@@ -38,6 +38,8 @@ var_dump($class->newInstanceWithoutConstructor());
 --EXPECTF--
 object(Foo)#%d (0) {
 }
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(stdClass)#%d (0) {
 }
 object(DateTime)#%d (0) {

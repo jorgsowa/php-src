@@ -18,6 +18,11 @@ print $dom2->saveXML();
 
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
+
+Deprecated: Calling loadXml() is deprecated, use the correct casing DOMDocument::loadXML() instead in %s on line %d
+
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <foo/>

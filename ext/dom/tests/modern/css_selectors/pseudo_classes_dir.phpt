@@ -20,7 +20,10 @@ test_failure($dom, ':dir(rtl)', true);
 test_failure($dom, ':dir(ltr)', true);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: :dir(rtl) ---
 Code 12 Invalid selector (Selectors. Not supported: dir)
 --- Selector: :dir(ltr) ---

@@ -59,7 +59,12 @@ ob_end_flush();
 
 echo "ok\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using soapserver as a class name with incorrect case is deprecated, use the correct casing SoapServer instead in %s on line %d
+
+Deprecated: Calling setclass() is deprecated, use the correct casing SoapServer::setClass() instead in %s on line %d
+
+Deprecated: Calling setpersistence() is deprecated, use the correct casing SoapServer::setPersistence() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://testuri.org" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><SOAP-ENV:Body><ns1:SumResponse><return xsi:type="xsd:int">8</return></ns1:SumResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>
 ok

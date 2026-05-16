@@ -20,6 +20,9 @@ $e = $e->item(0);
 echo $d->saveXml($e),"\n";
 echo $d->saveHtml($e),"\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <p>Hi.<br/>there</p>
+
+Deprecated: Calling saveHtml() is deprecated, use the correct casing DOMDocument::saveHTML() instead in %s on line %d
 <p>Hi.<br>there</p>

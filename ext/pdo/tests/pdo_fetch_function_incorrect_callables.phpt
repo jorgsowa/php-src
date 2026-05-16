@@ -85,12 +85,18 @@ require_once getenv('REDIR_TEST_DIR') . 'pdo_test.inc';
 $db = PDOTest::factory();
 PDOTest::dropTableIfExists($db, "pdo_fetch_function_incorrect_callable");
 ?>
---EXPECT--
+--EXPECTF--
 TypeError: function "nothing" not found or invalid function name
 TypeError: function "" not found or invalid function name
 TypeError: PDOStatement::fetchAll(): Argument #2 must be a callable, null given
 TypeError: no array or string given
 TypeError: cannot access "self" when no class scope is active
+
+Deprecated: Using bar as a class name with incorrect case is deprecated, use the correct casing Bar instead in %s on line %d
 TypeError: non-static method Bar::instanceMethod() cannot be called statically
+
+Deprecated: Using bar as a class name with incorrect case is deprecated, use the correct casing Bar instead in %s on line %d
 TypeError: cannot access private method Bar::privateStatic()
+
+Deprecated: Using bar as a class name with incorrect case is deprecated, use the correct casing Bar instead in %s on line %d
 TypeError: class Bar does not have a method "nonexistent"

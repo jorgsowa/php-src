@@ -18,6 +18,8 @@ var_dump($s);
 var_dump(unserialize($s));
 ?>
 --EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
 Warning: serialize(): "b" is returned from __sleep() multiple times in %s on line %d
 string(39) "O:1:"A":1:{s:1:"b";O:8:"stdClass":0:{}}"
 object(A)#%d (1) {

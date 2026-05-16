@@ -31,7 +31,10 @@ while ($reader->read()) {
 $reader->close();
 unlink($filename);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
+
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
 books
 book
    Attribute Name: num

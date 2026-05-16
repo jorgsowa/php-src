@@ -28,6 +28,7 @@
 #include "php_pdo_driver.h"
 #include "php_pdo_int.h"
 #include "zend_exceptions.h"
+#include "zend_execute.h"
 #include "zend_interfaces.h"
 #include "php_memory_streams.h"
 #include "pdo_stmt_arginfo.h"
@@ -1187,6 +1188,7 @@ PHP_METHOD(PDOStatement, fetchAll)
 					zend_argument_type_error(2, "must be a valid class");
 					RETURN_THROWS();
 				}
+				zend_check_class_name_case(Z_STR_P(arg2), fetch_class);
 			} else {
 				fetch_class = zend_standard_class_def;
 			}
@@ -1706,6 +1708,7 @@ bool pdo_stmt_setup_fetch_mode(pdo_stmt_t *stmt, zend_long mode, uint32_t mode_a
 					zend_argument_type_error(arg1_arg_num, "must be a valid class");
 					return false;
 				}
+				zend_check_class_name_case(Z_STR(args[0]), cep);
 				/* Verify constructor_args (args[1]) is ?array */
 				/* TODO: Improve logic? */
 				if (variadic_num_args == 2) {

@@ -8,6 +8,7 @@ $Data = "<!DOCTYPE HTML>\n<br />\n<input />";
 $Document = \Dom\HTMLDocument::createFromString( $Data );
 echo $Document->saveHTML();
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <!DOCTYPE html><html><head></head><body><br>
 <input></body></html>

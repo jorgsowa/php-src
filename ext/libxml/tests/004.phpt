@@ -27,7 +27,8 @@ foreach ($ctxs as $ctx) {
 echo "Done\n";
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 libxml_set_streams_context(): Argument #1 ($context) must be of type resource, null given
 bool(true)
 libxml_set_streams_context(): Argument #1 ($context) must be of type resource, string given

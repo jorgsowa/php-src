@@ -9,6 +9,7 @@ echo $prg->format('c') . "\n";
 $prg->getTimestamp();
 echo $prg->format('c') . "\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTimeImmutable::setTimezone() instead in %s on line %d
 2016-10-30T02:00:00+02:00
 2016-10-30T02:00:00+02:00

@@ -37,10 +37,16 @@ test_helper($dom, '#hi');
 test_helper($dom, '#hI');
 
 ?>
---EXPECT--
+--EXPECTF--
 === Document in quirks mode ===
 
+
+Deprecated: Using DOM\HTMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\HTMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: div.helloworld ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <div xmlns="http://www.w3.org/1999/xhtml" class="HElLoWorLD">
     <div id="hI">
 </div></div>
@@ -57,6 +63,8 @@ test_helper($dom, '#hI');
 
 === Document not in quirks mode ===
 
+
+Deprecated: Using DOM\HTMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\HTMLDocument instead in %s on line %d
 --- Selector: div.helloworld ---
 --- Selector: div.HElLoWorLD ---
 <div xmlns="http://www.w3.org/1999/xhtml" class="HElLoWorLD">

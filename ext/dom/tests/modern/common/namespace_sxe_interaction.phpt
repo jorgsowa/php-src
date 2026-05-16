@@ -47,7 +47,7 @@ echo $new_dom->saveXML(), "\n";
 @unlink(__DIR__ . "/namespace_sxe_interaction1.xml");
 @unlink(__DIR__ . "/namespace_sxe_interaction2.xml");
 ?>
---EXPECT--
+--EXPECTF--
 namespace c: string(5) "urn:c"
 namespace b: string(5) "urn:b"
 namespace a: NULL
@@ -59,9 +59,13 @@ namespace a: NULL
 <root xmlns:a="urn:a" a:attr="value"><b:child xmlns:b="urn:b">value<c:child xmlns:c="urn:c"/></b:child><foo>value2</foo></root>
 <foo>value2</foo>
 === serialize DOM ===
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:a="urn:a" a:attr="value"><b:child xmlns:b="urn:b">value<c:child xmlns:c="urn:c"/></b:child><foo>value2</foo></root>
 
 === serialize imported DOM ===
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:a="urn:a" a:attr="value"><b:child xmlns:b="urn:b">value<c:child xmlns:c="urn:c"/></b:child><foo>value2</foo></root>

@@ -14,6 +14,7 @@ var_dump($x);
 vaR_dump(serialize($x));
 ?>
 --EXPECTF--
+Deprecated: Calling vaR_dump() is deprecated, use the correct casing var_dump() instead in %s on line %d
 array(1) {
   ["y"]=>
   object(stdClass)#%d (1) {

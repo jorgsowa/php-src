@@ -19,7 +19,8 @@ $inputs = [
 var_dump(array_multisort($inputs, SORT_STRING));
 var_dump($inputs);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Declaring MyStringable::__tostring() with incorrect case is deprecated, use the correct casing __toString() instead in %s on line %d
 bool(true)
 array(3) {
   [0]=>

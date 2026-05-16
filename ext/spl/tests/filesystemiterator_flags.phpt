@@ -25,7 +25,22 @@ function printflags($it) {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
+
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
+
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
+
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
+
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
+
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
+
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
+
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
 00001000
 00000000
 00000000

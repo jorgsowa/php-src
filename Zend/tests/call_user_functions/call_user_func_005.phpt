@@ -18,6 +18,8 @@ var_dump(call_user_func(array('foo', 'teste')));
 
 ?>
 --EXPECTF--
+Deprecated: Declaring foo::__callstatic() with incorrect case is deprecated, use the correct casing __callStatic() instead in %s on line %d
+
 Deprecated: {closure:%s:%d}(): Optional parameter $a declared before required parameter $b is implicitly treated as a required parameter in %s on line %d
 string(1) "x"
 array(1) {

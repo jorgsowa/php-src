@@ -16,8 +16,10 @@ var_dump($els);
 var_dump($els[0]?->tagName);
 
 ?>
---EXPECT--
+--EXPECTF--
 string(1) "a"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root><b/></root>
 object(Dom\HTMLCollection)#2 (1) {

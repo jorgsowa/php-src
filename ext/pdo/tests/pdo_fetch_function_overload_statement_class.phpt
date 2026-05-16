@@ -46,9 +46,11 @@ require_once getenv('REDIR_TEST_DIR') . 'pdo_test.inc';
 $db = PDOTest::factory();
 PDOTest::dropTableIfExists($db, "pdo_fetch_function_overload_statement_class");
 ?>
---EXPECT--
+--EXPECTF--
 DerivedStatement::__construct(Overloaded)
 string(16) "DerivedStatement"
+
+Deprecated: Calling retrieve() is deprecated, use the correct casing DerivedStatement::reTrieve() instead in %s on line %d
 DerivedStatement::reTrieve(1,A)
 DerivedStatement::reTrieve(2,B)
 DerivedStatement::reTrieve(3,C)

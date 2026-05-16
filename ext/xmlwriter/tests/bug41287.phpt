@@ -29,7 +29,7 @@ $xw->endElement();
 $xw->endDocument();
 print $xw->flush(true);
 ?>
---EXPECT--
+--EXPECTF--
 <?xml version="1.0"?>
 <test:test xmlns:test="urn:x-test:">
  <test:foo></test:foo>
@@ -37,6 +37,14 @@ print $xw->flush(true);
  <bar xmlns=""></bar>
 </test:test>
 
+
+Deprecated: Calling startElementNS() is deprecated, use the correct casing XMLWriter::startElementNs() instead in %s on line %d
+
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
+
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
+
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
 <?xml version="1.0"?>
 <test:test xmlns:test="urn:x-test:">
  <test:foo></test:foo>

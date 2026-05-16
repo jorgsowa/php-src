@@ -37,6 +37,8 @@ Warning: Constant test const already defined, this will be an error in PHP 9 in 
 bool(false)
 bool(true)
 bool(true)
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 bool(true)
 int(1)
 int(2)

@@ -56,7 +56,7 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
 User class
 bool(true)
 bool(true)
@@ -67,9 +67,19 @@ Closure
 bool(true)
 bool(true)
 Internal class - SimpleXMLElement
+
+Deprecated: Using simplexmlelement as a class name with incorrect case is deprecated, use the correct casing SimpleXMLElement instead in %s on line %d
 bool(true)
+
+Deprecated: Using simplexmlelement as a class name with incorrect case is deprecated, use the correct casing SimpleXMLElement instead in %s on line %d
 bool(true)
+
+Deprecated: Using simplexmlelement as a class name with incorrect case is deprecated, use the correct casing SimpleXMLElement instead in %s on line %d
 Internal class - XMLWriter
+
+Deprecated: Using xmlwriter as a class name with incorrect case is deprecated, use the correct casing XMLWriter instead in %s on line %d
 bool(false)
 bool(false)
+
+Deprecated: Using xmlwriter as a class name with incorrect case is deprecated, use the correct casing XMLWriter instead in %s on line %d
 Error: Trying to clone an uncloneable object of class XMLWriter

@@ -83,6 +83,7 @@ echo "Done";
 ?>
 --EXPECT--
 *** Testing get_parent_class() : usage variations ***
+Error: 8192 - Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead
 Error: 2 - Undefined variable $undefined_var
 Error: 2 - Undefined variable $unset_var
 

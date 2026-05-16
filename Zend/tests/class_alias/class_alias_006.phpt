@@ -8,6 +8,7 @@ $foo = new foo();
 var_dump($foo);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(stdClass)#1 (0) {
 }

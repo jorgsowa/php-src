@@ -53,8 +53,10 @@ try {
     echo "Exception: ".$e->getMessage()."\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
 inserted 1
+
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 Exception: foo
 Exception: Heap is corrupted, heap properties are no longer ensured.
 Exception: Heap is corrupted, heap properties are no longer ensured.

@@ -45,6 +45,8 @@ object(ReflectionProperty)#%d (2) {
   ["class"]=>
   string(3) "foo"
 }
+
+Deprecated: Using reflectionobject as a class name with incorrect case is deprecated, use the correct casing ReflectionObject instead in %s on line %d
 object(ReflectionProperty)#%d (2) {
   ["name"]=>
   string(1) "a"

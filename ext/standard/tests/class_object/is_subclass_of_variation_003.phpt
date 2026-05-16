@@ -13,8 +13,12 @@ var_dump(is_subclass_of('caseSensitivityTestCHILD', 'caseSensitivityTEST'));
 
 echo "Done"
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing is_subclass_of() : usage variations ***
 *** Testing is_a() : usage variations ***
+
+Deprecated: Using caseSensitivityTestCHILD as a class name with incorrect case is deprecated, use the correct casing caseSensitivityTestChild instead in %s on line %d
+
+Deprecated: Using caseSensitivityTEST as a class name with incorrect case is deprecated, use the correct casing caseSensitivityTest instead in %s on line %d
 bool(true)
 Done

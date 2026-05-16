@@ -130,8 +130,10 @@ fclose($fp);
 closedir($dfp);
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing is_null() with valid null values ***
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 -- Iteration 1 --
 bool(true)
 -- Iteration 2 --
@@ -156,6 +158,8 @@ bool(true)
 bool(true)
 
 *** Testing is_bool() on non null values ***
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 -- Iteration 1 --
 bool(false)
 -- Iteration 2 --

@@ -80,7 +80,7 @@ foreach ([DomType::Legacy, DomType::Modern] as $case) {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
 --- Legacy test remove index 2 at index 2 ---
 bool(true)
 int(0)
@@ -133,6 +133,8 @@ string(5) "item3"
 bool(true)
 int(3)
 string(5) "item5"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <x><item1/><item2/><item4/><item5/></x>
 --- Modern test remove index 1 at index 2 ---
@@ -148,6 +150,8 @@ string(5) "item3"
 bool(true)
 int(3)
 string(5) "item5"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <x><item1/><item3/><item4/><item5/></x>
 --- Modern test remove all ---
@@ -160,5 +164,7 @@ string(5) "item3"
 bool(true)
 int(2)
 string(5) "item5"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <x><item2/><item4/></x>

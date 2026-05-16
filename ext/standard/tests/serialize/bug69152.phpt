@@ -9,6 +9,8 @@ $x->test();
 
 ?>
 --EXPECTF--
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
+
 Fatal error: Uncaught TypeError: Cannot assign string to property Exception::$trace of type array in %s:%d
 Stack trace:
 #0 %s(%d): unserialize('O:9:"exception"...')

@@ -21,6 +21,7 @@ var_dump(json_last_error(), json_last_error_msg());
 echo "Done\n";
 ?>
 --EXPECTF--
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(stdClass)#%d (1) {
   ["prop"]=>
   *RECURSION*

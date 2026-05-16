@@ -16,7 +16,8 @@ foreach ($i as $key => $value) {
 sort($dirs);
 print_r($dirs);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling getFileName() is deprecated, use the correct casing SplFileInfo::getFilename() instead in %s on line %d
 Array
 (
     [0] => .

@@ -15,7 +15,9 @@ $datetime->setTimezone($la_time);
 echo "New timezone: " . date_timezone_get($datetime)->getName() . "\n";
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing DateTime::setTimezone() : basic functionality ***
 Default timezone: Europe/London
+
+Deprecated: Using DateTimezone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
 New timezone: America/Los_Angeles

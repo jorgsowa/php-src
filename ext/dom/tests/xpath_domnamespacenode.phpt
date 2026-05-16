@@ -16,7 +16,8 @@ $nodes = $xpath->query('//namespace::*');
 var_dump($nodes->item(0));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 object(DOMNameSpaceNode)#4 (10) {
   ["nodeName"]=>
   string(9) "xmlns:xml"

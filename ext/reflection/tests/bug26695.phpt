@@ -20,5 +20,7 @@ $class = $params[0]->getClass();
 var_dump($class->getName());
 ?>
 --EXPECTF--
+Deprecated: Using bar as a class name with incorrect case is deprecated, use the correct casing Bar instead in %s on line %d
+
 Deprecated: Method ReflectionParameter::getClass() is deprecated since 8.0, use ReflectionParameter::getType() instead in %s on line %d
 string(3) "Foo"

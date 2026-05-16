@@ -62,4 +62,10 @@ session_create_id();
 bool(true)
 bool(true)
 
+Deprecated: Calling validateid() is deprecated, use the correct casing MySessionHandler::validateId() instead in %s on line %d
+
+Deprecated: Calling validateid() is deprecated, use the correct casing MySessionHandler::validateId() instead in %s on line %d
+
+Deprecated: Calling validateid() is deprecated, use the correct casing MySessionHandler::validateId() instead in %s on line %d
+
 Warning: session_create_id(): Failed to create new ID in %s on line %d

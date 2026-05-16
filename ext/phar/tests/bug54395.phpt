@@ -12,5 +12,6 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using phar as a class name with incorrect case is deprecated, use the correct casing Phar instead in %s on line %d
 string(25) "Mounting of 1 to 1 failed"

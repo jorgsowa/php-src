@@ -38,7 +38,8 @@ $f::$f();
 foo::$f();
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using FOO as a class name with incorrect case is deprecated, use the correct casing foo instead in %s on line %d
 __call:
 string(3) "ABC"
 __call:
@@ -47,14 +48,20 @@ __call:
 string(3) "XYZ"
 __call:
 string(3) "WWW"
+
+Deprecated: Using FOO as a class name with incorrect case is deprecated, use the correct casing foo instead in %s on line %d
 __call:
 string(3) "ABC"
 __callstatic:
 string(1) "A"
 __callstatic:
 string(1) "B"
+
+Deprecated: Using FOO as a class name with incorrect case is deprecated, use the correct casing foo instead in %s on line %d
 __callstatic:
 string(1) "C"
+
+Deprecated: Using FOO as a class name with incorrect case is deprecated, use the correct casing foo instead in %s on line %d
 __callstatic:
 string(3) "FOO"
 __callstatic:

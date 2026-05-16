@@ -93,6 +93,8 @@ bool(false)
 get_parent_class(): Argument #1 ($object_or_class) must be an object or a valid class name, string given
 get_parent_class(): Argument #1 ($object_or_class) must be an object or a valid class name, string given
 get_parent_class(): Argument #1 ($object_or_class) must be an object or a valid class name, string given
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 bool(false)
 get_parent_class(): Argument #1 ($object_or_class) must be an object or a valid class name, array given
 get_parent_class(): Argument #1 ($object_or_class) must be an object or a valid class name, int given

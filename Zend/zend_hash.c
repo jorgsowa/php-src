@@ -85,26 +85,17 @@ static void _zend_is_inconsistent(const HashTable *ht, const char *file, int lin
 		zend_hash_do_resize(ht);					\
 	}
 
+/* Deprecated public wrappers (PHP 8.6). These keep working for external
+ * extensions but emit a compile-time deprecation warning at the call site. The
+ * engine and bundled extensions use the non-deprecated internal twins
+ * (_zend_hash_find_ptr_lc / _zend_hash_str_find_ptr_lc), which are static inline
+ * in zend_hash.h so no new exported symbol is added. */
 ZEND_API void *zend_hash_str_find_ptr_lc(const HashTable *ht, const char *str, size_t len) {
-	void *result;
-	char *lc_str;
-
-	/* Stack allocate small strings to improve performance */
-	ALLOCA_FLAG(use_heap)
-
-	lc_str = zend_str_tolower_copy(do_alloca(len + 1, use_heap), str, len);
-	result = zend_hash_str_find_ptr(ht, lc_str, len);
-	free_alloca(lc_str, use_heap);
-
-	return result;
+	return _zend_hash_str_find_ptr_lc(ht, str, len);
 }
 
 ZEND_API void *zend_hash_find_ptr_lc(const HashTable *ht, zend_string *key) {
-	void *result;
-	zend_string *lc_key = zend_string_tolower(key);
-	result = zend_hash_find_ptr(ht, lc_key);
-	zend_string_release(lc_key);
-	return result;
+	return _zend_hash_find_ptr_lc(ht, key);
 }
 
 static void ZEND_FASTCALL zend_hash_do_resize(HashTable *ht);

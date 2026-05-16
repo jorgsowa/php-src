@@ -53,7 +53,8 @@ var_dump($dom->documentElement->innerHTML);
 var_dump($dom->documentElement->outerHTML);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 string(13) "Hello, world!"
 string(36) "<container>Hello, world!</container>"
 string(26) "<!--This is -a- comment-->"
@@ -66,6 +67,8 @@ string(12) "<container/>"
 string(35) "<container><container/></container>"
 string(72) "<container xmlns:ns1="urn:a" ns1:name="" xmlns:ns2="urn:b" ns2:name=""/>"
 string(95) "<container><container xmlns:ns1="urn:a" ns1:name="" xmlns:ns2="urn:b" ns2:name=""/></container>"
+
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 string(167) "
  <book>
   <title>The Grapes of Wrath</title>

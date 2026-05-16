@@ -40,8 +40,10 @@ $object->bar = 34;
 $closure();
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing ReflectionMethod::getClosure() : basic functionality ***
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 string(34) "Static Example class, Hello World!"
 string(22) "Example class, bar: 42"
 string(22) "Example class, bar: 34"

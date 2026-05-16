@@ -67,10 +67,16 @@ bool(false)
 --isUserDefined--
 bool(true)
 --getFilename--
+
+Deprecated: Calling getFilename() is deprecated, use the correct casing ReflectionFunctionAbstract::getFileName() instead in %s on line %d
 string(%d) "%s009.php"
 --getStartline--
+
+Deprecated: Calling getStartline() is deprecated, use the correct casing ReflectionFunctionAbstract::getStartLine() instead in %s on line %d
 int(6)
 --getEndline--
+
+Deprecated: Calling getEndline() is deprecated, use the correct casing ReflectionFunctionAbstract::getEndLine() instead in %s on line %d
 int(8)
 --getDocComment--
 string(%d) "/**

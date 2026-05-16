@@ -29,29 +29,39 @@ foreach($it as $name => $ent)
 unlink(__DIR__ . '/files/phar_oo_005.phar.php');
 __halt_compiler();
 ?>
---EXPECT--
+--EXPECTF--
 string(14) "phar://*/a.php"
 string(14) "phar://*/a.php"
 string(0) ""
+
+Deprecated: Calling getSubPathName() is deprecated, use the correct casing RecursiveDirectoryIterator::getSubPathname() instead in %s on line %d
 string(5) "a.php"
 string(20) "phar_oo_005.phar.php"
 string(16) "phar://*/b/c.php"
 string(16) "phar://*/b/c.php"
 string(1) "b"
+
+Deprecated: Calling getSubPathName() is deprecated, use the correct casing RecursiveDirectoryIterator::getSubPathname() instead in %s on line %d
 string(7) "b/c.php"
 string(1) "b"
 string(16) "phar://*/b/d.php"
 string(16) "phar://*/b/d.php"
 string(1) "b"
+
+Deprecated: Calling getSubPathName() is deprecated, use the correct casing RecursiveDirectoryIterator::getSubPathname() instead in %s on line %d
 string(7) "b/d.php"
 string(1) "b"
 string(14) "phar://*/b.php"
 string(14) "phar://*/b.php"
 string(0) ""
+
+Deprecated: Calling getSubPathName() is deprecated, use the correct casing RecursiveDirectoryIterator::getSubPathname() instead in %s on line %d
 string(5) "b.php"
 string(20) "phar_oo_005.phar.php"
 string(14) "phar://*/e.php"
 string(14) "phar://*/e.php"
 string(0) ""
+
+Deprecated: Calling getSubPathName() is deprecated, use the correct casing RecursiveDirectoryIterator::getSubPathname() instead in %s on line %d
 string(5) "e.php"
 string(20) "phar_oo_005.phar.php"

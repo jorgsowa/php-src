@@ -22,6 +22,9 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOMXpath as a class name with incorrect case is deprecated, use the correct casing DOMXPath instead in %s on line %d
+
+Deprecated: Calling registerPHPFunctions() is deprecated, use the correct casing DOMXPath::registerPhpFunctions() instead in %s on line %d
 Handler name must be a string
 Function name must be passed as the first argument

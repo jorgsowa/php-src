@@ -9,6 +9,9 @@ $a = $dom->head->firstChild->cloneNode(false);
 echo $dom->saveXML($a), "\n";
 echo $dom->saveHTML($a), "\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <template xmlns="http://www.w3.org/1999/xhtml"></template>
+
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <template></template>

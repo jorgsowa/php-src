@@ -18,8 +18,16 @@ $object->setTimeZone($la_time);
 var_dump( $object->getTimeZone()->getName() );
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing DateTime::getTimezone() : basic functionality ***
+
+Deprecated: Calling getTimeZone() is deprecated, use the correct casing DateTime::getTimezone() instead in %s on line %d
 string(13) "Europe/London"
+
+Deprecated: Calling getTimeZone() is deprecated, use the correct casing DateTime::getTimezone() instead in %s on line %d
 string(16) "America/New_York"
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
+
+Deprecated: Calling getTimeZone() is deprecated, use the correct casing DateTime::getTimezone() instead in %s on line %d
 string(19) "America/Los_Angeles"

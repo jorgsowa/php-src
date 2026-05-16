@@ -25,8 +25,10 @@ foreach ($classes as $class) {
 }
 
 ?>
---EXPECT--
-Is noCtor instantiable?  bool(true)
+--EXPECTF--
+Is noCtor instantiable?  
+Deprecated: Calling IsInstantiable() is deprecated, use the correct casing ReflectionClass::isInstantiable() instead in %s on line %d
+bool(true)
 Is publicCtorNew instantiable?  bool(true)
 Is protectedCtorNew instantiable?  bool(false)
 Is privateCtorNew instantiable?  bool(false)

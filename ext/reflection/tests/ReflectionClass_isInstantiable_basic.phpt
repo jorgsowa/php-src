@@ -32,8 +32,10 @@ foreach($classes  as $class ) {
 }
 
 ?>
---EXPECT--
-Is C instantiable?  bool(true)
+--EXPECTF--
+Is C instantiable?  
+Deprecated: Calling IsInstantiable() is deprecated, use the correct casing ReflectionClass::isInstantiable() instead in %s on line %d
+bool(true)
 Is iface instantiable?  bool(false)
 Is ifaceImpl instantiable?  bool(true)
 Is abstractClass instantiable?  bool(false)

@@ -24,5 +24,8 @@ catch(Exception $e)
 }
 echo "okey"
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using recursiveDirectoryIterator as a class name with incorrect case is deprecated, use the correct casing RecursiveDirectoryIterator instead in %s on line %d
+
+Deprecated: Using recursiveIteratorIterator as a class name with incorrect case is deprecated, use the correct casing RecursiveIteratorIterator instead in %s on line %d
 okey

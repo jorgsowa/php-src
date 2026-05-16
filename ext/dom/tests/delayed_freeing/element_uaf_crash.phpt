@@ -13,6 +13,7 @@ unset($d);
 
 echo $ret->textContent, "Done\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 <div><b/><xxx/></div>
 Done

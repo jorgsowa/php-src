@@ -112,6 +112,8 @@ bool(false)
 Array
 (
 )
+
+Deprecated: Using c as a class name with incorrect case is deprecated, use the correct casing C instead in %s on line %d
 C::h[call:1; len:37; id:originalID] - bool(true)
 Array
 (

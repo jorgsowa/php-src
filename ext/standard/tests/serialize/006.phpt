@@ -16,7 +16,8 @@ serialize()/unserialize() with exotic letters
     var_dump(serialize($åäöÅÄÖ));
     var_dump(unserialize(serialize($åäöÅÄÖ)));
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using Überkööliäå as a class name with incorrect case is deprecated, use the correct casing ÜberKööliäå instead in %s on line %d
 string(55) "O:11:"ÜberKööliäå":1:{s:11:"åäöÅÄÖüÜber";s:6:"åäöÅÄÖ";}"
 object(ÜberKööliäå)#2 (1) {
   ["åäöÅÄÖüÜber"]=>

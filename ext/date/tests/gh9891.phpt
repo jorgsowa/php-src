@@ -19,9 +19,12 @@ $b->setTimestamp($b->getTimestamp());
 echo '$a: ', $a->format(DateTime::ATOM), "\n";
 echo '$b: ', $b->format(DateTime::ATOM), "\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling getTimeStamp() is deprecated, use the correct casing DateTime::getTimestamp() instead in %s on line %d
 int(1234567890)
 =======
+
+Deprecated: Using DateTimezone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
 $a: 2022-11-01T13:30:00-05:00
 $b: 2022-11-01T13:30:00-05:00
 $a: @1667327400

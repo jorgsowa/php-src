@@ -19,7 +19,8 @@ $t = new test;
 
 echo "Done\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using test as a class name with incorrect case is deprecated, use the correct casing Test instead in %s on line %d
 array(1) {
   [0]=>
   int(1)

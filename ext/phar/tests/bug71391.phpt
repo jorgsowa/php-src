@@ -14,5 +14,6 @@ DONE
 <?php
 unlink(__DIR__."/bug71391.test.tar");
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling delMetaData() is deprecated, use the correct casing PharData::delMetadata() instead in %s on line %d
 DONE

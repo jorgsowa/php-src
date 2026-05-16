@@ -20,4 +20,8 @@ $obj = new testclass;
 --EXPECTF--
 %stestclass.inc
 %stestclass.class.inc
+
+Deprecated: Using testclass as a class name with incorrect case is deprecated, use the correct casing TestClass instead in %s on line %d
 bool(true)
+
+Deprecated: Using testclass as a class name with incorrect case is deprecated, use the correct casing TestClass instead in %s on line %d

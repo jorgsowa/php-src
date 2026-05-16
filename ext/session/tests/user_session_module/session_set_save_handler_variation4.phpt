@@ -51,6 +51,8 @@ rmdir($path);
 --EXPECTF--
 *** Testing session_set_save_handler() : variation ***
 
+Deprecated: Calling DEFINE() is deprecated, use the correct casing define() instead in %s on line %d
+
 Deprecated: session_set_save_handler(): Providing individual callbacks instead of an object implementing SessionHandlerInterface is deprecated in %s on line %d
 Open [%s,PHPSESSID]
 Read [%s,%s]

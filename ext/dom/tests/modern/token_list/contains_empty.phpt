@@ -12,5 +12,6 @@ $list = $element->classList;
 var_dump($list->contains('x'));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 bool(false)

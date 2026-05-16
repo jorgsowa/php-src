@@ -99,7 +99,7 @@ echo "Done\n";
 fclose($fp);
 closedir($dfp);
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing is_array() on different type of arrays ***
 -- Iteration 1 --
 bool(true)
@@ -133,6 +133,8 @@ bool(true)
 bool(true)
 
 *** Testing is_array() on non array types ***
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 -- Iteration 1 --
 bool(false)
 -- Iteration 2 --

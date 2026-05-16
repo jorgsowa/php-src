@@ -64,6 +64,8 @@ rmdir($path);
 ?>
 --EXPECTF--
 *** Testing session_set_save_handler() : basic functionality ***
+
+Deprecated: Calling DEFINE() is deprecated, use the correct casing define() instead in %s on line %d
 string(%d) "%s"
 
 Warning: session_module_name(): Session handler module "" cannot be found in %s on line %d

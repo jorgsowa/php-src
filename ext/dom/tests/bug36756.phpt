@@ -23,8 +23,11 @@ $GLOBALS['dom']->removeChild($GLOBALS['dom']->firstChild);
 echo "nodeType: " . $node->nodeType . "\n";
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOMXpath as a class name with incorrect case is deprecated, use the correct casing DOMXPath instead in %s on line %d
 root
 nodeType: 1
+
+Deprecated: Using DOMXpath as a class name with incorrect case is deprecated, use the correct casing DOMXPath instead in %s on line %d
 child
 nodeType: 1

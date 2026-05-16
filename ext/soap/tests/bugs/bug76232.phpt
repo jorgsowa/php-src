@@ -46,6 +46,7 @@ $client->__soapCall("foo", []);
 echo $client->__getLastRequestHeaders();
 ?>
 --EXPECTF--
+Deprecated: Using soapclient as a class name with incorrect case is deprecated, use the correct casing SoapClient instead in %s on line %d
 === Request with one cookie ===
 POST / HTTP/1.1
 Host: %s

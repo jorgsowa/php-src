@@ -58,6 +58,8 @@ test:
 0014 JMPZ T1 0016
 0015 ECHO string("True\n")
 0016 RETURN null
+
+Deprecated: Calling IN_ARRAY() is deprecated, use the correct casing in_array() instead in %s on line %d
 bool(true)
 bool(true)
 bool(true)

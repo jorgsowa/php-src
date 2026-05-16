@@ -69,7 +69,8 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using SQLITE3 as a class name with incorrect case is deprecated, use the correct casing SQLite3 instead in %s on line %d
 int(1)
 Unable to prepare statement: not authorized
 bool(true)

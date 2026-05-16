@@ -35,9 +35,11 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
 TypeError: Only arrays and Traversables can be unpacked, null given
 TypeError: Only arrays and Traversables can be unpacked, int given
 TypeError: Only arrays and Traversables can be unpacked, stdClass given
 TypeError: Only arrays and Traversables can be unpacked, string given
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 TypeError: Only arrays and Traversables can be unpacked, stdClass given

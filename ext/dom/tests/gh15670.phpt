@@ -20,10 +20,14 @@ echo $doc->saveXML(), "\n";
 echo $dom->saveXML(), "\n";
 ?>
 --EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
 Deprecated: Creation of dynamic property DOMDocument::$innerHTML is deprecated in %s on line %d
 <?xml version="1.0" standalone="yes"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html><body><p id="x">foo</p></body></html>
 
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root><child xmlns="urn:a"/></root>

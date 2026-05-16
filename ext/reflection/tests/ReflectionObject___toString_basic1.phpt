@@ -12,6 +12,7 @@ echo new ReflectionObject($f);
 
 ?>
 --EXPECTF--
+Deprecated: Using foo as a class name with incorrect case is deprecated, use the correct casing Foo instead in %s on line %d
 Object of class [ <user> class Foo ] {
   @@ %s 3-5
 

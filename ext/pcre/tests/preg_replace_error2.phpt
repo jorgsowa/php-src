@@ -25,7 +25,9 @@ try {
     echo $e->getMessage(), "\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
 string(64) "this is a stringthis is a stringthis is a stringthis is a string"
 preg_replace(): Argument #1 ($pattern) must be of type array when argument #2 ($replacement) is an array, string given
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 preg_replace(): Argument #2 ($replacement) must be of type array|string, stdClass given

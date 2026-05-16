@@ -78,7 +78,8 @@ var_dump($temp_array);
 
 echo "Done\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Declaring for_string_arsort::__tostring() with incorrect case is deprecated, use the correct casing __toString() instead in %s on line %d
 *** Testing arsort() : object functionality ***
 
 -- Testing arsort() by supplying various object arrays, 'flag' value is default --

@@ -23,6 +23,7 @@ $result = $stmt->fetchArray();
 var_dump($num,$result[0]);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using sqlite3 as a class name with incorrect case is deprecated, use the correct casing SQLite3 instead in %s on line %d
 int(100004313234244)
 int(100004313234244)

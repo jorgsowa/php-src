@@ -36,7 +36,6 @@ try {
 }
 ?>
 --EXPECTF--
-
 Warning: preg_grep(): Delimiter must not be alphanumeric, backslash, or NUL byte in %spreg_grep_error1.php on line %d
 bool(false)
 
@@ -55,4 +54,6 @@ array(2) {
   [2]=>
   string(4) "test"
 }
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 preg_grep(): Argument #1 ($pattern) must be of type string, stdClass given

@@ -35,7 +35,8 @@ var_dump($iterator->current());
 var_dump($iterator->valid());
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 ---
 int(0)
 string(1) "A"

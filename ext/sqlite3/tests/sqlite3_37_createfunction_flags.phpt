@@ -24,10 +24,15 @@ var_dump($db->querySingle("SELECT strtoupper('tEst')"));
 
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 bool(true)
 string(4) "TEST"
+
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 bool(true)
 string(4) "test"
+
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 bool(true)
 string(4) "test"

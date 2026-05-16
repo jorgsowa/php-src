@@ -61,7 +61,11 @@ DateObjectError: Object of type MyDateTimeImmutable (inheriting DateTimeImmutabl
 DateObjectError: Object of type MyDateTimeImmutable (inheriting DateTimeImmutable) has not been correctly initialized by calling parent::__construct() in its constructor
 DateObjectError: Object of type MyDateTimeImmutable (inheriting DateTimeImmutable) has not been correctly initialized by calling parent::__construct() in its constructor
 DateObjectError: Object of type MyDateTimeImmutable (inheriting DateTimeImmutable) has not been correctly initialized by calling parent::__construct() in its constructor
+
+Deprecated: Calling getTimeZone() is deprecated, use the correct casing DateTimeImmutable::getTimezone() instead in %s on line %d
 DateObjectError: Object of type MyDateTimeImmutable (inheriting DateTimeImmutable) has not been correctly initialized by calling parent::__construct() in its constructor
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTimeImmutable::setTimezone() instead in %s on line %d
 DateObjectError: Object of type MyDateTimeImmutable (inheriting DateTimeImmutable) has not been correctly initialized by calling parent::__construct() in its constructor
 DateObjectError: Object of type MyDateTimeImmutable (inheriting DateTimeImmutable) has not been correctly initialized by calling parent::__construct() in its constructor
 DateObjectError: Object of type MyDateTimeImmutable (inheriting DateTimeImmutable) has not been correctly initialized by calling parent::__construct() in its constructor

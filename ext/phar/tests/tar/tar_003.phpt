@@ -51,7 +51,10 @@ closedir($tar);
 <?php
 @unlink(__DIR__ . '/tar_003.phar.tar');
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling mkDir() is deprecated, use the correct casing tarmaker::mkdir() instead in %s on line %d
+
+Deprecated: Calling mkDir() is deprecated, use the correct casing tarmaker::mkdir() instead in %s on line %d
 hi there!
 dir
 dir

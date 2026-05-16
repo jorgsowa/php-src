@@ -93,15 +93,23 @@ object(PDODatabaseX)#%d (2) {
   int(22)
 }
 PDODatabaseX::query()
+
+Deprecated: Using PDOStatementx as a class name with incorrect case is deprecated, use the correct casing PDOStatementX instead in %s on line %d
 PDOStatementX::__construct()
 PDOStatementX::__destruct()
 PDODatabaseX::query()
+
+Deprecated: Using PDOStatementx as a class name with incorrect case is deprecated, use the correct casing PDOStatementX instead in %s on line %d
 PDOStatementX::__construct()
 PDOStatementX::__destruct()
 PDODatabaseX::query()
+
+Deprecated: Using PDOStatementx as a class name with incorrect case is deprecated, use the correct casing PDOStatementX instead in %s on line %d
 PDOStatementX::__construct()
 PDOStatementX::__destruct()
 PDODatabaseX::query()
+
+Deprecated: Using PDOStatementx as a class name with incorrect case is deprecated, use the correct casing PDOStatementX instead in %s on line %d
 PDOStatementX::__construct()
 object(PDOStatementX)#%d (3) {
   ["queryString"]=>

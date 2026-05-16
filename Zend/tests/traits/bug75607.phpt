@@ -21,5 +21,6 @@ class Child extends base
 echo "DONE";
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using base as a class name with incorrect case is deprecated, use the correct casing Base instead in %s on line %d
 DONE

@@ -101,6 +101,8 @@ array(0) {
 Write:%s
 Close:%s
 Open:%s
+
+Deprecated: Calling validateid() is deprecated, use the correct casing MySession::validateId() instead in %s on line %d
 Validate ID:%s
 Read:%s
 array(1) {

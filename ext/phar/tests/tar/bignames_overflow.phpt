@@ -29,7 +29,8 @@ echo $p1[str_repeat('a', 155) . '/' . str_repeat('a', 100)]->getContent() . "\n"
 <?php
 unlink(__DIR__ . '/' . basename(__FILE__, '.clean.php') . '.tar');
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling getFileName() is deprecated, use the correct casing SplFileInfo::getFilename() instead in %s on line %d
 a
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 hi

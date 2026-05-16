@@ -13,5 +13,6 @@ $p->outerHTML = '<a href="#two">Another Link</a>';
 echo $dom->saveHTML();
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <html><head></head><body><a href="#one"><a href="#two">Another Link</a></a></body></html>

@@ -30,10 +30,20 @@ $o= myHelloWorld::getInstance(array(1=>2));
 $o= myHelloWorld::getInstance(array(1=>2));
 
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using myHelloWorld as a class name with incorrect case is deprecated, use the correct casing MyHelloWorld instead in %s on line %d
 int(1)
+
+Deprecated: Using myHelloWorld as a class name with incorrect case is deprecated, use the correct casing MyHelloWorld instead in %s on line %d
+
+Deprecated: Using myHelloWorld as a class name with incorrect case is deprecated, use the correct casing MyHelloWorld instead in %s on line %d
 int(2)
+
+Deprecated: Using myHelloWorld as a class name with incorrect case is deprecated, use the correct casing MyHelloWorld instead in %s on line %d
 array(1) {
   [1]=>
   int(2)
 }
+
+Deprecated: Using myHelloWorld as a class name with incorrect case is deprecated, use the correct casing MyHelloWorld instead in %s on line %d

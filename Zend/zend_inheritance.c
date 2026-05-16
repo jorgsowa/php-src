@@ -2552,15 +2552,18 @@ static void zend_traits_init_trait_structures(zend_class_entry *ce, zend_class_e
 				zend_error_noreturn(E_COMPILE_ERROR, "Could not find trait %s", ZSTR_VAL(cur_method_ref->class_name));
 			}
 			zend_check_trait_usage(ce, trait, traits);
+			zend_check_class_name_case(cur_method_ref->class_name, trait);
 
 			/** Ensure that the preferred method is actually available. */
 			lcname = zend_string_tolower(cur_method_ref->method_name);
-			if (!zend_hash_exists(&trait->function_table, lcname)) {
+			zend_function *precedence_fn = zend_hash_find_ptr(&trait->function_table, lcname);
+			if (!precedence_fn) {
 				zend_error_noreturn(E_COMPILE_ERROR,
 						   "A precedence rule was defined for %s::%s but this method does not exist",
 						   ZSTR_VAL(trait->name),
 						   ZSTR_VAL(cur_method_ref->method_name));
 			}
+			zend_check_func_name_case(cur_method_ref->method_name, precedence_fn);
 
 			/** With the other traits, we are more permissive.
 				We do not give errors for those. This allows to be more
@@ -2581,6 +2584,7 @@ static void zend_traits_init_trait_structures(zend_class_entry *ce, zend_class_e
 					zend_error_noreturn(E_COMPILE_ERROR, "Could not find trait %s", ZSTR_VAL(class_name));
 				}
 				trait_num = zend_check_trait_usage(ce, exclude_ce, traits);
+				zend_check_class_name_case(class_name, exclude_ce);
 				if (!exclude_tables[trait_num]) {
 					ALLOC_HASHTABLE(exclude_tables[trait_num]);
 					zend_hash_init(exclude_tables[trait_num], 0, NULL, NULL, 0);
@@ -2626,12 +2630,15 @@ static void zend_traits_init_trait_structures(zend_class_entry *ce, zend_class_e
 					zend_error_noreturn(E_COMPILE_ERROR, "Could not find trait %s", ZSTR_VAL(cur_method_ref->class_name));
 				}
 				zend_check_trait_usage(ce, trait, traits);
+				zend_check_class_name_case(cur_method_ref->class_name, trait);
 				aliases[i] = trait;
 
 				/* And, ensure that the referenced method is resolvable, too. */
-				if (!zend_hash_exists(&trait->function_table, lcname)) {
+				zend_function *alias_fn = zend_hash_find_ptr(&trait->function_table, lcname);
+				if (!alias_fn) {
 					zend_error_noreturn(E_COMPILE_ERROR, "An alias was defined for %s::%s but this method does not exist", ZSTR_VAL(trait->name), ZSTR_VAL(cur_method_ref->method_name));
 				}
+				zend_check_func_name_case(cur_method_ref->method_name, alias_fn);
 			} else {
 				/* Find out which trait this method refers to. */
 				trait = NULL;
@@ -3482,6 +3489,67 @@ static zend_class_entry *zend_lazy_class_load(const zend_class_entry *pce)
 		} while (0)
 #endif
 
+ZEND_API void zend_check_namespace_case(const zend_class_entry *ce) /* {{{ */
+{
+	if (ce->ce_flags & ZEND_ACC_ANON_CLASS) {
+		return;
+	}
+
+	const char *name = ZSTR_VAL(ce->name);
+	size_t name_len = ZSTR_LEN(ce->name);
+	const char *last_sep = zend_memrchr(name, '\\', name_len);
+
+	if (!last_sep) {
+		return; /* Global namespace — nothing to check */
+	}
+
+	size_t ns_len = last_sep - name;
+
+	/* Scan the class table for an already-linked class in the same namespace
+	 * (case-insensitively). The first linked class establishes the canonical
+	 * casing. Not-yet-linked classes are skipped: a class whose parent is still
+	 * unresolved is registered in the table but not linked, and counting it here
+	 * would let two differently-cased classes flag each other (each scanning the
+	 * other), producing duplicate and contradictory deprecations depending on
+	 * link order. */
+	zend_class_entry *existing;
+	ZEND_HASH_MAP_FOREACH_PTR(EG(class_table), existing) {
+		if (existing == ce
+		 || (existing->ce_flags & ZEND_ACC_ANON_CLASS)
+		 || !(existing->ce_flags & ZEND_ACC_LINKED)) {
+			continue;
+		}
+
+		const char *existing_name = ZSTR_VAL(existing->name);
+		size_t existing_name_len = ZSTR_LEN(existing->name);
+		const char *existing_sep = zend_memrchr(existing_name, '\\', existing_name_len);
+
+		if (!existing_sep) {
+			continue;
+		}
+
+		size_t existing_ns_len = existing_sep - existing_name;
+		if (existing_ns_len != ns_len) {
+			continue;
+		}
+
+		if (zend_binary_strcasecmp(name, ns_len, existing_name, existing_ns_len) != 0) {
+			continue; /* Different namespace entirely */
+		}
+
+		/* Same namespace (case-insensitively). Check if casing matches. */
+		if (memcmp(name, existing_name, ns_len) != 0) {
+			zend_error(E_DEPRECATED,
+				"Namespace %.*s uses incorrect casing, the canonical casing is %.*s",
+				(int)ns_len, name,
+				(int)existing_ns_len, existing_name);
+		}
+		/* Stop after finding the first class in the same namespace. */
+		break;
+	} ZEND_HASH_FOREACH_END();
+}
+/* }}} */
+
 ZEND_API zend_class_entry *zend_do_link_class(zend_class_entry *ce, zend_string *lc_parent_name, const zend_string *key) /* {{{ */
 {
 	/* Load parent/interface dependencies first, so we can still gracefully abort linking
@@ -3499,6 +3567,8 @@ ZEND_API zend_class_entry *zend_do_link_class(zend_class_entry *ce, zend_string 
 	SET_ALLOCA_FLAG(use_heap);
 	ZEND_ASSERT(!(ce->ce_flags & ZEND_ACC_LINKED));
 
+	zend_check_namespace_case(ce);
+
 	if (ce->parent_name) {
 		parent = zend_fetch_class_by_name(
 			ce->parent_name, lc_parent_name,
@@ -3507,6 +3577,7 @@ ZEND_API zend_class_entry *zend_do_link_class(zend_class_entry *ce, zend_string 
 			check_unrecoverable_load_failure(ce);
 			return NULL;
 		}
+		zend_check_class_name_case(ce->parent_name, parent);
 		UPDATE_IS_CACHEABLE(parent);
 	}
 
@@ -3532,6 +3603,7 @@ ZEND_API zend_class_entry *zend_do_link_class(zend_class_entry *ce, zend_string 
 					return NULL;
 				}
 			}
+			zend_check_class_name_case(ce->trait_names[i].name, trait);
 			for (j = 0; j < i; j++) {
 				if (traits_and_interfaces[j] == trait) {
 					/* skip duplications */
@@ -3557,6 +3629,7 @@ ZEND_API zend_class_entry *zend_do_link_class(zend_class_entry *ce, zend_string 
 				free_alloca(traits_and_interfaces, use_heap);
 				return NULL;
 			}
+			zend_check_class_name_case(ce->interface_names[i].name, iface);
 			traits_and_interfaces[ce->num_traits + i] = iface;
 			if (iface) {
 				UPDATE_IS_CACHEABLE(iface);
@@ -4007,6 +4080,7 @@ ZEND_API zend_class_entry *zend_try_early_bind(zend_class_entry *ce, zend_class_
 		if (ZSTR_HAS_CE_CACHE(ce->name)) {
 			ZSTR_SET_CE_CACHE(ce->name, ce);
 		}
+		zend_check_namespace_case(ce);
 		zend_observer_class_linked_notify(ce, lcname);
 
 		return ce;

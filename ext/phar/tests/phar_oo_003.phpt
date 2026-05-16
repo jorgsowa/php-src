@@ -31,6 +31,8 @@ __halt_compiler();
 --EXPECTF--
 string(5) "a.php"
 string(32) "<?php echo "This is a.php\n"; ?>"
+
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
 This is a.php
 string(1) "b"
 %s(3) "DIR"

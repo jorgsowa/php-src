@@ -26,7 +26,8 @@ $elements = $xpath->query('//*[name()="b:z"]');
 echo $elements->length;
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <?xml version="1.0"?>
 <a:x xmlns:a="http://test"><b:y xmlns:b="http://test"><b:z/></b:y></a:x>
 string(3) "b:z"

@@ -42,8 +42,10 @@ ob_end_flush();
 $path = __DIR__ . '/session_module_name_variation4';
 rmdir($path);
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing session_module_name() : variation ***
+
+Deprecated: Calling DEFINE() is deprecated, use the correct casing define() instead in %s on line %d
 array(3) {
   ["Blah"]=>
   string(12) "Hello World!"

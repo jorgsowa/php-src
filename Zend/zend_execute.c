@@ -967,7 +967,11 @@ static const zend_class_entry *resolve_single_class_type(zend_string *name, cons
 	} else if (zend_string_equals_ci(name, ZSTR_KNOWN(ZEND_STR_PARENT))) {
 		return self_ce->parent;
 	} else {
-		return zend_lookup_class_ex(name, NULL, ZEND_FETCH_CLASS_NO_AUTOLOAD);
+		const zend_class_entry *ce = zend_lookup_class_ex(name, NULL, ZEND_FETCH_CLASS_NO_AUTOLOAD);
+		if (ce) {
+			zend_check_class_name_case(name, ce);
+		}
+		return ce;
 	}
 }
 
@@ -979,6 +983,9 @@ static zend_always_inline const zend_class_entry *zend_ce_from_type(
 		zend_class_entry *ce = ZSTR_GET_CE_CACHE(name);
 		if (!ce) {
 			ce = zend_lookup_class_ex(name, NULL, ZEND_FETCH_CLASS_NO_AUTOLOAD);
+			if (ce) {
+				zend_check_class_name_case(name, ce);
+			}
 		}
 		return ce;
 	}
@@ -1123,6 +1130,7 @@ static zend_always_inline zend_class_entry *zend_fetch_ce_from_type(
 				/* Cannot resolve */
 				return NULL;
 			}
+			zend_check_class_name_case(name, ce);
 		}
 	} else {
 		ce = zend_fetch_class(name,
@@ -1130,6 +1138,7 @@ static zend_always_inline zend_class_entry *zend_fetch_ce_from_type(
 		if (UNEXPECTED(!ce)) {
 			return NULL;
 		}
+		zend_check_class_name_case(name, ce);
 	}
 	return ce;
 }
@@ -3751,6 +3760,7 @@ static zend_never_inline zval* zend_fetch_static_property_address_ex(zend_proper
 				FREE_OP(op1_type, opline->op1.var);
 				return NULL;
 			}
+			zend_check_class_name_case(Z_STR_P(class_name), ce);
 			if (UNEXPECTED(op1_type != IS_CONST)) {
 				CACHE_PTR(cache_slot, ce);
 			}
@@ -5125,6 +5135,7 @@ static zend_never_inline zend_execute_data *zend_init_dynamic_call_string(zend_s
 			return NULL;
 		}
 
+		zend_check_func_name_case(mname, fbc);
 		zend_string_release_ex(lcname, 0);
 		zend_string_release_ex(mname, 0);
 
@@ -5140,20 +5151,30 @@ static zend_never_inline zend_execute_data *zend_init_dynamic_call_string(zend_s
 			init_func_run_time_cache(&fbc->op_array);
 		}
 	} else {
+		zend_string *func_name_for_check;
 		if (ZSTR_VAL(function)[0] == '\\') {
 			lcname = zend_string_alloc(ZSTR_LEN(function) - 1, 0);
 			zend_str_tolower_copy(ZSTR_VAL(lcname), ZSTR_VAL(function) + 1, ZSTR_LEN(function) - 1);
+			func_name_for_check = zend_string_init(ZSTR_VAL(function) + 1, ZSTR_LEN(function) - 1, 0);
 		} else {
 			lcname = zend_string_tolower(function);
+			func_name_for_check = function;
 		}
 		if (UNEXPECTED((func = zend_hash_find(EG(function_table), lcname)) == NULL)) {
 			zend_throw_error(NULL, "Call to undefined function %s()", ZSTR_VAL(function));
 			zend_string_release_ex(lcname, 0);
+			if (func_name_for_check != function) {
+				zend_string_release_ex(func_name_for_check, 0);
+			}
 			return NULL;
 		}
 		zend_string_release_ex(lcname, 0);
 
 		fbc = Z_FUNC_P(func);
+		zend_check_func_name_case(func_name_for_check, fbc);
+		if (func_name_for_check != function) {
+			zend_string_release_ex(func_name_for_check, 0);
+		}
 		if (EXPECTED(fbc->type == ZEND_USER_FUNCTION) && UNEXPECTED(!RUN_TIME_CACHE(&fbc->op_array))) {
 			init_func_run_time_cache(&fbc->op_array);
 		}
@@ -5256,6 +5277,7 @@ static zend_never_inline zend_execute_data *zend_init_dynamic_call_array(const z
 				}
 				return NULL;
 			}
+			zend_check_func_name_case(Z_STR_P(method), fbc);
 			if (!(fbc->common.fn_flags & ZEND_ACC_STATIC)) {
 				zend_non_static_method_call(fbc);
 				if (fbc->common.fn_flags & ZEND_ACC_CALL_VIA_TRAMPOLINE) {
@@ -5275,6 +5297,7 @@ static zend_never_inline zend_execute_data *zend_init_dynamic_call_array(const z
 				}
 				return NULL;
 			}
+			zend_check_func_name_case(Z_STR_P(method), fbc);
 
 			if ((fbc->common.fn_flags & ZEND_ACC_STATIC) != 0) {
 				object_or_called_scope = object->ce;

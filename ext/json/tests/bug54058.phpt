@@ -27,11 +27,15 @@ json_encode($c);
 var_dump(json_last_error(), json_last_error_msg());
 
 ?>
---EXPECT--
+--EXPECTF--
 int(5)
 string(56) "Malformed UTF-8 characters, possibly incorrectly encoded"
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 int(5)
 string(56) "Malformed UTF-8 characters, possibly incorrectly encoded"
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 int(5)
 string(56) "Malformed UTF-8 characters, possibly incorrectly encoded"
 int(5)

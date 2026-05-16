@@ -65,6 +65,8 @@ array(1) {
 }
 
 Instance properties:
+
+Deprecated: Using x as a class name with incorrect case is deprecated, use the correct casing X instead in %s on line %d
 object(X)#%d (1) {
   ["a_x"]=>
   array(1) {

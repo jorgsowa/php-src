@@ -24,7 +24,8 @@ $stmt->reset();
 var_dump($stmt->fetchAll(SQLITE3_ASSOC));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using sqlite3 as a class name with incorrect case is deprecated, use the correct casing SQLite3 instead in %s on line %d
 array(2) {
   [0]=>
   array(4) {

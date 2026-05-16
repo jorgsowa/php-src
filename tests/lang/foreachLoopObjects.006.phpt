@@ -71,6 +71,8 @@ var_dump($obj);
 ?>
 --EXPECTF--
 Substituting the iterated object for a different object.
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 string(10) "Original a"
 string(10) "Original b"
 string(10) "Original c"

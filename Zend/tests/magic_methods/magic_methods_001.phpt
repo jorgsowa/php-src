@@ -39,7 +39,10 @@ var_dump((string)$a);
 unset($a->a);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Declaring foo::__callstatic() with incorrect case is deprecated, use the correct casing __callStatic() instead in %s on line %d
+
+Deprecated: Declaring foo::__tostring() with incorrect case is deprecated, use the correct casing __toString() instead in %s on line %d
 call
 string(6) "sdfdsa"
 callstatic

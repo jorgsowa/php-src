@@ -19,11 +19,14 @@ $real = $rc->initializeLazyObject($obj);
 var_dump($real->prop);
 ?>
 --EXPECTF--
+
 Deprecated: Creation of dynamic property A::$b is deprecated in %s on line %d
 
 Deprecated: Creation of dynamic property A::$f is deprecated in %s on line %d
 
 Warning: Undefined variable $x in %s on line %d
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 
 Notice: Object of class stdClass could not be converted to int in %s on line %d
 

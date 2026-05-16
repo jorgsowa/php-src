@@ -56,6 +56,8 @@ string(%d) "Method [ <user, overwrites DateTimeZone, prototype DateTimeZone> sta
 }
 "
 
+
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
 bool(false)
 bool(true)
 string(0) ""

@@ -22,7 +22,11 @@ try {
 }
 ?>
 --EXPECTF--
-MY_METADATA_NULL
+MY_METADATA_
+Deprecated: Calling getFileName() is deprecated, use the correct casing SplFileInfo::getFilename() instead in %s on line %d
+
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
+NULL
 
 Warning: file_get_contents(phar://%s): Failed to open stream: phar error: "test.php" is not a file in phar "%s.phar" in %s.php on line %d
 array(1) {

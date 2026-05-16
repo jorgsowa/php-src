@@ -17,5 +17,8 @@ $writer->endAttribute();
 $writer->endElement();
 echo $writer->outputMemory();
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling writeAttributeNS() is deprecated, use the correct casing XMLWriter::writeAttributeNs() instead in %s on line %d
+
+Deprecated: Calling startAttributeNS() is deprecated, use the correct casing XMLWriter::startAttributeNs() instead in %s on line %d
 <foo test1="test1" test2="test2"/>

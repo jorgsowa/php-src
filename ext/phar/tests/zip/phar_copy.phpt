@@ -47,8 +47,17 @@ echo 'c: ' ,file_get_contents($p2['c']->getPathName());
 <?php unlink(__DIR__ . '/' . basename(__FILE__, '.clean.php') . '.phar.zip.php'); ?>
 <?php unlink(__DIR__ . '/' . basename(__FILE__, '.clean.php') . '2.phar.php'); ?>
 --EXPECTF--
-hihibool(true)
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
+hi
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
+hibool(true)
 file "/error/.." contains invalid characters upper directory reference, cannot be copied from "a" in phar %s
 bool(true)
 
-a: hib: hic: hi===DONE===
+a: 
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
+hib: 
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
+hic: 
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
+hi===DONE===

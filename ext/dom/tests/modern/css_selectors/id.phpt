@@ -24,9 +24,14 @@ test_helper($dom, '#test3');
 test_helper($dom, '#test4');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: #test ---
 --- Selector: #test1 ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <test id="test1"/>
 --- Selector: #test2 ---
 <test id="test2"/>

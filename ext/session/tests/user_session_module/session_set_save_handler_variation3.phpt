@@ -27,6 +27,8 @@ rmdir($path);
 ?>
 --EXPECTF--
 *** Testing session_set_save_handler() : variation ***
+
+Deprecated: Calling DEFINE() is deprecated, use the correct casing define() instead in %s on line %d
 int(2)
 
 Warning: session_save_path(): Session save path cannot be changed when a session is active (session started automatically) in %s on line %d

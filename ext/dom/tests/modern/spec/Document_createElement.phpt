@@ -35,13 +35,17 @@ $element = $dom->createElement("HEad");
 dumpElement($element);
 
 ?>
---EXPECT--
+--EXPECTF--
 --- Into rootless document ---
+
+Deprecated: Using DOM\Element as a class name with incorrect case is deprecated, use the correct casing Dom\Element instead in %s on line %d
 tagName: string(4) "HTML"
 nodeName: string(4) "HTML"
 textContent: string(6) "&hello"
 prefix: NULL
 namespaceURI: string(28) "http://www.w3.org/1999/xhtml"
+
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <html>&amp;hello</html>
 
 tagName: string(4) "HEAD"

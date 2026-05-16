@@ -392,7 +392,7 @@ static void append_essential_headers(smart_str* buffer, php_cli_server_client *c
 
 static const char *get_mime_type(const php_cli_server *server, const char *ext, size_t ext_len) /* {{{ */
 {
-	return zend_hash_str_find_ptr_lc(&server->extension_mime_types, ext, ext_len);
+	return _zend_hash_str_find_ptr_lc(&server->extension_mime_types, ext, ext_len);
 } /* }}} */
 
 PHP_FUNCTION(apache_request_headers) /* {{{ */

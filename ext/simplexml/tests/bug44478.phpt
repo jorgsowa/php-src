@@ -17,7 +17,8 @@ print $xml_element->node2."\n";
 print $xml_element->asXML();
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using simpleXMLElement as a class name with incorrect case is deprecated, use the correct casing SimpleXMLElement instead in %s on line %d
 a &#38; b
 a &#38; b
 a & b

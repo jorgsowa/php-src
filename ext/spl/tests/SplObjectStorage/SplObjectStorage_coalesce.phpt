@@ -46,6 +46,9 @@ var_dump($s);
 
 ?>
 --EXPECTF--
+Deprecated: Using Stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using Stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 string(7) "default"
 string(7) "dynamic"
 string(7) "dynamic"

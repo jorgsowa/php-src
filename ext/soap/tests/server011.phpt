@@ -29,5 +29,6 @@ if ($wsdl == file_get_contents(__DIR__."/test.wsdl")) {
     echo "fail\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using soapserver as a class name with incorrect case is deprecated, use the correct casing SoapServer instead in %s on line %d
 ok

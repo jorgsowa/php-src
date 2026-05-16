@@ -16,6 +16,8 @@ $c = new c();
 ?>
 ===DONE===
 --EXPECTF--
+Deprecated: Declaring a::__CONSTRUCT() with incorrect case is deprecated, use the correct casing __construct() instead in %s on line %d
+
 Fatal error: Uncaught Error: Call to undefined method b::b() in %s:%d
 Stack trace:
 #0 %s(%d): c->__construct()

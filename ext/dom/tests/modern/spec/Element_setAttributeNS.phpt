@@ -45,9 +45,13 @@ echo $dom->saveHtml($container), "\n";
 dumpAttrs($container);
 
 ?>
---EXPECT--
+--EXPECTF--
 --- xmlns attribute ---
 <container xmlns:foo="1"></container>
+
+Deprecated: Using DOM\Element as a class name with incorrect case is deprecated, use the correct casing Dom\Element instead in %s on line %d
+
+Deprecated: Using DOM\Attr as a class name with incorrect case is deprecated, use the correct casing Dom\Attr instead in %s on line %d
 Attr: xmlns:foo
 string(5) "xmlns"
 string(9) "xmlns:foo"

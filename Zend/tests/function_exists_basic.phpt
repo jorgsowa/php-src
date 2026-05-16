@@ -27,10 +27,12 @@ Class C {
 }
 var_dump(function_exists('C::f'));
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing function_exists() : basic functionality ***
 Internal function: bool(true)
 User defined function: bool(true)
-Case sensitivity: bool(true)
+Case sensitivity: 
+Deprecated: Calling F() is deprecated, use the correct casing f() instead in %s on line %d
+bool(true)
 Non existent function: bool(false)
 Method: bool(false)

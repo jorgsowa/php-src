@@ -207,7 +207,7 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing mail() : basic functionality ***
 
 
@@ -244,6 +244,8 @@ TypeError: Header "foo3" must only contain values of type string, int found
 TypeError: Header "foo4" must only contain values of type string, float found
 TypeError: Header "foo5" must only contain values of type string, false found
 TypeError: Header "foo6" must only contain values of type string, null found
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 TypeError: Header "foo7" must only contain values of type string, stdClass found
 
 

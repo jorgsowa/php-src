@@ -38,7 +38,7 @@ $rp = $rc->getProperty('prop');
 dumpType($rp->getType());
 
 ?>
---EXPECT--
+--EXPECTF--
 Type X&Y&Z&Traversable&Countable:
 Allows null: false
   Name: X
@@ -67,6 +67,12 @@ Allows null: false
   Name: Countable
   String: Countable
   Allows Null: false
+
+Deprecated: Using Y as a class name with incorrect case is deprecated, use the correct casing y instead in %s on line %d
+
+Deprecated: Using X as a class name with incorrect case is deprecated, use the correct casing x instead in %s on line %d
+
+Deprecated: Using Y as a class name with incorrect case is deprecated, use the correct casing y instead in %s on line %d
 Type X&Y&Countable:
 Allows null: false
   Name: X

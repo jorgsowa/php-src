@@ -39,6 +39,7 @@ var_dump($list[$ref], isset($list[$ref]), empty($list[$ref]));
 
 ?>
 --EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 --- -1 ---
 NULL
 bool(false)

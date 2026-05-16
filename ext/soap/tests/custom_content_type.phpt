@@ -75,6 +75,9 @@ if (strpos($headers, 'Content-Type: application/soap+xml; charset=utf-8; action=
 else
   printf("Content-Type Default OK" . PHP_EOL);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using soapclient as a class name with incorrect case is deprecated, use the correct casing SoapClient instead in %s on line %d
 Content-Type OK
+
+Deprecated: Using soapclient as a class name with incorrect case is deprecated, use the correct casing SoapClient instead in %s on line %d
 Content-Type Default OK

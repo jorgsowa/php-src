@@ -36,6 +36,7 @@
 #include "zend_enum.h"
 #include "zend_observer.h"
 #include "zend_call_stack.h"
+#include "zend_execute.h"
 #include "zend_frameless_function.h"
 #include "zend_property_hooks.h"
 
@@ -324,7 +325,7 @@ static zend_always_inline bool zend_is_confusable_type(const zend_string *name, 
 
 static bool zend_is_not_imported(zend_string *name) {
 	/* Assuming "name" is unqualified here. */
-	return !FC(imports) || zend_hash_find_ptr_lc(FC(imports), name) == NULL;
+	return !FC(imports) || _zend_hash_find_ptr_lc(FC(imports), name) == NULL;
 }
 
 void zend_oparray_context_begin(zend_oparray_context *prev_context, zend_op_array *op_array) /* {{{ */
@@ -1117,7 +1118,7 @@ static zend_string *zend_resolve_non_class_name(
 		if (case_sensitive) {
 			import_name = zend_hash_find_ptr(current_import_sub, name);
 		} else {
-			import_name = zend_hash_find_ptr_lc(current_import_sub, name);
+			import_name = _zend_hash_find_ptr_lc(current_import_sub, name);
 		}
 
 		if (import_name) {
@@ -1134,7 +1135,7 @@ static zend_string *zend_resolve_non_class_name(
 	if (compound && FC(imports)) {
 		/* If the first part of a qualified name is an alias, substitute it. */
 		size_t len = compound - ZSTR_VAL(name);
-		const zend_string *import_name = zend_hash_str_find_ptr_lc(FC(imports), ZSTR_VAL(name), len);
+		const zend_string *import_name = _zend_hash_str_find_ptr_lc(FC(imports), ZSTR_VAL(name), len);
 
 		if (import_name) {
 			return zend_concat_names(
@@ -1199,7 +1200,7 @@ static zend_string *zend_resolve_class_name(zend_string *name, uint32_t type) /*
 			/* If the first part of a qualified name is an alias, substitute it. */
 			size_t len = compound - ZSTR_VAL(name);
 			const zend_string *import_name =
-				zend_hash_str_find_ptr_lc(FC(imports), ZSTR_VAL(name), len);
+				_zend_hash_str_find_ptr_lc(FC(imports), ZSTR_VAL(name), len);
 
 			if (import_name) {
 				return zend_concat_names(
@@ -1208,7 +1209,7 @@ static zend_string *zend_resolve_class_name(zend_string *name, uint32_t type) /*
 		} else {
 			/* If an unqualified name is an alias, replace it. */
 			zend_string *import_name
-				= zend_hash_find_ptr_lc(FC(imports), name);
+				= _zend_hash_find_ptr_lc(FC(imports), name);
 
 			if (import_name) {
 				return zend_string_copy(import_name);
@@ -1339,6 +1340,7 @@ ZEND_API zend_class_entry *zend_bind_class_in_slot(
 	}
 
 	if (ce->ce_flags & ZEND_ACC_LINKED) {
+		zend_check_namespace_case(ce);
 		zend_observer_class_linked_notify(ce, Z_STR_P(lcname));
 		return ce;
 	}
@@ -1542,7 +1544,20 @@ static bool is_generator_compatible_class_type(const zend_string *name) {
 		|| zend_string_equals_literal_ci(name, "Generator");
 }
 
-static void zend_mark_function_as_generator(void) /* {{{ */
+/* Returns the canonical casing of a generator-compatible class/interface type
+ * name (Traversable, Iterator, Generator), or NULL if the name is not one. */
+static const char *zend_generator_type_canonical_name(const zend_string *name) {
+	if (zend_string_equals_ci(name, ZSTR_KNOWN(ZEND_STR_TRAVERSABLE))) {
+		return "Traversable";
+	} else if (zend_string_equals_literal_ci(name, "Iterator")) {
+		return "Iterator";
+	} else if (zend_string_equals_literal_ci(name, "Generator")) {
+		return "Generator";
+	}
+	return NULL;
+}
+
+static void zend_mark_function_as_generator(bool check_return_type_case) /* {{{ */
 {
 	if (!CG(active_op_array)->function_name) {
 		zend_error_noreturn(E_COMPILE_ERROR,
@@ -1557,6 +1572,18 @@ static void zend_mark_function_as_generator(void) /* {{{ */
 			ZEND_TYPE_FOREACH(return_type, single_type) {
 				if (ZEND_TYPE_HAS_NAME(*single_type)
 						&& is_generator_compatible_class_type(ZEND_TYPE_NAME(*single_type))) {
+					/* This function is called once per yield expression and once
+					 * at function close; only the close pass requests the casing
+					 * check, so the deprecation is emitted exactly once. */
+					if (check_return_type_case) {
+						zend_string *type_name = ZEND_TYPE_NAME(*single_type);
+						const char *canonical = zend_generator_type_canonical_name(type_name);
+						if (canonical && !zend_string_equals_cstr(type_name, canonical, strlen(canonical))) {
+							zend_error(E_DEPRECATED,
+								"Using %s as a class name with incorrect case is deprecated, use the correct casing %s instead",
+								ZSTR_VAL(type_name), canonical);
+						}
+					}
 					valid_type = true;
 					break;
 				}
@@ -1796,6 +1823,23 @@ static void zend_ensure_valid_class_fetch_type(uint32_t fetch_type) /* {{{ */
 }
 /* }}} */
 
+/* PHP 8.6 deprecation: warn when a class name is referenced with the wrong case
+ * during compilation. Resolves the name against the compile-time class table and
+ * delegates to the canonical zend_check_class_name_case(). Remove this helper and
+ * its callers together with the deprecation in PHP 9.0. */
+static void zend_check_compile_time_class_name_case(zend_string *name)
+{
+	const zend_class_entry *ce;
+	if (CG(active_class_entry) && zend_string_equals_ci(name, CG(active_class_entry)->name)) {
+		ce = CG(active_class_entry);
+	} else {
+		ce = _zend_hash_find_ptr_lc(CG(class_table), name);
+	}
+	if (ce) {
+		zend_check_class_name_case(name, ce);
+	}
+}
+
 static bool zend_try_compile_const_expr_resolve_class_name(zval *zv, zend_ast *class_ast) /* {{{ */
 {
 	uint32_t fetch_type;
@@ -1830,9 +1874,12 @@ static bool zend_try_compile_const_expr_resolve_class_name(zval *zv, zend_ast *c
 			return false;
 		case ZEND_FETCH_CLASS_STATIC:
 			return false;
-		case ZEND_FETCH_CLASS_DEFAULT:
-			ZVAL_STR(zv, zend_resolve_class_name_ast(class_ast));
+		case ZEND_FETCH_CLASS_DEFAULT: {
+			zend_string *resolved_name = zend_resolve_class_name_ast(class_ast);
+			ZVAL_STR(zv, resolved_name);
+			zend_check_compile_time_class_name_case(resolved_name);
 			return true;
+		}
 		default: ZEND_UNREACHABLE();
 	}
 }
@@ -1864,7 +1911,7 @@ static bool zend_verify_ct_const_access(const zend_class_constant *c, const zend
 			if (ce->ce_flags & ZEND_ACC_RESOLVED_PARENT) {
 				ce = ce->parent;
 			} else {
-				ce = zend_hash_find_ptr_lc(CG(class_table), ce->parent_name);
+				ce = _zend_hash_find_ptr_lc(CG(class_table), ce->parent_name);
 				if (!ce) {
 					break;
 				}
@@ -1884,7 +1931,7 @@ static bool zend_try_ct_eval_class_const(zval *zv, zend_string *class_name, zend
 	if (class_name_refers_to_active_ce(class_name, fetch_type)) {
 		cc = zend_hash_find_ptr(&CG(active_class_entry)->constants_table, name);
 	} else if (fetch_type == ZEND_FETCH_CLASS_DEFAULT && !(CG(compiler_options) & ZEND_COMPILE_NO_CONSTANT_SUBSTITUTION)) {
-		const zend_class_entry *ce = zend_hash_find_ptr_lc(CG(class_table), class_name);
+		const zend_class_entry *ce = _zend_hash_find_ptr_lc(CG(class_table), class_name);
 		if (ce) {
 			cc = zend_hash_find_ptr(&ce->constants_table, name);
 		} else {
@@ -4332,6 +4379,8 @@ static zend_result zend_try_compile_ct_bound_init_user_func(zend_ast *name_ast, 
 		return FAILURE;
 	}
 
+	zend_check_func_name_case(name, fbc);
+
 	opline = zend_emit_op(NULL, ZEND_INIT_FCALL, NULL, NULL);
 	opline->extended_value = num_args;
 	opline->op1.num = zend_vm_calc_used_stack(num_args, fbc);
@@ -5454,6 +5503,8 @@ static void zend_compile_call(znode *result, const zend_ast *ast, uint32_t type)
 			zend_compile_dynamic_call(result, &name_node, args_ast, ast->lineno, type);
 			return;
 		}
+
+		zend_check_func_name_case(Z_STR_P(name), fbc);
 
 		if (!is_callable_convert &&
 		    zend_try_compile_special_func(result, lcname,
@@ -8537,6 +8588,34 @@ static void add_stringable_interface(zend_class_entry *ce) {
 		ZSTR_INIT_LITERAL("stringable", 0);
 }
 
+static const char *zend_get_canonical_magic_method_name(const zend_string *lcname) /* {{{ */
+{
+	if (zend_string_equals_literal(lcname, ZEND_TOSTRING_FUNC_NAME)) {
+		return "__toString";
+	} else if (zend_string_equals_literal(lcname, ZEND_CALLSTATIC_FUNC_NAME)) {
+		return "__callStatic";
+	} else if (zend_string_equals_literal(lcname, ZEND_DEBUGINFO_FUNC_NAME)) {
+		return "__debugInfo";
+	} else if (zend_string_equals_literal(lcname, ZEND_CONSTRUCTOR_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_DESTRUCTOR_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_CLONE_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_GET_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_SET_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_UNSET_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_ISSET_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_CALL_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_INVOKE_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, "__sleep")
+			|| zend_string_equals_literal(lcname, "__wakeup")
+			|| zend_string_equals_literal(lcname, "__serialize")
+			|| zend_string_equals_literal(lcname, "__unserialize")
+			|| zend_string_equals_literal(lcname, "__set_state")) {
+		return ZSTR_VAL(lcname);
+	}
+	return NULL;
+}
+/* }}} */
+
 static zend_string *zend_begin_method_decl(zend_op_array *op_array, zend_string *name, bool has_body) /* {{{ */
 {
 	zend_class_entry *ce = CG(active_class_entry);
@@ -8610,6 +8689,15 @@ static zend_string *zend_begin_method_decl(zend_op_array *op_array, zend_string 
 	}
 
 	zend_add_magic_method(ce, (zend_function *) op_array, lcname);
+
+	const char *canonical_magic = zend_get_canonical_magic_method_name(lcname);
+	if (canonical_magic && strcmp(ZSTR_VAL(name), canonical_magic) != 0) {
+		zend_error(E_DEPRECATED,
+			"Declaring %s::%s() with incorrect case is deprecated, "
+			"use the correct casing %s() instead",
+			ZSTR_VAL(ce->name), ZSTR_VAL(name), canonical_magic);
+	}
+
 	if (zend_string_equals_literal(lcname, ZEND_TOSTRING_FUNC_NAME)
 			&& !(ce->ce_flags & ZEND_ACC_TRAIT)) {
 		add_stringable_interface(ce);
@@ -8685,7 +8773,7 @@ static zend_string *zend_begin_func_decl(znode *result, zend_op_array *op_array,
 
 	if (FC(imports_function)) {
 		const zend_string *import_name =
-			zend_hash_find_ptr_lc(FC(imports_function), unqualified_name);
+			_zend_hash_find_ptr_lc(FC(imports_function), unqualified_name);
 		if (import_name && !zend_string_equals_ci(lcname, import_name)) {
 			zend_error_noreturn(E_COMPILE_ERROR, "Cannot redeclare function %s() (previously declared as local import)",
 				ZSTR_VAL(name));
@@ -8843,7 +8931,7 @@ static zend_op_array *zend_compile_func_decl_ex(
 	zend_compile_params(params_ast, return_type_ast,
 		is_method && zend_string_equals_literal(lcname, ZEND_TOSTRING_FUNC_NAME) ? IS_STRING : 0);
 	if (CG(active_op_array)->fn_flags & ZEND_ACC_GENERATOR) {
-		zend_mark_function_as_generator();
+		zend_mark_function_as_generator(true);
 		zend_emit_op(NULL, ZEND_GENERATOR_CREATE, NULL, NULL);
 	}
 	if (decl->kind == ZEND_AST_ARROW_FUNC) {
@@ -9565,7 +9653,7 @@ static void zend_compile_class_decl(znode *result, const zend_ast *ast, bool top
 
 		if (FC(imports)) {
 			zend_string *import_name =
-				zend_hash_find_ptr_lc(FC(imports), unqualified_name);
+				_zend_hash_find_ptr_lc(FC(imports), unqualified_name);
 			if (import_name && !zend_string_equals_ci(lcname, import_name)) {
 				zend_error_noreturn(E_COMPILE_ERROR, "Cannot redeclare class %s "
 						"(previously declared as local import)", ZSTR_VAL(name));
@@ -9675,6 +9763,7 @@ static void zend_compile_class_decl(znode *result, const zend_ast *ast, bool top
 				zend_build_properties_info_table(ce);
 				zend_inheritance_check_override(ce);
 				ce->ce_flags |= ZEND_ACC_LINKED;
+				zend_check_namespace_case(ce);
 				zend_observer_class_linked_notify(ce, lcname);
 				return;
 			} else {
@@ -11019,7 +11108,7 @@ static void zend_compile_yield(znode *result, zend_ast *ast) /* {{{ */
 	zend_op *opline;
 	bool returns_by_ref = (CG(active_op_array)->fn_flags & ZEND_ACC_RETURN_REFERENCE) != 0;
 
-	zend_mark_function_as_generator();
+	zend_mark_function_as_generator(false);
 
 	if (key_ast) {
 		zend_compile_expr(&key_node, key_ast);
@@ -11049,7 +11138,7 @@ static void zend_compile_yield_from(znode *result, const zend_ast *ast) /* {{{ *
 	zend_ast *expr_ast = ast->child[0];
 	znode expr_node;
 
-	zend_mark_function_as_generator();
+	zend_mark_function_as_generator(false);
 
 	if (CG(active_op_array)->fn_flags & ZEND_ACC_RETURN_REFERENCE) {
 		zend_error_noreturn(E_COMPILE_ERROR,
@@ -11377,6 +11466,9 @@ static void zend_compile_class_const(znode *result, zend_ast *ast) /* {{{ */
 			zend_string *resolved_name = zend_resolve_class_name_ast(class_ast);
 			if (zend_try_ct_eval_class_const(&result->u.constant, resolved_name, const_str)) {
 				result->op_type = IS_CONST;
+				if (zend_get_class_fetch_type(resolved_name) == ZEND_FETCH_CLASS_DEFAULT) {
+					zend_check_compile_time_class_name_case(resolved_name);
+				}
 				zend_string_release_ex(resolved_name, 0);
 				return;
 			}

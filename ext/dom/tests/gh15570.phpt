@@ -14,6 +14,7 @@ $dom = Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
 $a = $dom->head->firstChild->cloneNode(false);
 var_dump($dom->saveHTML($a));
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 string(1) "
 "

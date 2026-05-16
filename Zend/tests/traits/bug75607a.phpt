@@ -32,5 +32,6 @@ $c = new Grand();
 var_dump($c::$prop1);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using base as a class name with incorrect case is deprecated, use the correct casing Base instead in %s on line %d
 int(1)

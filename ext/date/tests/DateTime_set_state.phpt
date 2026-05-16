@@ -15,6 +15,7 @@ var_dump($datetimeObjectNew);
 
 ?>
 --EXPECTF--
+Deprecated: Using DateTimezone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
 object(DateTime)#%d (3) {
   ["date"]=>
   string(26) "2017-10-06 23:30:00.000000"

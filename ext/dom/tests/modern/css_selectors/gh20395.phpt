@@ -25,7 +25,8 @@ foreach ($dom->querySelectorAll('Div') as $div) {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using Dom\HtmlDocument as a class name with incorrect case is deprecated, use the correct casing Dom\HTMLDocument instead in %s on line %d
 bool(false)
 bool(false)
 bool(false)

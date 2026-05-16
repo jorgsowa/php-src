@@ -16,5 +16,6 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 Dom\TokenList::contains(): Argument #1 ($token) must not contain any null bytes

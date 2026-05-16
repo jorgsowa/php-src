@@ -24,7 +24,8 @@ $it->rewind();
 var_dump($it->key(), $it->current());
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 object(InternalIterator)#5 (0) {
 }
 int(0)

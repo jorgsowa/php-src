@@ -37,7 +37,9 @@ dump($dom, 'd:child');
 dump($dom, 'root');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
 === c:child ===
 prefix: string(1) "c"
 namespaceURI: string(5) "urn:c"

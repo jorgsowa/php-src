@@ -14,7 +14,8 @@ $c = clone $a;
 var_dump((string)$c == (string)$a);
 var_dump($a->key() == $c->key());
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
 bool(true)
 bool(true)
 bool(true)

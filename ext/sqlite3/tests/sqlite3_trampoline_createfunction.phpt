@@ -20,7 +20,8 @@ var_dump($db->querySingle("SELECT strtoupper('test')"));
 var_dump($db->querySingle("SELECT strtoupper('test')"));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling createfunction() is deprecated, use the correct casing SQLite3::createFunction() instead in %s on line %d
 bool(true)
 Trampoline for strtoupper
 string(4) "TEST"

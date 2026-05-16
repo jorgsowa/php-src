@@ -48,6 +48,7 @@ var_dump($temp_array);
 echo "Done";
 ?>
 --EXPECTF--
+Deprecated: Declaring for_string_natcasesort::__tostring() with incorrect case is deprecated, use the correct casing __toString() instead in %s on line %d
 *** Testing natcasesort() : object functionality ***
 
 -- Testing natcasesort() by supplying object arrays --

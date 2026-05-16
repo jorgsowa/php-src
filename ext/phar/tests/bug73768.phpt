@@ -13,4 +13,5 @@ echo "OK\n";
 }
 ?>
 --EXPECTF--
+Deprecated: Calling LoadPhar() is deprecated, use the correct casing Phar::loadPhar() instead in %s on line %d
 internal corruption of phar "%sbug73768.phar" (truncated manifest header)

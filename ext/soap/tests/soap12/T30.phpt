@@ -14,7 +14,8 @@ $HTTP_RAW_POST_DATA = <<<EOF
 EOF;
 include "soap12-test.inc";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using soapserver as a class name with incorrect case is deprecated, use the correct casing SoapServer instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://example.org/ts-tests"><SOAP-ENV:Body><ns1:responseOk>foo</ns1:responseOk></SOAP-ENV:Body></SOAP-ENV:Envelope>
 ok

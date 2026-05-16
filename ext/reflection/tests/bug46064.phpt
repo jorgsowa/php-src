@@ -48,6 +48,7 @@ new bar;
 
 ?>
 --EXPECTF--
+Deprecated: Using reflectionproperty as a class name with incorrect case is deprecated, use the correct casing ReflectionProperty instead in %s on line %d
 object(ReflectionProperty)#%d (2) {
   ["name"]=>
   string(1) "z"
@@ -64,13 +65,19 @@ array(1) {
 }
 int(1000)
 ---------------------------
+
+Deprecated: Using reflectionproperty as a class name with incorrect case is deprecated, use the correct casing ReflectionProperty instead in %s on line %d
 string(30) "Property x::$zz does not exist"
+
+Deprecated: Using reflectionproperty as a class name with incorrect case is deprecated, use the correct casing ReflectionProperty instead in %s on line %d
 object(ReflectionProperty)#%d (2) {
   ["name"]=>
   string(3) "zzz"
   ["class"]=>
   string(1) "x"
 }
+
+Deprecated: Using reflectionproperty as a class name with incorrect case is deprecated, use the correct casing ReflectionProperty instead in %s on line %d
 int(2)
 bool(false)
 bool(true)

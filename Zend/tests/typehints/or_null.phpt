@@ -192,46 +192,60 @@ try {
 
 ?>
 --EXPECTF--
-TypeError: unloadedClass(): Argument #1 ($param) must be of type ?I\Dont\Exist, stdClass given, called in %s:%d
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+TypeError: unloadedClass(): Argument #1 ($param) must be of type ?I\Dont\Exist, stdClass given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): unloadedClass(Object(stdClass))
 #1 {main}
-TypeError: loadedClass(): Argument #1 ($param) must be of type ?RealClass, stdClass given, called in %s:%d
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+TypeError: loadedClass(): Argument #1 ($param) must be of type ?RealClass, stdClass given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): loadedClass(Object(stdClass))
 #1 {main}
-TypeError: loadedInterface(): Argument #1 ($param) must be of type ?RealInterface, stdClass given, called in %s:%d
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+TypeError: loadedInterface(): Argument #1 ($param) must be of type ?RealInterface, stdClass given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): loadedInterface(Object(stdClass))
 #1 {main}
-TypeError: unloadedClass(): Argument #1 ($param) must be of type ?I\Dont\Exist, int given, called in %s:%d
+TypeError: unloadedClass(): Argument #1 ($param) must be of type ?I\Dont\Exist, int given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): unloadedClass(1)
 #1 {main}
-TypeError: loadedClass(): Argument #1 ($param) must be of type ?RealClass, int given, called in %s:%d
+TypeError: loadedClass(): Argument #1 ($param) must be of type ?RealClass, int given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): loadedClass(1)
 #1 {main}
-TypeError: loadedInterface(): Argument #1 ($param) must be of type ?RealInterface, int given, called in %s:%d
+TypeError: loadedInterface(): Argument #1 ($param) must be of type ?RealInterface, int given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): loadedInterface(1)
 #1 {main}
-TypeError: callableF(): Argument #1 ($param) must be of type ?callable, int given, called in %s:%d
+TypeError: callableF(): Argument #1 ($param) must be of type ?callable, int given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): callableF(1)
 #1 {main}
-TypeError: intF(): Argument #1 ($param) must be of type ?int, stdClass given, called in %s:%d
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+TypeError: intF(): Argument #1 ($param) must be of type ?int, stdClass given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): intF(Object(stdClass))
 #1 {main}
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 TypeError: returnUnloadedClass(): Return value must be of type ?I\Dont\Exist, stdClass returned in %s:%d
 Stack trace:
 #0 %s(%d): returnUnloadedClass()
 #1 {main}
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 TypeError: returnLoadedClass(): Return value must be of type ?RealClass, stdClass returned in %s:%d
 Stack trace:
 #0 %s(%d): returnLoadedClass()
 #1 {main}
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 TypeError: returnLoadedInterface(): Return value must be of type ?RealInterface, stdClass returned in %s:%d
 Stack trace:
 #0 %s(%d): returnLoadedInterface()
@@ -252,6 +266,8 @@ TypeError: returnCallable(): Return value must be of type ?callable, int returne
 Stack trace:
 #0 %s(%d): returnCallable()
 #1 {main}
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 TypeError: returnInt(): Return value must be of type ?int, stdClass returned in %s:%d
 Stack trace:
 #0 %s(%d): returnInt()

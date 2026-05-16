@@ -26,7 +26,12 @@ $xw->endDocument();
 $output = $xw->flush(true);
 print $output;
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling startElementNS() is deprecated, use the correct casing XMLWriter::startElementNs() instead in %s on line %d
+
+Deprecated: Calling startAttributeNS() is deprecated, use the correct casing XMLWriter::startAttributeNs() instead in %s on line %d
+
+Deprecated: Calling startAttributeNS() is deprecated, use the correct casing XMLWriter::startAttributeNs() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
    <ns1:child1 ns1:att1="a&amp;b" att2="double&quot; single'" ns1:att2="&lt;&gt;&quot;'&amp;" xmlns:ns1="urn:ns1">

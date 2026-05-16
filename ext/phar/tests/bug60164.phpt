@@ -12,6 +12,7 @@ foreach (new RecursiveIteratorIterator(new Phar($phar, alias: 'stuboflength1041.
     var_dump($item->getFileName());
 }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling getFileName() is deprecated, use the correct casing SplFileInfo::getFilename() instead in %s on line %d
 string(5) "a.php"
 string(5) "b.php"

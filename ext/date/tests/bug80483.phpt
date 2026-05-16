@@ -16,6 +16,9 @@ var_dump($serialized);
 var_dump(unserialize($serialized));
 ?>
 --EXPECTF--
+Deprecated: Calling SetTime() is deprecated, use the correct casing DateTime::setTime() instead in %s on line %d
+
+Deprecated: Calling SetDate() is deprecated, use the correct casing DateTime::setDate() instead in %s on line %d
 object(DateTime)#%d (%d) {
   ["date"]=>
   string(28) "+20201-01-01 00:00:00.000000"

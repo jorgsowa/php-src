@@ -27,8 +27,13 @@ test_helper($dom, 'h2:nth-child(3n - 2)');
 test_helper($dom, 'h2:nth-last-child(3n - 2)');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: h2:nth-of-type(n+2):nth-last-of-type(n+2) ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <h2>2</h2>
 <h2>3</h2>
 <h2>4</h2>

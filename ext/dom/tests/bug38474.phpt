@@ -35,7 +35,8 @@ echo $dom->firstChild->getAttribute('pre:type')."\n";
 echo $dom->firstChild->getAttribute('post:type')."\n";
 echo $dom->firstChild->getAttribute('new:type');
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 foo
 bar
 foo2

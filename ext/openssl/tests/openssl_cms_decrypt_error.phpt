@@ -30,6 +30,8 @@ var_dump(openssl_cms_decrypt($a, $b, 0, 0));
 echo "Done\n";
 ?>
 --EXPECT--
+string(105) "Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead"
+string(105) "Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead"
 Object of class stdClass could not be converted to string
 object(stdClass)#1 (0) {
 }

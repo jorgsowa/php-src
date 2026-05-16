@@ -22,6 +22,7 @@ $fill_freed_space_4 = "filler_zval_4";
 debug_zval_dump($unserialized_payload[1]);
 ?>
 --EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 array(1) refcount(3){
   [0]=>
   object(stdClass)#%d (0) refcount(1){

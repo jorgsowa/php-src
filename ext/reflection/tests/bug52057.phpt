@@ -28,9 +28,12 @@ var_dump($h->class.'::'.$h->getName());
 
 ?>
 --EXPECTF--
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
 bool(true)
 bool(true)
 bool(true)
+
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
 object(ReflectionMethod)#%d (2) {
   ["name"]=>
   string(8) "__invoke"

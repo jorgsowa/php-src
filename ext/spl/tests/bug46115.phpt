@@ -7,5 +7,6 @@ $x = new reflectionmethod('RecursiveArrayIterator', 'asort');
 $z = $x->invoke($h);
 ?>
 DONE
---EXPECT--
+--EXPECTF--
+Deprecated: Using reflectionmethod as a class name with incorrect case is deprecated, use the correct casing ReflectionMethod instead in %s on line %d
 DONE

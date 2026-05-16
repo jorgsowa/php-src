@@ -17,6 +17,7 @@ foreach ($books as $book) {
     echo "{$book->title} was written by {$book->author}\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 The Grapes of Wrath was written by John Steinbeck
 The Pearl was written by John Steinbeck

@@ -97,8 +97,12 @@ echo "--------- Check various node_name return values\n";
 print ("Not needed\n");
 
 ?>
---EXPECT--
+--EXPECTF--
 Test 1: accessing single nodes from php
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
+
+Deprecated: Calling loadxml() is deprecated, use the correct casing DOMDocument::loadXML() instead in %s on line %d
 --------- root
 Node Name: chapter
 Node Type: 1
@@ -178,6 +182,8 @@ Num Children: 0
 Node Content: en
 
 --------- Add child to root
+
+Deprecated: Using domElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Node Name: Silly
 Node Type: 1
 Num Children: 1
@@ -206,6 +212,8 @@ Node Content: Symphony
 
 --------- Find element by tagname
     Using dom
+
+Deprecated: Calling getElementsByTagname() is deprecated, use the correct casing DOMDocument::getElementsByTagName() instead in %s on line %d
 Node Name: Silly
 Node Type: 1
 Num Children: 1
@@ -242,6 +250,8 @@ Node Type: 3
 Num Children: 0
 Node Content:
 
+
+Deprecated: Calling savexml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <?xml version="1.0" standalone="yes"?>
 <!DOCTYPE chapter SYSTEM "/share/sgml/Norman_Walsh/db3xml10/db3xml10.dtd" [
 <!ENTITY sp "spanish">

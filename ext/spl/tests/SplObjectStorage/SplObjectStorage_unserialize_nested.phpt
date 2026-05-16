@@ -18,7 +18,10 @@ echo $s."\n";
 $so1 = unserialize($s);
 var_dump($so1);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 O:16:"SplObjectStorage":2:{i:0;a:4:{i:0;O:8:"stdClass":1:{s:1:"a";O:8:"stdClass":0:{}}i:1;i:1;i:2;r:4;i:3;i:2;}i:1;a:0:{}}
 object(SplObjectStorage)#4 (1) {
   ["storage":"SplObjectStorage":private]=>

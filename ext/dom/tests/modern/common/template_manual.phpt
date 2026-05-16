@@ -22,15 +22,23 @@ echo $dom->saveXML(), "\n";
 echo $dom->saveHTML(), "\n";
 
 ?>
---EXPECT--
+--EXPECTF--
 === After creation ===
 string(0) ""
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template xmlns="http://www.w3.org/1999/xhtml"></template>
+
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <template></template>
 === After setting content ===
 string(12) "<p>hello</p>"
 NULL
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template xmlns="http://www.w3.org/1999/xhtml"><p>hello</p></template>
+
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <template><p>hello</p></template>

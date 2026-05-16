@@ -44,13 +44,17 @@ testError($dom, "http://www.w3.org/2000/xmlns/", "svg");
 testError($dom, "urn:foo", "xml:xml");
 
 ?>
---EXPECT--
+--EXPECTF--
 --- Normal cases ---
+
+Deprecated: Using DOM\Element as a class name with incorrect case is deprecated, use the correct casing Dom\Element instead in %s on line %d
 tagName: string(5) "qname"
 nodeName: string(5) "qname"
 textContent: string(6) "&hello"
 prefix: NULL
 namespaceURI: NULL
+
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <qname>&amp;hello</qname>
 
 tagName: string(7) "foo:bar"

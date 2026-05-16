@@ -84,7 +84,7 @@ for ($x = 0; $x < $mylen; $x++) {
 }
 echo 'Element Name: '.(($elem = $dom->getElementByID('n3'))?$elem->nodeName:'Not Found')."\n";
 ?>
---EXPECT--
+--EXPECTF--
 Tag Name: chapter
 Chapter: 1
 Attribute num exists?: Yes
@@ -107,7 +107,15 @@ Row Count: 3
 myelements Count: 2
 
 -- IDs --
+
+Deprecated: Calling getElementByID() is deprecated, use the correct casing DOMDocument::getElementById() instead in %s on line %d
 Element Name: chapter
+
+Deprecated: Calling getElementByID() is deprecated, use the correct casing DOMDocument::getElementById() instead in %s on line %d
 Element Name: Not Found
+
+Deprecated: Calling getElementByID() is deprecated, use the correct casing DOMDocument::getElementById() instead in %s on line %d
 Element Name: newns2:myelement
+
+Deprecated: Calling getElementByID() is deprecated, use the correct casing DOMDocument::getElementById() instead in %s on line %d
 Element Name: Not Found

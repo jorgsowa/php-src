@@ -71,13 +71,17 @@ $xpath->registerPhpFunctions(null);
 $xpath->evaluate("//a[php:function('var_dump', string(@href))]");
 
 ?>
---EXPECT--
+--EXPECTF--
 --- Legit cases: none ---
 No callbacks were registered
 --- Legit cases: all ---
+
+Deprecated: Calling registerPHPFunctions() is deprecated, use the correct casing DOMXPath::registerPhpFunctions() instead in %s on line %d
 string(15) "https://php.net"
 string(15) "https://php.net"
 --- Legit cases: set ---
+
+Deprecated: Calling registerPHPFunctions() is deprecated, use the correct casing DOMXPath::registerPhpFunctions() instead in %s on line %d
 string(15) "https://php.net"
 string(15) "https://php.net"
 string(15) "https://php.net"

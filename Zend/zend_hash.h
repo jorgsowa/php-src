@@ -927,13 +927,55 @@ static zend_always_inline void *zend_hash_str_find_ptr(const HashTable *ht, cons
 
 BEGIN_EXTERN_C()
 
-/* Will lowercase the str; use only if you don't need the lowercased string for
- * anything else. If you have a lowered string, use zend_hash_str_find_ptr. */
-ZEND_API void *zend_hash_str_find_ptr_lc(const HashTable *ht, const char *str, size_t len);
+/* Forward declarations of the lowercasing helpers used by the inline twins
+ * below. They live in zend_operators.h, which cannot be included here because it
+ * depends on zend_hash.h. The declarations are identical to the originals. */
+ZEND_API char *ZEND_FASTCALL zend_str_tolower_copy(char *dest, const char *source, size_t length);
+ZEND_API zend_string *ZEND_FASTCALL zend_string_tolower_ex(zend_string *str, bool persistent);
+
+/* Internal, non-deprecated entry points for case-insensitive symbol lookup.
+ * Used by the engine and bundled extensions, which still need case-insensitive
+ * resolution while it remains supported. They are static inline (not exported)
+ * so no new ABI symbol is added. External code should not rely on these:
+ * case-insensitive name resolution is deprecated (see the "Case-sensitive PHP"
+ * RFC) and these helpers go away together with the public wrappers below once
+ * incorrect-case references become a fatal error. */
+static zend_always_inline void *_zend_hash_str_find_ptr_lc(const HashTable *ht, const char *str, size_t len) {
+	void *result;
+	char *lc_str;
+
+	/* Stack allocate small strings to improve performance */
+	ALLOCA_FLAG(use_heap)
+
+	lc_str = zend_str_tolower_copy((char *) do_alloca(len + 1, use_heap), str, len);
+	result = zend_hash_str_find_ptr(ht, lc_str, len);
+	free_alloca(lc_str, use_heap);
+
+	return result;
+}
+
+static zend_always_inline void *_zend_hash_find_ptr_lc(const HashTable *ht, zend_string *key) {
+	void *result;
+	zend_string *lc_key = zend_string_tolower_ex(key, false);
+	result = zend_hash_find_ptr(ht, lc_key);
+	zend_string_release(lc_key);
+	return result;
+}
 
 /* Will lowercase the str; use only if you don't need the lowercased string for
- * anything else. If you have a lowered string, use zend_hash_find_ptr. */
-ZEND_API void *zend_hash_find_ptr_lc(const HashTable *ht, zend_string *key);
+ * anything else. If you have a lowered string, use zend_hash_str_find_ptr.
+ *
+ * Deprecated in PHP 8.6: case-insensitive symbol lookup is going away. Resolve
+ * class and function names through the regular resolution API (which emits the
+ * appropriate deprecation), or use a case-sensitive lookup with the canonical
+ * name. */
+ZEND_ATTRIBUTE_DEPRECATED ZEND_API void *zend_hash_str_find_ptr_lc(const HashTable *ht, const char *str, size_t len);
+
+/* Will lowercase the str; use only if you don't need the lowercased string for
+ * anything else. If you have a lowered string, use zend_hash_find_ptr.
+ *
+ * Deprecated in PHP 8.6: see zend_hash_str_find_ptr_lc() above. */
+ZEND_ATTRIBUTE_DEPRECATED ZEND_API void *zend_hash_find_ptr_lc(const HashTable *ht, zend_string *key);
 
 END_EXTERN_C()
 

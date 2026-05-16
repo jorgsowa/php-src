@@ -60,6 +60,8 @@ foreach ($functions as $type => $function) {
 echo PHP_EOL . "Done";
 ?>
 --EXPECTF--
+E_DEPRECATED: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead on line 40
+
 Testing 'int' type:
 
 *** Trying int(1)

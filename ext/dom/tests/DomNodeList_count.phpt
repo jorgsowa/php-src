@@ -22,7 +22,8 @@ var_dump($root->childNodes->count());
 var_dump(count($root->childNodes));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 int(7)
 int(7)
 int(7)

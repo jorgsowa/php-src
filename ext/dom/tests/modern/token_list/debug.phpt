@@ -10,7 +10,8 @@ $element = $dom->documentElement;
 var_dump($element->classList);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 object(Dom\TokenList)#3 (2) {
   ["length"]=>
   int(3)

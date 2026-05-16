@@ -53,9 +53,18 @@ echo 'bd8b ' . $end->format($date_format) . ' - ' . $start->format($date_format)
 
 echo "\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bd0 2010-11-07 01:00:00 EST America/New_York - 2010-11-07 01:59:59 EDT America/New_York = P0DT0H0M1S
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bd5 2010-11-07 01:30:00 EST America/New_York - 2010-11-06 04:30:00 EDT America/New_York = P0DT22H
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bd6 2010-11-07 01:30:00 EDT America/New_York - 2010-11-06 04:30:00 EDT America/New_York = P0DT21H
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bd8a 2010-11-07 01:00:00 EST America/New_York - 2010-11-06 01:00:00 EDT America/New_York = P1DT0H
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bd8b 2010-11-07 01:00:00 EDT America/New_York - 2010-11-06 01:00:00 EDT America/New_York = P0DT24H

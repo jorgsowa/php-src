@@ -37,9 +37,11 @@ test($attribute, "", "foo");
 test($attribute, null, "bar");
 
 ?>
---EXPECT--
+--EXPECTF--
 === Element test ===
 --- rename to "urn:x" "x:foo" ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <x:foo xmlns:x="urn:x" xmlns:a="urn:a">
     <a:child attrib="value"/>

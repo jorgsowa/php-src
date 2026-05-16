@@ -62,10 +62,12 @@ $text3 = $text2->splitText(1);
 
 echo "Is Whitespace?: ".($text2->isElementContentWhitespace()?'YES':'NO');
 ?>
---EXPECT--
+--EXPECTF--
 Comment Length: 42
 New Comment Length: 15
 New Comment Data: Updated comment
+
+Deprecated: Using DOMCDataSection as a class name with incorrect case is deprecated, use the correct casing DOMCdataSection instead in %s on line %d
 Substring: <>&"
 New Substring: <>&'
 Comment Value: instructions

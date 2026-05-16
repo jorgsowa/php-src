@@ -79,14 +79,21 @@ echo 'bs10 ' . $end->format($date_format) . " - $interval_spec = "
     . $end->sub($interval)->format($date_format) . "\n";
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bs1 2010-11-07 01:00:00 EST America/New_York - PT1S = 2010-11-07 01:59:59 EDT America/New_York
 bs2 2010-11-07 04:30:00 EST America/New_York - P1D = 2010-11-06 04:30:00 EDT America/New_York
 bs3 2010-11-07 03:30:00 EST America/New_York - PT24H = 2010-11-06 04:30:00 EDT America/New_York
 bs4 2010-11-07 02:30:00 EST America/New_York - PT23H = 2010-11-06 04:30:00 EDT America/New_York
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bs5 2010-11-07 01:30:00 EST America/New_York - PT22H = 2010-11-06 04:30:00 EDT America/New_York
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bs6 2010-11-07 01:30:00 EDT America/New_York - PT21H = 2010-11-06 04:30:00 EDT America/New_York
 bs7 2010-11-07 01:30:00 EDT America/New_York - P1D = 2010-11-06 01:30:00 EDT America/New_York
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 bs8 2010-11-07 01:30:00 EST America/New_York - P1DT1H = 2010-11-06 00:30:00 EDT America/New_York
 bs9 2010-11-07 03:30:00 EST America/New_York - P1D = 2010-11-06 03:30:00 EDT America/New_York
 bs10 2010-11-07 02:30:00 EST America/New_York - P1D = 2010-11-06 02:30:00 EDT America/New_York

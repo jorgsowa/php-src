@@ -18,7 +18,9 @@ echo "Done\n";
 --EXPECT--
 string(42) "Exception: Class "unknown" does not exist
 "
-string(183) "Class [ <internal:Core> class stdClass ] {
+string(323) "
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in Unknown on line 0
+Class [ <internal:Core> class stdClass ] {
 
   - Constants [0] {
   }
@@ -37,7 +39,9 @@ string(183) "Class [ <internal:Core> class stdClass ] {
 }
 
 "
-string(2232) "Class [ <internal:Core> class Exception implements Stringable, Throwable ] {
+string(2374) "
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in Unknown on line 0
+Class [ <internal:Core> class Exception implements Stringable, Throwable ] {
 
   - Constants [0] {
   }

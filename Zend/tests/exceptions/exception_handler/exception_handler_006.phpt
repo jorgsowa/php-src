@@ -21,5 +21,7 @@ throw new excEption();
 
 echo "Done\n";
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using excEption as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 string(24) "foo(): Exception thrown!"

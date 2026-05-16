@@ -22,8 +22,10 @@ try {
 echo $dom->saveXML();
 
 ?>
---EXPECT--
+--EXPECTF--
 Namespace Error
 Invalid Character Error
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root/>

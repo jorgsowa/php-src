@@ -25,7 +25,7 @@ $a::bAr();
 foo::BAZ();
 
 ?>
---EXPECT--
+--EXPECTF--
 nonstatic
 string(6) "fOoBaR"
 nonstatic
@@ -34,5 +34,7 @@ nonstatic
 string(6) "fOOBAr"
 static
 string(3) "bAr"
+
+Deprecated: Using foo as a class name with incorrect case is deprecated, use the correct casing Foo instead in %s on line %d
 static
 string(3) "BAZ"

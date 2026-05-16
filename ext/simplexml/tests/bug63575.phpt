@@ -14,7 +14,10 @@ $r->addChild('c', new SimpleXMlElement('<c></c>'));
 
 echo $o1->asXML(), PHP_EOL, $o2->asXML();
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using SimpleXMlElement as a class name with incorrect case is deprecated, use the correct casing SimpleXMLElement instead in %s on line %d
+
+Deprecated: Using SimpleXMlElement as a class name with incorrect case is deprecated, use the correct casing SimpleXMLElement instead in %s on line %d
 <?xml version="1.0"?>
 <a><b/></a>
 

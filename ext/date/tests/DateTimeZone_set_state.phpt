@@ -15,6 +15,7 @@ var_dump($datetimezoneObjectNew);
 
 ?>
 --EXPECTF--
+Deprecated: Using DateTimezone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
 object(DateTimeZone)#%d (2) {
   ["timezone_type"]=>
   int(3)

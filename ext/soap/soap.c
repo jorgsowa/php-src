@@ -1576,7 +1576,7 @@ PHP_METHOD(SoapServer, handle)
 				}
 			}
 #endif
-			if (zend_hash_find_ptr_lc(function_table, Z_STR(h->function_name)) != NULL ||
+			if (_zend_hash_find_ptr_lc(function_table, Z_STR(h->function_name)) != NULL ||
 			    ((service->type == SOAP_CLASS || service->type == SOAP_OBJECT) &&
 			     zend_hash_str_exists(function_table, ZEND_CALL_FUNC_NAME, sizeof(ZEND_CALL_FUNC_NAME)-1))) {
 				if (service->type == SOAP_CLASS || service->type == SOAP_OBJECT) {
@@ -1614,7 +1614,7 @@ PHP_METHOD(SoapServer, handle)
 		}
 	}
 
-	if (zend_hash_find_ptr_lc(function_table, Z_STR(function_name)) != NULL ||
+	if (_zend_hash_find_ptr_lc(function_table, Z_STR(function_name)) != NULL ||
 	    ((service->type == SOAP_CLASS || service->type == SOAP_OBJECT) &&
 	     zend_hash_str_exists(function_table, ZEND_CALL_FUNC_NAME, sizeof(ZEND_CALL_FUNC_NAME)-1))) {
 		if (service->type == SOAP_CLASS || service->type == SOAP_OBJECT) {
@@ -4283,9 +4283,9 @@ static sdlFunctionPtr get_function(sdlPtr sdl, const char *function_name, size_t
 	sdlFunctionPtr tmp;
 
 	if (sdl != NULL) {
-		if ((tmp = zend_hash_str_find_ptr_lc(&sdl->functions, function_name, function_name_length)) != NULL) {
+		if ((tmp = _zend_hash_str_find_ptr_lc(&sdl->functions, function_name, function_name_length)) != NULL) {
 			return tmp;
-		} else if (sdl->requests != NULL && (tmp = zend_hash_str_find_ptr_lc(sdl->requests, function_name, function_name_length)) != NULL) {
+		} else if (sdl->requests != NULL && (tmp = _zend_hash_str_find_ptr_lc(sdl->requests, function_name, function_name_length)) != NULL) {
 			return tmp;
 		}
 	}

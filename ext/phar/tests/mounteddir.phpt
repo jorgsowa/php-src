@@ -106,6 +106,8 @@ Mounting of .phar/stub.php to %sextfile.php within phar %stests/tempmanifest1.ph
 directory
 extfile.php
 extfile2.php
+
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
 phar://%stempmanifest1.phar.php/testit%cdirectory
 phar://%stempmanifest1.phar.php/testit%cextfile.php
 phar://%stempmanifest1.phar.php/testit%cextfile2.php

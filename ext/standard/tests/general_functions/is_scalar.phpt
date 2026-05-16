@@ -108,7 +108,7 @@ fclose($fp);
 closedir($dfp);
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing basic operations ***
 -- Iteration 1 --
 bool(true)
@@ -178,6 +178,10 @@ bool(true)
 bool(true)
 
 *** Testing possible variations ***
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 -- Iteration 1 --
 bool(false)
 -- Iteration 2 --

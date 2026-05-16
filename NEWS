@@ -3,6 +3,13 @@ PHP                                                                        NEWS
 ?? ??? ????, PHP 8.6.0alpha1
 
 - Core:
+  . Calling a function or method using incorrect casing is now deprecated.
+    (jorgsowa)
+  . Referencing a class, interface, trait, or enum using incorrect casing is
+    now deprecated, covering all language constructs and APIs that accept a
+    class name. (jorgsowa)
+  . Using a namespace with incorrect casing in references, use imports, or
+    namespace declarations is now deprecated. (jorgsowa)
   . Added first-class callable cache to share instances for the duration of the
     request. (ilutov)
   . It is now possible to use reference assign on WeakMap without the key

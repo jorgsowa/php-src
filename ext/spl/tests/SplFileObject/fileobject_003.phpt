@@ -64,12 +64,24 @@ bool(false)
 bool(true)
 bool(true)
 %s(%d) "%sfileobject_001a.txt"
+
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
 string(%d) "%sfileobject_001a.txt"
+
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
 bool(true)
+
+Deprecated: Calling getFileName() is deprecated, use the correct casing SplFileInfo::getFilename() instead in %s on line %d
 string(19) "fileobject_001a.txt"
+
+Deprecated: Calling getFileName() is deprecated, use the correct casing SplFileInfo::getFilename() instead in %s on line %d
 bool(true)
 string(%d) "%stests%eSplFileObject"
 bool(true)
+
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
+
+Deprecated: Calling getFileName() is deprecated, use the correct casing SplFileInfo::getFilename() instead in %s on line %d
 string(%d) "%sfileobject_001a.txt"
 string(19) "fileobject_001a.txt"
 string(%d) "%stests%eSplFileObject"

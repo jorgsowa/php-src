@@ -32,6 +32,8 @@ object(SimpleXMLElement)#%d (1) {
   string(9) "something"
 }
 
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
 Warning: Array to string conversion in %s on line %d
 It's not possible to assign a complex type to properties, stdClass given
 Done

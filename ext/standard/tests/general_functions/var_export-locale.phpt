@@ -302,7 +302,7 @@ echo "\nDone";
 
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing var_export() with integer values ***
 
 *** Output for integer values ***
@@ -901,6 +901,8 @@ string(41) "array (
 )"
 
 *** Testing var_export() with valid objects ***
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 
 *** Output for objects ***
 

@@ -34,6 +34,7 @@ test($obj);
 
 var_dump($obj->prop);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using Stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 string(10) "aaaaaaaaaa"
 string(10) "bbbbbbbbbb"

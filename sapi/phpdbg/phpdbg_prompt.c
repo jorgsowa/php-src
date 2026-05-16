@@ -100,7 +100,7 @@ static inline int phpdbg_call_register(phpdbg_param_t *stack) /* {{{ */
 			return FAILURE;
 		}
 
-		zend_function *user_fn = zend_hash_str_find_ptr_lc(&PHPDBG_G(registered), name->str, name->len);
+		zend_function *user_fn = _zend_hash_str_find_ptr_lc(&PHPDBG_G(registered), name->str, name->len);
 		if (user_fn != NULL) {
 			HashTable *params_ht = NULL;
 			if (name->next) {

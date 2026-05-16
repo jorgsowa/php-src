@@ -18,4 +18,6 @@ for ($i = 10000; $i > 0; $i--) {
 }
 ?>
 --EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
 Fatal error: Allowed memory size of %d bytes exhausted%s(tried to allocate %d bytes) in %s on line %d

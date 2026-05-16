@@ -37,14 +37,27 @@ print "$attr->value\n";
 print $doc->saveXml($elt) . "\n";
 ?>
 --EXPECTF--
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <elt a="&amp;"/>
 &
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <elt a="&amp;"/>
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <elt a=""/>
 
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <elt a=""/>
 &
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <elt a="&amp;"/>
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <elt xmlns:svg="http://www.w3.org/2000/svg" svg:id="&amp;amp;"/>
 <&
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <elt xmlns:svg="http://www.w3.org/2000/svg" svg:id="&lt;&amp;"/>

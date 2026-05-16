@@ -36,11 +36,15 @@ test("text");
 test("");
 
 ?>
---EXPECT--
+--EXPECTF--
 === HTML (<p>foo</p><p>bar</p>) ===
 --- Position BeforeBegin ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <html xmlns="http://www.w3.org/1999/xhtml"><head></head><body><p>foo</p><p>bar</p><div>Sample text</div></body></html>
+
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <html><head></head><body><p>foo</p><p>bar</p><div>Sample text</div></body></html>
 int(1)
 int(3)

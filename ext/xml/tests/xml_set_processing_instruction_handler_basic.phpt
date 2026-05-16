@@ -33,8 +33,10 @@ $p1 = new Xml_Parser();
 $p1->parse($xml);
 echo "Done\n";
 ?>
---EXPECT--
+--EXPECTF--
 Simple test of xml_set_processing_instruction_handler() function
+
+Deprecated: Using Xml_Parser as a class name with incorrect case is deprecated, use the correct casing XML_Parser instead in %s on line %d
 Target: xml-stylesheet
 Data: href="default.xsl" type="text/xml"
 Done

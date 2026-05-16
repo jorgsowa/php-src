@@ -50,9 +50,14 @@ test_helper($dom, 'a[tokens~="DEF" i]');
 test_helper($dom, 'a[tokens~="DEF GHI" i]');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 === Case sensitive ===
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: a[title] ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <a title="http://example.com" lang="en-us"/>
 <a title="http://example.be"/>
 <a title="ftp://example.be" lang="nl-be" tokens="abc def ghi"/>

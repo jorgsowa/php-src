@@ -20,7 +20,10 @@ test_failure($dom, ':lang(en)', true);
 test_failure($dom, ':lang(nl)', true);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: :lang(en) ---
 Code 12 Invalid selector (Selectors. Not supported: lang)
 --- Selector: :lang(nl) ---

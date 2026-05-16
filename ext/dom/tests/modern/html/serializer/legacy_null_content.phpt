@@ -15,6 +15,7 @@ $root->appendChild($dom->importLegacyNode(new DOMCdataSection('')));
 echo $dom->saveHTML(), "\n";
 echo $dom->documentElement->innerHTML, "\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <html><!----><?target ></html>
 <!----><?target >

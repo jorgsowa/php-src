@@ -32,13 +32,15 @@ gc_collect_cycles();
 var_dump($bar);
 gc_enable();
 /*  will output:
-object(bad)#4 (1) {
+object(bad)#%d (1) {
   ["_private":"bad":private]=>
   &UNKNOWN:0
 }
 */
 ?>
 --EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(bad)#%d (1) {
   ["_private":"bad":private]=>
   array(1) {

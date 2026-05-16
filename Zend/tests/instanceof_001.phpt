@@ -17,8 +17,10 @@ var_dump($c[0] instanceof stdClass);
 var_dump(@$inexistent instanceof stdClass);
 
 ?>
---EXPECT--
+--EXPECTF--
 bool(true)
+
+Deprecated: Using stdCLass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 bool(true)
 bool(true)
 bool(true)

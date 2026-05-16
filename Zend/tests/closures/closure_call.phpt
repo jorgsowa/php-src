@@ -61,7 +61,9 @@ int(0)
 int(0)
 int(3)
 
-Warning: Cannot bind closure to scope of internal class stdClass, this will be an error in PHP 9 in %s line %d
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Warning: Cannot bind closure to scope of internal class stdClass, this will be an error in PHP 9 in %s on line %d
 NULL
 int(21)
 int(3)

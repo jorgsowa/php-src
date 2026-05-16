@@ -21,5 +21,6 @@ for ($i=4; $i<100; $i++) {
 }
 ?>
 ===DONE===
---EXPECT--
+--EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 ===DONE===

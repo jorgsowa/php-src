@@ -12,5 +12,6 @@ foreach($xpath->query('/root/noexist') as $child) {
 }
 ?>
 okey
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOMXpath as a class name with incorrect case is deprecated, use the correct casing DOMXPath instead in %s on line %d
 okey

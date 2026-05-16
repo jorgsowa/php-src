@@ -27,7 +27,14 @@ echo in_array( "US/Eastern", $b ) ? "found" : "notfound", "\n";
 echo in_array( "US/Eastern", $c ) ? "found" : "notfound", "\n";
 echo in_array( "US/Eastern", $d ) ? "found" : "notfound", "\n\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DateTimezone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
+
+Deprecated: Using DateTimezone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
+
+Deprecated: Using DateTimezone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
+
+Deprecated: Using DateTimezone as a class name with incorrect case is deprecated, use the correct casing DateTimeZone instead in %s on line %d
 found
 notfound
 found

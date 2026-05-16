@@ -19,5 +19,7 @@ Warning: DOMDocument::loadXML(): %s
 <root><child/></root>
 
 Warning: Dom\XMLDocument::createFromString(): %s
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root><child/></root>

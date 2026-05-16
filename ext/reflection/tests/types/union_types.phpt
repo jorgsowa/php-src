@@ -60,7 +60,7 @@ $rp = $rc->getProperty('prop');
 dumpType($rp->getType());
 
 ?>
---EXPECT--
+--EXPECTF--
 Type X|Y|int|float|false|null:
 Allows null: true
   Name: X
@@ -136,6 +136,8 @@ Allows null: false
   Name: int
   String: int
   Allows Null: false
+
+Deprecated: Using X as a class name with incorrect case is deprecated, use the correct casing x instead in %s on line %d
 Type X|Y|int:
 Allows null: false
   Name: X
@@ -147,6 +149,10 @@ Allows null: false
   Name: int
   String: int
   Allows Null: false
+
+Deprecated: Using X as a class name with incorrect case is deprecated, use the correct casing x instead in %s on line %d
+
+Deprecated: Using Y as a class name with incorrect case is deprecated, use the correct casing y instead in %s on line %d
 Type X|Y|int:
 Allows null: false
   Name: X

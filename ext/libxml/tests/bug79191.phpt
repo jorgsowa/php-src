@@ -19,4 +19,5 @@ var_dump($dom->save(__DIR__ . '/bug79191.xml'));
 unlink(__DIR__ . '/bug79191.xml');
 ?>
 --EXPECTF--
+Deprecated: Calling loadxml() is deprecated, use the correct casing DOMDocument::loadXML() instead in %s on line %d
 int(%d)

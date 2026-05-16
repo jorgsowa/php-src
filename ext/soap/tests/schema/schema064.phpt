@@ -41,6 +41,9 @@ test_schema($schema,'type="tns:testType"',array(
 echo "ok";
 ?>
 --EXPECTF--
+Deprecated: Calling addfunction() is deprecated, use the correct casing SoapServer::addFunction() instead in %s on line %d
+
+Deprecated: Calling __getlastrequest() is deprecated, use the correct casing SoapClient::__getLastRequest() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://test-uri/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><SOAP-ENV:Body><ns1:test><testParam xsi:type="ns1:testType"><dateTime xsi:type="xsd:dateTime">1976-04-05T01:02:03Z</dateTime><time xsi:type="xsd:time">01:02:03Z</time><date xsi:type="xsd:date">1976-04-05Z</date><gYearMonth xsi:type="xsd:gYearMonth">1976-04Z</gYearMonth><gYear xsi:type="xsd:gYear">1976Z</gYear><gMonthDay xsi:type="xsd:gMonthDay">--04-05Z</gMonthDay><gDay xsi:type="xsd:gDay">---05Z</gDay><gMonth xsi:type="xsd:gMonth">--04--Z</gMonth></testParam></ns1:test></SOAP-ENV:Body></SOAP-ENV:Envelope>
 object(stdClass)#%d (8) {

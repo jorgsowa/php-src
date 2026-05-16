@@ -37,8 +37,10 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing ReflectionMethod::getClosure() : error conditions ***
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 
 -- Testing ReflectionMethod::getClosure() function with invalid object --
 string(72) "Given object is not an instance of the class this method was declared in"

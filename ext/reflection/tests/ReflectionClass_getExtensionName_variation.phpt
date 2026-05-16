@@ -14,5 +14,6 @@ Rein Velt <rein@velt.org>
     $rc=new reflectionClass('myClass');
     var_dump( $rc->getExtensionName()) ;
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using reflectionClass as a class name with incorrect case is deprecated, use the correct casing ReflectionClass instead in %s on line %d
 bool(false)

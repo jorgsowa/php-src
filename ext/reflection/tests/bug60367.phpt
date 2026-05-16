@@ -25,5 +25,6 @@ $method = ReflectionMethod::createFromMethodName("A::call");
 $method->invoke(null);
 $method->invokeArgs(null, array());
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using b as a class name with incorrect case is deprecated, use the correct casing B instead in %s on line %d
 BBAA

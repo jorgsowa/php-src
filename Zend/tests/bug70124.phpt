@@ -39,8 +39,11 @@ try  {
 }
 ?>
 --EXPECTF--
+
 Warning: Undefined variable $f in %s on line %d
 string(34) "Value of type null is not callable"
+
+Deprecated: Using a as a class name with incorrect case is deprecated, use the correct casing A instead in %s on line %d
 string(31) "Call to undefined method A::y()"
 string(31) "Call to undefined method A::y()"
 string(34) "Call to undefined function bar\y()"

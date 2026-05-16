@@ -25,7 +25,8 @@ foreach ($xpath->query("p", $dom->documentElement->firstElementChild->nextElemen
 var_dump($xpath->evaluate("count(p)", $dom->documentElement->firstElementChild->nextElementSibling));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOMXpath as a class name with incorrect case is deprecated, use the correct casing DOMXPath instead in %s on line %d
 foo1
 foo2
 float(2)

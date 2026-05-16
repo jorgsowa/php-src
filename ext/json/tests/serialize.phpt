@@ -60,7 +60,8 @@ foreach(array('NonSerializingTest','SerializingTest','ValueSerializingTest','Sel
     echo json_encode(new $class($odata)), "\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 ==NonSerializingTest==
 {"data":{"str":"foo","int":1,"float":2.3,"bool":false,"nil":null,"arr":[1,2,3],"obj":{}}}
 {"data":["foo",1,2.3,false,null,[1,2,3],{}]}

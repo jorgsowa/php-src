@@ -11,6 +11,7 @@ $xml->addAttribute("alt", "");
 echo $xml->asXML();
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using SimpleXmlElement as a class name with incorrect case is deprecated, use the correct casing SimpleXMLElement instead in %s on line %d
 <?xml version="1.0"?>
 <img src="foo" alt=""/>

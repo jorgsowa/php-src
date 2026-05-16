@@ -29,8 +29,13 @@ test_helper($dom, 'h2:nth-last-child(odd of .hi)');
 test_helper($dom, 'h2.hi:nth-last-child(odd)');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: h2:nth-child(even of .hi) ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <h2 class="hi">3</h2>
 <h2 class="hi">6</h2>
 --- Selector: h2.hi:nth-child(even) ---

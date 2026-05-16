@@ -71,7 +71,8 @@ $root->replaceChild($frag, $root->firstChild);
 echo $dom->saveXML();
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 <?xml version="1.0"?>
 <root><first/><newsecond/><newthird/><newfourth/></root>
 

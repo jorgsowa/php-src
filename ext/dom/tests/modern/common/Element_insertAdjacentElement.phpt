@@ -22,16 +22,24 @@ var_dump($p->insertAdjacentElement(Dom\AdjacentPosition::AfterEnd, $dom->createE
 echo $dom->saveXML(), "\n";
 
 ?>
---EXPECT--
+--EXPECTF--
 string(1) "A"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <container><A/><p>foo</p></container>
 string(1) "B"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <container><A/><p><B/>foo</p></container>
 string(1) "C"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <container><A/><p><B/>foo<C/></p></container>
 string(1) "D"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <container><A/><p><B/>foo<C/></p><D/></container>

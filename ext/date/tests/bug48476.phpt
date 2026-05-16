@@ -31,7 +31,9 @@ try {
     echo $e::class, ': ', $e->getMessage(), "\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
 DateObjectError: Object of type MyDateTime (inheriting DateTime) has not been correctly initialized by calling parent::__construct() in its constructor
 DateObjectError: Object of type MyDateTime (inheriting DateTime) has not been correctly initialized by calling parent::__construct() in its constructor
+
+Deprecated: Using MyDateTimezone as a class name with incorrect case is deprecated, use the correct casing MyDateTimeZone instead in %s on line %d
 DateObjectError: Object of type MyDateTimeZone (inheriting DateTimeZone) has not been correctly initialized by calling parent::__construct() in its constructor

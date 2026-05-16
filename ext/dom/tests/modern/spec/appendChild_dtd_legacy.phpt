@@ -30,9 +30,11 @@ try {
 echo $other->saveXml();
 
 ?>
---EXPECT--
+--EXPECTF--
 Found entity: foo
 A document may only contain one document type
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 <?xml version="1.0"?>
 <!DOCTYPE doc [
 <!ENTITY foo "bar">

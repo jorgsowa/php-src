@@ -1193,7 +1193,7 @@ static zend_result ZEND_FASTCALL zend_ast_evaluate_inner(
 						if (ce->get_static_method) {
 							fptr = ce->get_static_method(ce, method_name);
 						} else {
-							fptr = zend_hash_find_ptr_lc(&ce->function_table, method_name);
+							fptr = _zend_hash_find_ptr_lc(&ce->function_table, method_name);
 							if (fptr) {
 								if (!zend_check_method_accessible(fptr, scope)) {
 									if (ce->__callstatic) {

@@ -35,7 +35,6 @@ try {
 
 ?>
 --EXPECTF--
-
 Warning: preg_match(): Delimiter must not be alphanumeric, backslash, or NUL byte in %spreg_match_error1.php on line %d
 bool(false)
 
@@ -49,4 +48,6 @@ Warning: preg_match(): Unknown modifier 'F' in %spreg_match_error1.php on line %
 bool(false)
 preg_match(): Argument #1 ($pattern) must be of type string, array given
 int(1)
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 preg_match(): Argument #1 ($pattern) must be of type string, stdClass given

@@ -64,10 +64,13 @@ try {
     echo $e->getMessage() . \PHP_EOL;
 }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling registerPHPFunctions() is deprecated, use the correct casing DOMXPath::registerPhpFunctions() instead in %s on line %d
 myval
 float(1)
 bool(true)
 float(4)
+
+Deprecated: Calling registerPHPFunctions() is deprecated, use the correct casing DOMXPath::registerPhpFunctions() instead in %s on line %d
 DOMXPath::registerPhpFunctions(): Argument #1 ($restrict) must be a callable, function "non_existent" not found or invalid function name
 DOMXPath::registerPhpFunctions(): Argument #1 ($restrict) must be an array with valid callbacks as values, function "non_existant" not found or invalid function name

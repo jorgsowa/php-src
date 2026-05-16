@@ -29,6 +29,8 @@ bool(false)
 bool(false)
 autoload(autoload_interface)
 autoload(Autoload_Implements)
+
+Deprecated: Using Autoload_Implements as a class name with incorrect case is deprecated, use the correct casing autoload_implements instead in %s on line %d
 object(autoload_implements)#%d (0) {
 }
 bool(true)

@@ -13,5 +13,6 @@ dom
         echo $e->getMessage();
     }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOMCDataSection as a class name with incorrect case is deprecated, use the correct casing DOMCdataSection instead in %s on line %d
 DOMCdataSection::__construct() expects exactly 1 argument, 0 given

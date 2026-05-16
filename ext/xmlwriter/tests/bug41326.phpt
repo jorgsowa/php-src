@@ -33,7 +33,8 @@ $xw->endElement();
 $xw->endDocument();
 print $xw->flush(true);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using XmlWriter as a class name with incorrect case is deprecated, use the correct casing XMLWriter instead in %s on line %d
 <?xml version="1.0"?>
 <test>
  <foo/>
@@ -42,6 +43,18 @@ print $xw->flush(true);
  <bar/>
 </test>
 
+
+Deprecated: Calling startElementNS() is deprecated, use the correct casing XMLWriter::startElementNs() instead in %s on line %d
+
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
+
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
+
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
+
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
+
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
 <?xml version="1.0"?>
 <test:test xmlns:test="urn:x-test:">
  <test:foo></test:foo>

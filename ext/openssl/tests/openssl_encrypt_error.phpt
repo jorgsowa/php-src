@@ -19,6 +19,8 @@ var_dump(openssl_encrypt($data, $wrong, $password));
 var_dump(openssl_encrypt($data, $method, $password, OPENSSL_DONT_ZERO_PAD_KEY, $iv));
 ?>
 --EXPECTF--
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
 Warning: openssl_encrypt(): Unknown cipher algorithm in %s on line %d
 bool(false)
 

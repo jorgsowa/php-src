@@ -59,6 +59,7 @@ foreach ($types as $type) {
 echo "Done\n";
 ?>
 --EXPECTF--
+string(105) "Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead"
 string(5) "array"
 string(6) "string"
 string(5) "array"

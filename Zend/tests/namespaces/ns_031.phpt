@@ -17,6 +17,8 @@ function foo() {
 call_user_func(__NAMESPACE__."\\foo");
 call_user_func(__NAMESPACE__."\\test::foo");
 ?>
---EXPECT--
+--EXPECTF--
 test\foo
+
+Deprecated: Using test\test as a class name with incorrect case is deprecated, use the correct casing test\Test instead in %s on line %d
 test\Test::foo

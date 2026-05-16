@@ -27,5 +27,6 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Declaring obj::__tostring() with incorrect case is deprecated, use the correct casing __toString() instead in %s on line %d
 Iterated value is no longer an array or object

@@ -15,11 +15,15 @@ echo "\ntesting __get magic method\n";
 var_dump(property_exists("AutoTest", "foo"));
 
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing property_exists() : class auto loading ***
 
 testing property in autoloaded class
+
+Deprecated: Using AutoTest as a class name with incorrect case is deprecated, use the correct casing autoTest instead in %s on line %d
 bool(true)
 
 testing __get magic method
+
+Deprecated: Using AutoTest as a class name with incorrect case is deprecated, use the correct casing autoTest instead in %s on line %d
 bool(false)

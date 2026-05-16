@@ -18,10 +18,12 @@ var_dump(new $foo?->bar);
 
 ?>
 --EXPECTF--
+
+Deprecated: Using bar as a class name with incorrect case is deprecated, use the correct casing Bar instead in %s on line %d
 object(Bar)#2 (0) {
 }
 
-Fatal error: Uncaught Error: Class name must be a valid object or a string in %s.php:14
+Fatal error: Uncaught Error: Class name must be a valid object or a string in %s:%d
 Stack trace:
 #0 {main}
-  thrown in %s.php on line 14
+  thrown in %s on line %d

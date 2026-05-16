@@ -14,7 +14,8 @@ foreach ($list as $entry) {
     var_dump($entry);
 }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 string(2) "AB"
 string(1) "B"
 string(1) "C"

@@ -38,6 +38,8 @@ var_dump($d->upperCase());
 --EXPECTF--
 Deprecated: Trait DemoTraitA used by DemoClass is deprecated in %s on line %d
 
+Deprecated: Using DemoTraita as a class name with incorrect case is deprecated, use the correct casing DemoTraitA instead in %s on line %d
+
 Deprecated: Trait DemoTraitB used by DemoClass is deprecated in %s on line %d
 string(1) "a"
 string(1) "B"

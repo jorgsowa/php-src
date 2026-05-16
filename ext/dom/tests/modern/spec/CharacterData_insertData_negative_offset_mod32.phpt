@@ -40,13 +40,17 @@ try {
 echo $dom->saveHtml($comment), "\n";
 
 ?>
---EXPECT--
+--EXPECTF--
 --- Modern behaviour ---
 Index Size Error
 <!--foobarbaz-->
 <!--fAoobarbaz-->
 --- Legacy behaviour ---
 Index Size Error
+
+Deprecated: Calling saveHtml() is deprecated, use the correct casing DOMDocument::saveHTML() instead in %s on line %d
 <!--foobarbaz-->
 Index Size Error
+
+Deprecated: Calling saveHtml() is deprecated, use the correct casing DOMDocument::saveHTML() instead in %s on line %d
 <!--foobarbaz-->

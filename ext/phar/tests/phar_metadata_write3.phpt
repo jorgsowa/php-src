@@ -75,6 +75,8 @@ Calling getMetadata with EchoesOnWakeup allowed
 In wakeup
 object(EchoesOnWakeup)#2 (0) {
 }
+
+Deprecated: Calling setMetaData() is deprecated, use the correct casing Phar::setMetadata() instead in %s on line %d
 Calling getMetadata with too low max_depth
 
 Warning: Phar::getMetadata(): Maximum depth of 1 exceeded. The depth limit can be changed using the max_depth unserialize() option or the unserialize_max_depth ini setting in %sphar_metadata_write3.php on line 39

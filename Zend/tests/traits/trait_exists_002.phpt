@@ -15,7 +15,9 @@ var_dump(trait_exists('foo\\IFoo'));
 var_dump(trait_exists('FOO\\ITEST'));
 
 ?>
---EXPECT--
+--EXPECTF--
 bool(false)
 bool(true)
+
+Deprecated: Using FOO\ITEST as a class name with incorrect case is deprecated, use the correct casing foo\ITest instead in %s on line %d
 bool(true)

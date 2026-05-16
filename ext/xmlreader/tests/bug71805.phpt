@@ -33,5 +33,6 @@ function TestXML($file) {
 }
 ?>
 --EXPECTF--
+Deprecated: Calling readOuterXML() is deprecated, use the correct casing XMLReader::readOuterXml() instead in %s on line %d
 %sXMLReaderGood_bug71805.xml : Good!
 %sXMLReaderBad_bug71805.xml : Good!

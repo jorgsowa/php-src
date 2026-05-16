@@ -450,7 +450,7 @@ static ZEND_MINIT_FUNCTION(zend_accelerator)
 
 void zend_accel_register_ini_entries(void)
 {
-	zend_module_entry *module = zend_hash_str_find_ptr_lc(&module_registry,
+	zend_module_entry *module = _zend_hash_str_find_ptr_lc(&module_registry,
 			ACCELERATOR_PRODUCT_NAME, strlen(ACCELERATOR_PRODUCT_NAME));
 
 	zend_register_ini_entries_ex(ini_entries, module->module_number, module->type);

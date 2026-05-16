@@ -32,7 +32,8 @@ test($dom->getElementById('div3'), 'root :not(div[class])');
 test($dom->getElementById('div3'), 'root > :not(div[class])');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 --- Selector: div ---
 string(4) "div3"
 --- Selector: [class="foo"] ---

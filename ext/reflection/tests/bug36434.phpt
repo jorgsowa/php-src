@@ -26,6 +26,7 @@ foreach ($r->GetProperties() as $p)
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling GetProperties() is deprecated, use the correct casing ReflectionClass::getProperties() instead in %s on line %d
 bar foo
 ancestor ancestor

@@ -10,5 +10,8 @@ Rein Velt <rein@velt.org>
     $rc=new reflectionClass('domDocument');
     var_dump( $rc->getExtensionName()) ;
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using reflectionClass as a class name with incorrect case is deprecated, use the correct casing ReflectionClass instead in %s on line %d
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 string(3) "dom"

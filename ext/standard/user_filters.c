@@ -19,6 +19,7 @@
 #include "ext/standard/basic_functions.h"
 #include "ext/standard/file.h"
 #include "ext/standard/user_filters_arginfo.h"
+#include "zend_execute.h"
 
 #define PHP_STREAM_BRIGADE_RES_NAME	"userfilter.bucket brigade"
 #define PHP_STREAM_BUCKET_RES_NAME "userfilter.bucket"
@@ -378,6 +379,7 @@ static php_stream_filter *user_filter_factory_create(const char *filtername,
 					filtername, ZSTR_VAL(fdat->classname));
 			return NULL;
 		}
+		zend_check_class_name_case(fdat->classname, fdat->ce);
 	}
 
 	/* create the object */

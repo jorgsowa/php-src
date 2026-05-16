@@ -20,6 +20,7 @@ dump_iterateable($basicClass);
 dump_iterateable($stdClass);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 bool(false)
 bool(false)

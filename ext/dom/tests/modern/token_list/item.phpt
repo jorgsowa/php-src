@@ -19,7 +19,8 @@ var_dump($list->item(0));
 var_dump($list->item(1));
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 NULL
 string(1) "A"
 string(1) "B"

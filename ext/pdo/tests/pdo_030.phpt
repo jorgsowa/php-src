@@ -102,6 +102,8 @@ array(1) {
   [0]=>
   string(12) "PDOStatement"
 }
+
+Deprecated: Using PDOStatementx as a class name with incorrect case is deprecated, use the correct casing PDOStatementX instead in %s on line %d
 array(2) {
   [0]=>
   string(13) "PDOStatementX"

@@ -24,6 +24,7 @@ $db->query('DROP TABLE test_pdo_sqlite_transaction');
 
 ?>
 --EXPECTF--
+Deprecated: Calling rollback() is deprecated, use the correct casing PDO::rollBack() instead in %s on line %d
 int(0)
 
 Warning: PDO::query(): SQLSTATE[HY000]: General error: 6 database table is locked in %s on line %d

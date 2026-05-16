@@ -18,6 +18,7 @@
 
 #include "php.h"
 #include "zend_exceptions.h"
+#include "zend_execute.h"
 #include "zend_interfaces.h"
 #include "ext/pcre/php_pcre.h"
 
@@ -1326,6 +1327,7 @@ static spl_dual_it_object* spl_dual_it_construct(INTERNAL_FUNCTION_PARAMETERS, z
 						zend_throw_exception(spl_ce_LogicException, "Class to downcast to not found or not base class or does not implement Traversable", 0);
 						return NULL;
 					}
+					zend_check_class_name_case(class_name, ce_cast);
 					ce = ce_cast;
 				}
 				if (instanceof_function(ce, zend_ce_aggregate)) {

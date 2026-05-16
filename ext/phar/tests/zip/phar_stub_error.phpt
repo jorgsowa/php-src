@@ -44,6 +44,8 @@ __HALT_COMPILER();
 string(50) "<?php echo "first stub\n"; __HALT_COMPILER(); ?>
 "
 bool(true)
+
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 Exception: illegal stub for zip-based phar "%sphar_stub_error.phar.zip"
 string(50) "<?php echo "first stub\n"; __HALT_COMPILER(); ?>
 "

@@ -24,5 +24,6 @@ $obj->a->createCollation('col', function() use ($obj) {});
 
 ?>
 ===DONE===
---EXPECT--
+--EXPECTF--
+Deprecated: Using Pdo as a class name with incorrect case is deprecated, use the correct casing PDO instead in %s on line %d
 ===DONE===

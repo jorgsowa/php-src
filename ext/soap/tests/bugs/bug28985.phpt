@@ -9,7 +9,8 @@ soap.wsdl_cache_enabled=0
 $client = new SOAPClient(__DIR__.'/bug28985.wsdl', array('trace'=>1));
 var_dump($client->__getTypes());
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using SOAPClient as a class name with incorrect case is deprecated, use the correct casing SoapClient instead in %s on line %d
 array(42) {
   [0]=>
   string(100) "struct LoginMGDIS {

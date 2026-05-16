@@ -64,7 +64,10 @@ $reader->close();
 <?php
 unlink(__DIR__.'/003-move-errors.xml');
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
+
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
 book
 bool(true)
 num: 1

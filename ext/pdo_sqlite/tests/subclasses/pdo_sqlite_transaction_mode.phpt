@@ -68,7 +68,66 @@ try {
     printf("Database is locked: %s\n", $e->getMessage());
 }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
+
+Deprecated: Using PDO\Sqlite as a class name with incorrect case is deprecated, use the correct casing Pdo\Sqlite instead in %s on line %d
 bool(true)
 bool(true)
 bool(true)

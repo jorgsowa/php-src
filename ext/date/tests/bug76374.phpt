@@ -14,6 +14,13 @@ $objDateFrom = new dateTime('2017-01-01 12:00:00');
 $interval = $objDateTo->diff($objDateFrom);
 echo $interval->m, "\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using dateTime as a class name with incorrect case is deprecated, use the correct casing DateTime instead in %s on line %d
+
+Deprecated: Using dateTime as a class name with incorrect case is deprecated, use the correct casing DateTime instead in %s on line %d
 9
+
+Deprecated: Using dateTime as a class name with incorrect case is deprecated, use the correct casing DateTime instead in %s on line %d
+
+Deprecated: Using dateTime as a class name with incorrect case is deprecated, use the correct casing DateTime instead in %s on line %d
 9

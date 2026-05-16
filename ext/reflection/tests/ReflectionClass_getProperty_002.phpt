@@ -58,9 +58,17 @@ ReflectionClass::getProperty() expects exactly 1 argument, 0 given
 ReflectionClass::getProperty() expects exactly 1 argument, 2 given
 
 Deprecated: ReflectionClass::getProperty(): Passing null to parameter #1 ($name) of type string is deprecated in %s on line %d
+
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 Property C::$ does not exist
+
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 Property C::$1 does not exist
+
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 Property C::$1.5 does not exist
+
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 Property C::$1 does not exist
 ReflectionClass::getProperty(): Argument #1 ($name) must be of type string, array given
 ReflectionClass::getProperty(): Argument #1 ($name) must be of type string, C given

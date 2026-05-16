@@ -18,7 +18,10 @@ EOF;
 test_schema($schema,'type="tns:testType"',array(123,123.5),'rpc','literal');
 echo "ok";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling addfunction() is deprecated, use the correct casing SoapServer::addFunction() instead in %s on line %d
+
+Deprecated: Calling __getlastrequest() is deprecated, use the correct casing SoapClient::__getLastRequest() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://test-uri/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><SOAP-ENV:Body><ns1:test><testParam><xsd:int>123</xsd:int><xsd:int>123</xsd:int></testParam></ns1:test></SOAP-ENV:Body></SOAP-ENV:Envelope>
 array(2) {

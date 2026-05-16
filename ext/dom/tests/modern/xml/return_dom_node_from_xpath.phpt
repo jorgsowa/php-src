@@ -13,5 +13,6 @@ $test = $xpath->query('x:test()');
 var_dump($test[0]->nodeName);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling registerPhpFunctionNs() is deprecated, use the correct casing Dom\XPath::registerPhpFunctionNS() instead in %s on line %d
 string(3) "foo"

@@ -37,9 +37,11 @@ test($nodes, "manipulation combined with querying", function ($n) {
     unset($n->child);
 });
 ?>
---EXPECT--
+--EXPECTF--
 --- asXml ---
 nodeData: 1
+
+Deprecated: Calling asXml() is deprecated, use the correct casing SimpleXMLElement::asXML() instead in %s on line %d
 nodeData: 2
 nodeData: 3
 --- attributes ---

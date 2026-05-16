@@ -18,6 +18,8 @@ $x = new bar;
 $x->test();
 ?>
 --EXPECTF--
+Deprecated: Declaring bar::__callstatic() with incorrect case is deprecated, use the correct casing __callStatic() instead in %s on line %d
+
 Fatal error: Uncaught Exception in %s:%d
 Stack trace:
 #0 %s(%d): {closure:%s}(%d, 'Use of "self" i%s', '%s', %d)

@@ -95,7 +95,8 @@ $element->setAttribute("xmlns", "value");
 test($container);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 The resulting XML serialization is not well-formed
 The resulting XML serialization is not well-formed
 The resulting XML serialization is not well-formed

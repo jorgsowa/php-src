@@ -14,7 +14,7 @@ var_dump( $d );
 echo $d->format( DATE_ISO8601 ), "\n\n";
 echo $d->format( 'U' ), "\n\n";
 ?>
---EXPECT--
+--EXPECTF--
 object(DateTime)#1 (3) {
   ["date"]=>
   string(26) "1955-05-22 02:00:00.000000"
@@ -26,6 +26,8 @@ object(DateTime)#1 (3) {
 1955-05-22T02:00:00+0200
 -461203200
 
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 object(DateTime)#1 (3) {
   ["date"]=>
   string(26) "1955-05-22 01:00:00.000000"

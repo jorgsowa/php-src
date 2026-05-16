@@ -20,6 +20,7 @@
 #include "zend.h"
 #include "zend_API.h"
 #include "zend_closures.h"
+#include "zend_execute.h"
 #include "zend_exceptions.h"
 #include "zend_interfaces.h"
 #include "zend_objects.h"
@@ -236,6 +237,8 @@ static void do_closure_bind(zval *return_value, zval *zclosure, zval *newthis, z
 		} else if ((ce = zend_lookup_class(scope_str)) == NULL) {
 			zend_error(E_WARNING, "Class \"%s\" not found", ZSTR_VAL(scope_str));
 			RETURN_NULL();
+		} else {
+			zend_check_class_name_case(scope_str, ce);
 		}
 	} else {
 		ce = NULL;

@@ -54,7 +54,8 @@ $y->handle($request);
 
 ?>
 ===DONE===
---EXPECT--
+--EXPECTF--
+Deprecated: Calling addfunction() is deprecated, use the correct casing SoapServer::addFunction() instead in %s on line %d
 array(6) {
   [1]=>
   int(123)

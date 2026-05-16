@@ -114,6 +114,8 @@ Warning: filter_var_array(): Unknown filter with ID 1000000 in %s on line %d
 bool(false)
 filter_var_array(): Argument #2 ($options) must be of type array|int, string given
 -- (4)
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 filter_var_array(): Argument #2 ($options) must be of type array|int, stdClass given
 array(0) {
 }

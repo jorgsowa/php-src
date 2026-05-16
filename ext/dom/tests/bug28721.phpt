@@ -118,7 +118,11 @@ echo "\np:\n";
 print_node_r($p);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
+
+Deprecated: Using DomNode as a class name with incorrect case is deprecated, use the correct casing DOMNode instead in %s on line %d
+
 name (value): p ( t1 X t2  xxx )
 parent: NULL
 previousSibling: NULL
@@ -247,6 +251,8 @@ nextSibling: NULL
   previousSibling: name (value): b ()
   nextSibling: NULL
 
+
+Deprecated: Calling createTextNOde() is deprecated, use the correct casing DOMDocument::createTextNode() instead in %s on line %d
 
 p:
 

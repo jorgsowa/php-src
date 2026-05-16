@@ -29,7 +29,10 @@ test_failure($dom, ':nth-col(1)', true);
 test_failure($dom, ':nth-last-col(1)', true);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\HTMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\HTMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: :nth-col(1) ---
 Code 12 Invalid selector (Selectors. Not supported: nth-col)
 --- Selector: :nth-last-col(1) ---

@@ -29,5 +29,8 @@ if ($reader->nodeType != XMLREADER::END_ELEMENT) {
 
 $reader->close();
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
+
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
 ok

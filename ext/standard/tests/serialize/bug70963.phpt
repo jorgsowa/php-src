@@ -6,6 +6,8 @@ var_dump(unserialize('a:2:{i:0;O:9:"exception":1:{s:16:"'."\0".'Exception'."\0".
 var_dump(unserialize('a:2:{i:0;O:9:"exception":1:{s:16:"'."\0".'Exception'."\0".'trace";s:4:"test";}i:1;r:3;}'));
 ?>
 --EXPECTF--
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
+
 Fatal error: Uncaught TypeError: Cannot assign string to property Exception::$trace of type array in %s:%d
 Stack trace:
 #0 %s(%d): unserialize('a:2:{i:0;O:9:"e...')

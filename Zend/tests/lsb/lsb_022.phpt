@@ -25,6 +25,10 @@ class B extends A {
 B::foo();
 ?>
 --EXPECTF--
+Deprecated: Declaring A::__callstatic() with incorrect case is deprecated, use the correct casing __callStatic() instead in %s on line %d
+
+Deprecated: Declaring B::__callstatic() with incorrect case is deprecated, use the correct casing __callStatic() instead in %s on line %d
+
 Deprecated: Use of "static" in callables is deprecated in %s on line %d
 B
 

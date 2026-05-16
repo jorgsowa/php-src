@@ -24,12 +24,19 @@ $fragment->firstChild->outerHTML = '<strong>bar</strong>';
 echo $dom->saveXML($fragment), "\n";
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns="urn:a"><x xmlns="urn:a"><p>foo</p><p xmlns="urn:x">bar</p></x></root>
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns="urn:a"><x xmlns="urn:a"><p>foo</p><p xmlns="urn:x">bar</p></x></root>
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns="urn:a">tést</root>
 string(1) "p"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <strong xmlns="http://www.w3.org/1999/xhtml">bar</strong>

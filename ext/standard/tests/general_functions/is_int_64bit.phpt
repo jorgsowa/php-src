@@ -132,7 +132,7 @@ foreach ($not_int_types as $type ) {
 
 echo "Done\n";
 ?>
---EXPECT--
+--EXPECTF--
 *** Testing is_int(), is_integer() & is_long()  with valid integer values ***
 --Iteration 1--
 bool(true)
@@ -208,6 +208,8 @@ bool(true)
 bool(true)
 
 *** Testing is_int(), is_integer() & is_long() with  non integer values ***
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 --Iteration 1--
 bool(true)
 bool(true)

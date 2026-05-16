@@ -16,6 +16,7 @@ foo::$a();
 
 ?>
 --EXPECTF--
+Deprecated: Declaring foo::__callstatic() with incorrect case is deprecated, use the correct casing __callStatic() instead in %s on line %d
 string(3) "AaA"
 
 Fatal error: Uncaught Error: Method name must be a string in %s:%d

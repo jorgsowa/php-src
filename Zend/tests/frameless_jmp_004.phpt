@@ -12,6 +12,7 @@ function declare_local_class_exists() {
 declare_local_class_exists();
 var_dump(CLASS_EXISTS('Foo'));
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling Foo\CLASS_EXISTS() is deprecated, use the correct casing Foo\class_exists() instead in %s on line %d
 string(16) "Foo\class_exists"
 bool(true)

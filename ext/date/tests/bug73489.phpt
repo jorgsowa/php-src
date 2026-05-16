@@ -17,8 +17,16 @@ $datetime->getTimestamp();
 $datetime->setTimeZone(new DateTimeZone('-03:00'));
 var_dump($datetime->getTimestamp());
 ?>
---EXPECT--
+--EXPECTF--
+int(1478721600)
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 int(1478721600)
 int(1478721600)
-int(1478721600)
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 int(1478721600)

@@ -10,6 +10,7 @@ $it2 = new RecursiveDirectoryIterator(__DIR__);
 $it2->rewind();
 echo gettype($it2->current())."\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
 string
 object

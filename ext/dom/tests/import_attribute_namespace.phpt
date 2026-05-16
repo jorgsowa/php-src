@@ -26,9 +26,12 @@ echo $dom->saveXML();
 echo $dom2->saveXML();
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling getAttributeNodeNs() is deprecated, use the correct casing DOMElement::getAttributeNodeNS() instead in %s on line %d
 string(7) "default"
 string(7) "some:ns"
+
+Deprecated: Calling setAttributeNodeNs() is deprecated, use the correct casing DOMElement::setAttributeNodeNS() instead in %s on line %d
 string(7) "default"
 string(7) "some:ns"
 <?xml version="1.0"?>

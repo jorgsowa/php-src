@@ -33,7 +33,6 @@ try {
 }
 ?>
 --EXPECTF--
-
 Warning: preg_replace(): Delimiter must not be alphanumeric, backslash, or NUL byte in %spreg_replace_error1.php on line %d
 NULL
 
@@ -47,4 +46,6 @@ Warning: preg_replace(): Unknown modifier 'F' in %spreg_replace_error1.php on li
 NULL
 string(1) "a"
 string(1) "1"
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 preg_replace(): Argument #1 ($pattern) must be of type array|string, stdClass given

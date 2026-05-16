@@ -31,4 +31,5 @@ require_once("func_info_generated.php");
 unlink("func_info_generated.php");
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling dom\import_simplexml() is deprecated, use the correct casing Dom\import_simplexml() instead in %s on line %d

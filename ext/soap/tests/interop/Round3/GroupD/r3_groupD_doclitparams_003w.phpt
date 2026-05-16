@@ -18,9 +18,12 @@ $HTTP_RAW_POST_DATA = $client->__getlastrequest();
 include("round3_groupD_doclitparams.inc");
 echo "ok\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling __getlastrequest() is deprecated, use the correct casing SoapClient::__getLastRequest() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://soapinterop.org/xsd"><SOAP-ENV:Body><ns1:echoStruct><ns1:param0><ns1:varFloat>325.325</ns1:varFloat><ns1:varInt>34</ns1:varInt><ns1:varString>arg</ns1:varString></ns1:param0></ns1:echoStruct></SOAP-ENV:Body></SOAP-ENV:Envelope>
+
+Deprecated: Calling __getlastrequest() is deprecated, use the correct casing SoapClient::__getLastRequest() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://soapinterop.org/xsd"><SOAP-ENV:Body><ns1:echoStructResponse><ns1:return><ns1:varFloat>325.325</ns1:varFloat><ns1:varInt>34</ns1:varInt><ns1:varString>arg</ns1:varString></ns1:return></ns1:echoStructResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>
 ok

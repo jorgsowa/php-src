@@ -26,7 +26,8 @@ foreach ($db->query('SELECT testing(name) FROM pdosqlite_002') as $row) {
 
 echo "Fin.";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using Pdo as a class name with incorrect case is deprecated, use the correct casing PDO instead in %s on line %d
 array(2) {
   ["testing(name)"]=>
   string(3) "php"

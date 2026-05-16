@@ -38,7 +38,7 @@ var_dump($uri5->getUserInfo());
 var_dump($uri6->getUserInfo());
 
 ?>
---EXPECT--
+--EXPECTF--
 NULL
 NULL
 string(4) "user"
@@ -49,5 +49,7 @@ string(13) "%75s%2Fr:pass"
 string(11) "us%2Fr:pass"
 NULL
 The specified userinfo is malformed
+
+Deprecated: Calling withUserinfo() is deprecated, use the correct casing Uri\Rfc3986\Uri::withUserInfo() instead in %s on line %d
 NULL
 string(9) "user:pass"

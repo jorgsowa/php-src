@@ -20,8 +20,10 @@ var_dump($dom->saveXML());
 var_dump($node->baseURI);
 
 ?>
---EXPECT--
+--EXPECTF--
 string(11) "about:blank"
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 string(84) "<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "publicId" "systemId">
 "

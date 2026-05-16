@@ -32,9 +32,11 @@ var_dump(max(1, true, false, true));
 var_dump(max(0, true, false, true));
 
 ?>
---EXPECT--
+--EXPECTF--
 max(): Argument #1 ($value) must be of type array, int given
 max(): Argument #1 ($value) must contain at least one element
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 max(): Argument #1 ($value) must be of type array, stdClass given
 int(2)
 float(2.11)

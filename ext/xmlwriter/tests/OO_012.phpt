@@ -25,6 +25,9 @@ $xmlWriter->endElement();
 echo $xmlWriter->outputMemory(true);
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using XmlWriter as a class name with incorrect case is deprecated, use the correct casing XMLWriter instead in %s on line %d
+
+Deprecated: Calling writeCData() is deprecated, use the correct casing XMLWriter::writeCdata() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <myDocumentRoot><myElement><cdataElement><![CDATA[Text for inclusion within CData tags can include characters like <, >, &, and quotes like ' and "]]></cdataElement></myElement></myDocumentRoot>

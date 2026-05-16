@@ -20,5 +20,6 @@ echo file_get_contents($doc_dest);
 unset($xw);
 unlink($doc_dest);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling writeElementNS() is deprecated, use the correct casing XMLWriter::writeElementNs() instead in %s on line %d
 <!DOCTYPE foo SYSTEM "urn:bar"><foo><foo:bar xmlns:foo="urn:foo">dummy content</foo:bar></foo>

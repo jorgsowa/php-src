@@ -13,6 +13,8 @@ print_r($xml->asXml());
 ?>
 --EXPECTF--
 Warning: SimpleXMLElement::addAttribute(): Attribute requires prefix for namespace in %sbug43221.php on line %d
+
+Deprecated: Calling asXml() is deprecated, use the correct casing SimpleXMLElement::asXML() instead in %sbug43221.php on line %d
 <?xml version="1.0" encoding="utf-8"?>
 <root><node xmlns:foo="http://bar.com" a="b" foo:e="f">value</node></root>
 	

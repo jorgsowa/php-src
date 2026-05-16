@@ -35,8 +35,13 @@ test_helper($dom, 'a:last-of-type');
 test_failure($dom, 'container[* | bar]');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: container[align] ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <container align="left" foo:bar="baz" xmlns:a="urn:a" a:bar="baz"/>
 --- Selector: container[foo\:bar] ---
 <container align="left" foo:bar="baz" xmlns:a="urn:a" a:bar="baz"/>

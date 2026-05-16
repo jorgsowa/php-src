@@ -317,72 +317,140 @@ try {
 
 
 ?>
---EXPECT--
- 1 DOMDocument::createElement('valid')
+--EXPECTF--
+1 DOMDocument::createElement('valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 valid
  2 DOMDocument::createElement('-invalid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Invalid Character Error
  3 DOMDocument::createElement(' ')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Invalid Character Error
  4 DOMDocument::createElement('prefix:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 valid
  5 DOMDocument::createElementNS('http://valid.com', 'valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 valid
  6 DOMDocument::createElementNS('http://valid.com', 'prefix:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 valid
  7 DOMDocument::createElementNS('http://valid.com', '-invalid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
  8 DOMDocument::createElementNS('http://valid.com', 'prefix:-invalid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
  9 DOMDocument::createElementNS('', 'prefix:invalid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
 10 DOMDocument::createElementNS('http://valid.com', 'prefix:valid:invalid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
 11 DOMDocument::createElementNS('http://valid.com', '-prefix:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
 12 DOMDocument::createElementNS('-', 'prefix:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 valid
 13 DOMElement::__construct('valid')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 valid
 14 DOMElement::__construct('-invalid')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Invalid Character Error
 15 DOMElement::__construct(' ')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Invalid Character Error
 16 DOMElement::__construct('prefix:valid')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Namespace Error
 17 DOMElement::__construct('valid', '', 'http://valid.com')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 valid
 18 DOMElement::__construct('prefix:valid', '', 'http://valid.com')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 valid
 19 DOMElement::__construct('-invalid', '', 'http://valid.com')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Invalid Character Error
 20 DOMElement::__construct('prefix:-invalid', '', 'http://valid.com')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Namespace Error
 21 DOMElement::__construct('prefix:invalid', '', '')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Namespace Error
 22 DOMElement::__construct('prefix:valid:invalid', '', 'http://valid.com')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Namespace Error
 23 DOMElement::__construct('-prefix:valid', '', 'http://valid.com')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Invalid Character Error
 24 DOMElement::__construct('prefix:valid', '', '-')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 valid
 25 DOMDocument::createElementNS('', 'prefix:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
 26 DOMDocument::createElementNS('http://wrong.namespaceURI.com', 'xml:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
 27 DOMElement::__construct('xml:valid', '', 'http://wrong.namespaceURI.com')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Namespace Error
 28 DOMDocument::createElementNS('http://www.w3.org/XML/1998/namespace', 'xml:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 valid
 30 DOMDocument::createElementNS('http://wrong.namespaceURI.com', 'xmlns:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
 31 DOMElement::__construct('xmlns:valid', '', 'http://wrong.namespaceURI.com')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Namespace Error
 32 DOMDocument::createElementNS('http://www.w3.org/2000/xmlns/', 'xmlns:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 valid
 33 DOMElement::__construct('xmlns:valid', '', 'http://www.w3.org/2000/xmlns/')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 valid
 34 DOMDocument::createElementNS('http://www.w3.org/2000/xmlns/', 'wrongprefix:valid')
+
+Deprecated: Using domDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 Namespace Error
 35 DOMElement::__construct('wrongprefix:valid', '', 'http://www.w3.org/2000/xmlns/')
+
+Deprecated: Using DomElement as a class name with incorrect case is deprecated, use the correct casing DOMElement instead in %s on line %d
 Namespace Error

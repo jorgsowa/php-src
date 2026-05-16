@@ -22,9 +22,13 @@ foreach ($test_dates as $test_date)
     echo PHP_EOL;
 }
 ?>
---EXPECT--
+--EXPECTF--
 2008-01-01T12:00:00-0700
 2008-01-01T12:00:00+0000
+
+Deprecated: Calling getTimeZone() is deprecated, use the correct casing DateTime::getTimezone() instead in %s on line %d
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 2008-01-01T12:00:00-0700
 2008-01-01T05:00:00-0700
 

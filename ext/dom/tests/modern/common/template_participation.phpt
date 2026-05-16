@@ -52,7 +52,7 @@ $template = $dom->createElement('template');
 var_dump($template->innerHTML);
 
 ?>
---EXPECT--
+--EXPECTF--
 === Manipulation ===
 First child of template: NULL
 First child of template after appending: string(9) "INVISIBLE"
@@ -64,13 +64,19 @@ object(Dom\NodeList)#4 (1) {
   int(0)
 }
 === HTML serialization ===
+
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <!DOCTYPE html><html><head></head><body>
         <template>a<div>foo</div>b</template>
     
 </body></html>
 === HTML serialization of <template> ===
+
+Deprecated: Calling saveHTML() is deprecated, use the correct casing Dom\HTMLDocument::saveHtml() instead in %s on line %d
 <template>a<div>foo</div>b</template>
 === XML serialization ===
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>
@@ -78,6 +84,8 @@ object(Dom\NodeList)#4 (1) {
     
 </body></html>
 === XML serialization of <template> ===
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\HTMLDocument::saveXml() instead in %s on line %d
 <template xmlns="http://www.w3.org/1999/xhtml">a<div>foo</div>b</template>
 === Creating a new template should not leak the old contents ===
 string(0) ""

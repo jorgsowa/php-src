@@ -43,8 +43,12 @@ __call:
 string(3) "ABC"
 __call:
 string(3) "ABC"
+
+Deprecated: Using BAR as a class name with incorrect case is deprecated, use the correct casing bar instead in %s on line %d
 __call:
 string(3) "xyz"
+
+Deprecated: Using BAR as a class name with incorrect case is deprecated, use the correct casing bar instead in %s on line %d
 __call:
 string(3) "www"
 
@@ -55,6 +59,10 @@ string(1) "y"
 Deprecated: Use of "self" in callables is deprecated in %s on line %d
 __call:
 string(1) "y"
+
+Deprecated: Using BAR as a class name with incorrect case is deprecated, use the correct casing bar instead in %s on line %d
 ok
+
+Deprecated: Using BAR as a class name with incorrect case is deprecated, use the correct casing bar instead in %s on line %d
 call_user_func(): Argument #1 ($callback) must be a valid callback, class bar does not have a method "www"
 call_user_func(): Argument #1 ($callback) must be a valid callback, cannot access "self" when no class scope is active

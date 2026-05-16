@@ -84,6 +84,8 @@ echo "Serialized:\n-----------\n$serialized\n-----------\nRestored:\n-----------
 string(144) "O:34:"SerializableDomDocumentSleepWakeup":1:{s:43:"%0SerializableDomDocumentSleepWakeup%0xmlData";s:39:"<?xml version="1.0"?>
 <tag>value</tag>
 ";}"
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 Serialized:
 -----------
 O:34:"SerializableDomDocumentSleepWakeup":1:{s:43:"%0SerializableDomDocumentSleepWakeup%0xmlData";s:39:"<?xml version="1.0"?>
@@ -95,6 +97,8 @@ Restored:
 <?xml version="1.0"?>
 <tag>value</tag>
 === __serialize and __unserialize ===
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 Serialized:
 -----------
 O:47:"SerializableDomDocument__Serialize__Unserialize":1:{s:7:"xmlData";s:39:"<?xml version="1.0"?>
@@ -108,6 +112,8 @@ Restored:
 === serialize and unserialize ===
 
 Deprecated: SerializableDomDocumentSerializeUnserialize implements the Serializable interface, which is deprecated. Implement __serialize() and __unserialize() instead (or in addition, if support for old PHP versions is necessary) in %s on line %d
+
+Deprecated: Calling saveXml() is deprecated, use the correct casing DOMDocument::saveXML() instead in %s on line %d
 Serialized:
 -----------
 C:43:"SerializableDomDocumentSerializeUnserialize":39:{<?xml version="1.0"?>

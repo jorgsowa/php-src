@@ -24,7 +24,10 @@ $rootNode->appendChild($rootNode);
 
 ?>
 --EXPECTF--
+Deprecated: Using domdocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 --- Catch exception with try/catch
+
+Deprecated: Using domexception as a class name with incorrect case is deprecated, use the correct casing DOMException instead in %s on line %d
 object(DOMException)#%d (%d) {
   ["message":protected]=>
   string(23) "Hierarchy Request Error"

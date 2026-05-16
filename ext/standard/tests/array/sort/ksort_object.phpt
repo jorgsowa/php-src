@@ -77,6 +77,7 @@ var_dump($temp_array);
 echo "Done\n";
 ?>
 --EXPECTF--
+Deprecated: Declaring StringObject::__tostring() with incorrect case is deprecated, use the correct casing __toString() instead in %s on line %d
 *** Testing ksort() : object functionality ***
 
 -- Testing ksort() by supplying various object arrays, 'flag' value is default --

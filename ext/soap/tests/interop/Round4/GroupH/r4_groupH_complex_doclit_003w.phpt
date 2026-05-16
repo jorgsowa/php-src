@@ -29,9 +29,12 @@ $HTTP_RAW_POST_DATA = $client->__getlastrequest();
 include("round4_groupH_complex_doclit.inc");
 echo "ok\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling __getlastrequest() is deprecated, use the correct casing SoapClient::__getLastRequest() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://soapinterop.org/types" xmlns:ns2="http://soapinterop.org/types/requestresponse"><SOAP-ENV:Body><ns2:echoExtendedStructFaultRequest><ns1:structMessage><ns1:varString>a1</ns1:varString><ns1:varInt>11</ns1:varInt><ns1:varFloat>12.345</ns1:varFloat></ns1:structMessage><ns1:shortMessage>12</ns1:shortMessage><ns1:stringMessage>arg</ns1:stringMessage><ns1:intMessage>-3</ns1:intMessage><ns1:anotherIntMessage>5</ns1:anotherIntMessage></ns2:echoExtendedStructFaultRequest></SOAP-ENV:Body></SOAP-ENV:Envelope>
+
+Deprecated: Calling __getlastrequest() is deprecated, use the correct casing SoapClient::__getLastRequest() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://soapinterop.org/types" xmlns:ns2="http://soapinterop.org/types/part"><SOAP-ENV:Body><SOAP-ENV:Fault><faultcode>SOAP-ENV:Server</faultcode><faultstring>Fault in response to 'echoExtendedStructFault'.</faultstring><detail><ns2:ExtendedStructPart><ns1:structMessage><ns1:varString>a1</ns1:varString><ns1:varInt>11</ns1:varInt><ns1:varFloat>12.345</ns1:varFloat></ns1:structMessage><ns1:shortMessage>12</ns1:shortMessage><ns1:stringMessage>arg</ns1:stringMessage><ns1:intMessage>-3</ns1:intMessage><ns1:anotherIntMessage>5</ns1:anotherIntMessage></ns2:ExtendedStructPart></detail></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>
 ok

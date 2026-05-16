@@ -39,8 +39,10 @@ try {
 var_dump($dom->body?->nodeName);
 
 ?>
---EXPECT--
+--EXPECTF--
 --- Set body to NULL ---
+
+Deprecated: Using DOM\HTMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\HTMLDocument instead in %s on line %d
 string(4) "BODY"
 The new body must either be a body or a frameset tag
 string(4) "BODY"
@@ -57,5 +59,7 @@ string(4) "BODY"
 Cannot assign Dom\Element to property Dom\Document::$body of type ?Dom\HTMLElement
 string(4) "BODY"
 --- Set body without document element ---
+
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
 A body can only be set if there is a document element
 NULL

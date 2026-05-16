@@ -29,10 +29,14 @@ $periodWithRecurrencesWithoutStart = new DatePeriod($start, $interval, $recurren
 var_dump($periodWithRecurrences->getRecurrences());
 
 ?>
---EXPECT--
+--EXPECTF--
 string(19) "2000-01-01 00:00:00"
+
+Deprecated: Calling getTimeZone() is deprecated, use the correct casing DateTime::getTimezone() instead in %s on line %d
 string(13) "Europe/Berlin"
 string(19) "2000-01-31 00:00:00"
+
+Deprecated: Calling getTimeZone() is deprecated, use the correct casing DateTime::getTimezone() instead in %s on line %d
 string(3) "UTC"
 string(12) "+0-0-1-0-0-0"
 NULL

@@ -22,8 +22,13 @@ test_helper($dom, 'a:not(:any-link)');
 test_helper($dom, ':not(:any-link)');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: :any-link ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <a xmlns="http://www.w3.org/1999/xhtml" href="http://example.com">Link</a>
 <area xmlns="http://www.w3.org/1999/xhtml" href="http://example.com">Link</area>
 --- Selector: :link ---

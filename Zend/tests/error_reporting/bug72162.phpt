@@ -11,5 +11,7 @@ try {
     echo $exception->getMessage() . "\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 error_reporting(): Argument #1 ($error_level) must be of type ?int, stdClass given

@@ -30,6 +30,8 @@ Array
 
 )
 #0 %s(%d): {closure:%s:%d}(23)
+
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
 Array
 (
     [0] => Array

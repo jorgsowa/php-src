@@ -14,8 +14,13 @@ $d = new DateTime('2008-01-01 12:00:00+0200');
 $d->setTimeZone($tz2);
 echo $d->format(DATE_ISO8601), PHP_EOL;
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling getTimeZone() is deprecated, use the correct casing DateTime::getTimezone() instead in %s on line %d
 UTC
 UTC
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 2008-01-01T10:00:00+0000
+
+Deprecated: Calling setTimeZone() is deprecated, use the correct casing DateTime::setTimezone() instead in %s on line %d
 2008-01-01T10:00:00+0000

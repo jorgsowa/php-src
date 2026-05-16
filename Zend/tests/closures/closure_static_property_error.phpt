@@ -16,6 +16,8 @@ var_dump($x::$x);
 --EXPECTF--
 int(1)
 
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
+
 Fatal error: Uncaught Error: Access to undeclared static property Closure::$x in %s:%d
 Stack trace:
 #0 {main}

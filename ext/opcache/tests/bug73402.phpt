@@ -26,5 +26,6 @@ class B
 $b = new B;
 $b->test();
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling Info() is deprecated, use the correct casing Logger::info() instead in %s on line %d
 test

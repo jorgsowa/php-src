@@ -65,7 +65,7 @@ echo "\n" . 'C::$p->q=f(): ';
 C::$p = new stdclass;
 echo $a[C::$p->q=f()][++C::$p->q];
 ?>
---EXPECT--
+--EXPECTF--
 $i=f(): good
 $$x=f(): good
 ${'i'}=f(): good
@@ -77,4 +77,6 @@ $i->p[0]=f(): good
 $i->p[0]->p=f(): good
 C::$p=f(): good
 C::$p[0]=f(): good
-C::$p->q=f(): good
+C::$p->q=f(): 
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+good

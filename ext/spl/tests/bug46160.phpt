@@ -10,5 +10,6 @@ try {
 
 ?>
 DONE
---EXPECT--
+--EXPECTF--
+Deprecated: Using splqueue as a class name with incorrect case is deprecated, use the correct casing SplQueue instead in %s on line %d
 DONE

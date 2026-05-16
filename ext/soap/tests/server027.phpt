@@ -20,7 +20,8 @@ $server->setObject($foo);
 var_dump($server->getfunctions());
 echo "ok\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling getfunctions() is deprecated, use the correct casing SoapServer::getFunctions() instead in %s on line %d
 array(2) {
   [0]=>
   string(11) "__construct"

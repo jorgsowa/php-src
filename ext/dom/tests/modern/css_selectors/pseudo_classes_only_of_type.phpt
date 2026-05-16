@@ -29,8 +29,13 @@ test_helper($dom, '.only-of-type2 p:only-of-type');
 test_helper($dom, '.only-of-type3 p:only-of-type');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DOM\XMLDocument as a class name with incorrect case is deprecated, use the correct casing Dom\XMLDocument instead in %s on line %d
+
+Deprecated: Using DOM\ParentNode as a class name with incorrect case is deprecated, use the correct casing Dom\ParentNode instead in %s on line %d
 --- Selector: .only-of-type1 p:only-of-type ---
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <p>Alone</p>
 --- Selector: .only-of-type2 p:only-of-type ---
 --- Selector: .only-of-type3 p:only-of-type ---

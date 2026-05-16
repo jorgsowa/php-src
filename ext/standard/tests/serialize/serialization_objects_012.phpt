@@ -74,6 +74,8 @@ echo "Done";
 ?>
 --EXPECTF--
 Array containing same object twice:
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 array(2) {
   [0]=>
   object(stdClass)#%d (0) {
@@ -115,6 +117,8 @@ array(2) {
 
 
 Array containing object and reference to that object:
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 array(2) {
   [0]=>
   &object(stdClass)#%d (0) {
@@ -152,7 +156,11 @@ array(2) {
 }
 
 
-Object containing same object twice:object(stdClass)#%d (2) {
+Object containing same object twice:
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+object(stdClass)#%d (2) {
   ["a"]=>
   object(stdClass)#%d (0) {
   }
@@ -193,6 +201,10 @@ object(stdClass)#%d (2) {
 
 
 Object containing object and reference to that object:
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(stdClass)#%d (2) {
   ["a"]=>
   &object(stdClass)#%d (0) {

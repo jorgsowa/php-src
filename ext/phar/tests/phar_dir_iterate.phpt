@@ -24,6 +24,7 @@ unlink(__DIR__ . '/' . basename(__FILE__, '.clean.php') . '.phar.php');
 __halt_compiler();
 ?>
 --EXPECTF--
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
 string(%d) "phar://%sphar_dir_iterate.phar.php%canother.file.txt"
 string(%d) "phar://%sphar_dir_iterate.phar.php/sub%ctop.txt"
 string(%d) "phar://%sphar_dir_iterate.phar.php%ctop.txt"

@@ -37,6 +37,7 @@ $foo["bar"]->onBaz[] = function() {};
 var_dump($foo->bar->onBaz);
 ?>
 --EXPECTF--
+Deprecated: Using arrayAccess as a class name with incorrect case is deprecated, use the correct casing ArrayAccess instead in %s on line %d
 array(1) {
   [0]=>
   object(Closure)#%d (3) {

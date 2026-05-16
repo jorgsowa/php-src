@@ -7,5 +7,6 @@ $x->__construct(1);
 
 echo "done!\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using splfileinfo as a class name with incorrect case is deprecated, use the correct casing SplFileInfo instead in %s on line %d
 done!

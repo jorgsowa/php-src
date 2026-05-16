@@ -45,6 +45,7 @@ var_dump($foo);
 
 ?>
 --EXPECTF--
+Deprecated: Using Setter as a class name with incorrect case is deprecated, use the correct casing setter instead in %s on line %d
 Setting [a] to 100
 OK!
 Getting [a]

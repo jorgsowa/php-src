@@ -66,7 +66,8 @@ var_dump($o2[0] === $o2[1]);
 var_dump($o2[2] !== $o2);
 var_dump($o2[2][2] === $o2[2]);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 bool(true)
 bool(true)
 string(96) "O:11:"ArrayObject":4:{i:0;i:0;i:1;a:3:{i:0;O:8:"stdClass":0:{}i:1;r:4;i:2;r:1;}i:2;a:0:{}i:3;N;}"
@@ -77,6 +78,8 @@ bool(true)
 bool(true)
 bool(true)
 #### Extending ArrayObject
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 bool(true)
 bool(true)
 string(97) "O:12:"ArrayObject2":4:{i:0;i:0;i:1;a:3:{i:0;O:8:"stdClass":0:{}i:1;r:4;i:2;r:1;}i:2;a:0:{}i:3;N;}"

@@ -52,6 +52,7 @@ function f($x)
 $a = f(null) ?? f(1) ?? f(2);
 ?>
 --EXPECTF--
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 int(3)
 
 int(7)

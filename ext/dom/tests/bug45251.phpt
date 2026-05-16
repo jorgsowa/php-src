@@ -26,5 +26,6 @@ foreach ($bbb->attributes as $attr)
 echo $attr->parentNode->localName;
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling loadXml() is deprecated, use the correct casing DOMDocument::loadXML() instead in %s on line %d
 ccc

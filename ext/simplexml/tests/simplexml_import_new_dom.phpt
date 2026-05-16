@@ -16,9 +16,11 @@ $s->book[0]->title = "test";
 echo $dom->saveXML();
 
 ?>
---EXPECT--
+--EXPECTF--
 The Grapes of Wrath was written by John Steinbeck
 The Pearl was written by John Steinbeck
+
+Deprecated: Calling saveXML() is deprecated, use the correct casing Dom\XMLDocument::saveXml() instead in %s on line %d
 <?xml version="1.0" encoding="UTF-8"?>
 <books>
  <book>

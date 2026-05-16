@@ -22,8 +22,10 @@ dumpAttr($attr);
 $attr = $dom->createAttribute('FoOo');
 dumpAttr($attr);
 ?>
---EXPECT--
+--EXPECTF--
 --- HTML document ---
+
+Deprecated: Using DOM\Attr as a class name with incorrect case is deprecated, use the correct casing Dom\Attr instead in %s on line %d
 Attr: foo
 NULL
 string(3) "foo"

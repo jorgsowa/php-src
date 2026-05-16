@@ -33,4 +33,6 @@ foreach (get_declared_classes() as $class) {
 Deprecated: Constant SUNFUNCS_RET_STRING is deprecated since 8.4, as date_sunrise() and date_sunset() were deprecated in 8.1 in %s on line %d
 
 Deprecated: Constant SUNFUNCS_RET_STRING is deprecated since 8.4, as date_sunrise() and date_sunset() were deprecated in 8.1 in %s on line %d
+
+Deprecated: Calling dom\import_simplexml() is deprecated, use the correct casing Dom\import_simplexml() instead in %s on line %d
 ===DONE===

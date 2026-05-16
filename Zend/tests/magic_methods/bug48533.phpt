@@ -31,6 +31,7 @@ $x::b();
 
 ?>
 --EXPECTF--
+Deprecated: Declaring foo::__callstatic() with incorrect case is deprecated, use the correct casing __callStatic() instead in %s on line %d
 string(9) "__call::a"
 int(2)
 string(9) "__call::c"

@@ -30,7 +30,9 @@ foreach($classes  as $class ) {
     var_dump($ro->IsInstantiable());
 }
 ?>
---EXPECT--
-Is C instantiable?  bool(true)
+--EXPECTF--
+Is C instantiable?  
+Deprecated: Calling IsInstantiable() is deprecated, use the correct casing ReflectionClass::isInstantiable() instead in %s on line %d
+bool(true)
 Is ifaceImpl instantiable?  bool(true)
 Is D instantiable?  bool(true)

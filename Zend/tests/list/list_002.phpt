@@ -12,7 +12,9 @@ list($a, list($b)) = array($a, array($b));
 var_dump($a, $b, $a === $b);
 
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(stdClass)#1 (0) {
 }
 object(stdClass)#1 (0) {

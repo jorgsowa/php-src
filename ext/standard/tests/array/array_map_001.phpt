@@ -17,6 +17,7 @@ try {
 
 echo "Done\n";
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using exception as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
 string(17) "exception caught!"
 Done

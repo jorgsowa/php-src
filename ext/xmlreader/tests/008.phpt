@@ -63,6 +63,13 @@ if ($reader->isValid()) {
     echo "string DTD: ok\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
+
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
+
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
+
+Deprecated: Using XMLREADER as a class name with incorrect case is deprecated, use the correct casing XMLReader instead in %s on line %d
 file DTD: ok
 string DTD: ok

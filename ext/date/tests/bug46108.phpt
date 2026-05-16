@@ -9,6 +9,7 @@ var_dump(unserialize(serialize(new Datetime)));
 
 ?>
 --EXPECTF--
+Deprecated: Using Datetime as a class name with incorrect case is deprecated, use the correct casing DateTime instead in %s on line %d
 object(DateTime)#%d (3) {
   ["date"]=>
   string(%d) "%s"

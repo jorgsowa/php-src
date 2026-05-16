@@ -23,7 +23,8 @@ try {
 }
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 int(1)
 must be between 0 and 2147483647
 Cannot access DOMNamedNodeMap without offset

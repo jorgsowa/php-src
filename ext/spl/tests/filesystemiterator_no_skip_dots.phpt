@@ -22,7 +22,10 @@ $dir = __DIR__ . '/filesystemiterator_no_skip_dots';
 unlink($dir . '/file');
 rmdir($dir);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using FileSystemIterator as a class name with incorrect case is deprecated, use the correct casing FilesystemIterator instead in %s on line %d
+
+Deprecated: Calling getFileName() is deprecated, use the correct casing SplFileInfo::getFilename() instead in %s on line %d
 array(3) {
   [0]=>
   string(1) "."

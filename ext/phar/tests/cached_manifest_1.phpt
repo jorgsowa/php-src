@@ -25,6 +25,8 @@ string(1) "b"
 string(1) "d"
 string(9) "index.php"
 string(7) "web.php"
+
+Deprecated: Calling getPathName() is deprecated, use the correct casing SplFileInfo::getPathname() instead in %s on line %d
 string(%d) "phar://%snophar.phar/b%cc.php"
 string(%d) "phar://%snophar.phar%cd"
 string(%d) "phar://%snophar.phar%cindex.php"

@@ -10,7 +10,8 @@ $element = $dom2->firstChild;
 $dom = new DomDocument();
 var_dump($element);
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Using DomDocument as a class name with incorrect case is deprecated, use the correct casing DOMDocument instead in %s on line %d
 object(Dom\HTMLElement)#3 (31) {
   ["namespaceURI"]=>
   string(28) "http://www.w3.org/1999/xhtml"

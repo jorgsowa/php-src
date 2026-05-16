@@ -19,6 +19,8 @@ var_dump($beginTimestamp);
 $dateTimeTz = (new DateTime('1970-01-01T00:00:00UTC'))->getTimeStamp();
 var_dump($dateTimeTz === $beginTimestamp);
 ?>
---EXPECT--
+--EXPECTF--
 int(0)
+
+Deprecated: Calling getTimeStamp() is deprecated, use the correct casing DateTime::getTimestamp() instead in %s on line %d
 bool(true)
