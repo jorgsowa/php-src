@@ -13,7 +13,9 @@ test($arg)->name[1] = "xxxx";
 
 print_r($arg);
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using Stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 stdClass Object
 (
     [name] => Array

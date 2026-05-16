@@ -17,5 +17,7 @@ function foo ($a) {
 
 var_dump(foo("para"));
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using PdoException as a class name with incorrect case is deprecated, use the correct casing PDOException instead in %s on line %d
 int(3)

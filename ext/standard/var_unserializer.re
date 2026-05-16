@@ -17,6 +17,7 @@
 #include "php_incomplete_class.h"
 #include "zend_portability.h"
 #include "zend_exceptions.h"
+#include "zend_execute.h"
 
 /* {{{ reference-handling for unserializer: var_* */
 #define VAR_ENTRIES_MAX 1018     /* 1024 - offsetof(php_unserialize_data, entries) / sizeof(void*) */
@@ -1207,6 +1208,7 @@ object ":" uiv ":" ["]	{
 		if ((*var_hash)->allowed_classes && ZSTR_HAS_CE_CACHE(class_name)) {
 			ce = ZSTR_GET_CE_CACHE(class_name);
 			if (ce) {
+				zend_check_class_name_case(class_name, ce);
 				zend_string_release_ex(lc_name, 0);
 				break;
 			}
@@ -1216,6 +1218,7 @@ object ":" uiv ":" ["]	{
 		if (ce
 		 && (ce->ce_flags & ZEND_ACC_LINKED)
 		 && !(ce->ce_flags & ZEND_ACC_ANON_CLASS)) {
+			zend_check_class_name_case(class_name, ce);
 			zend_string_release_ex(lc_name, 0);
 			break;
 		}
@@ -1237,6 +1240,7 @@ object ":" uiv ":" ["]	{
 		}
 
 		if (ce) {
+			zend_check_class_name_case(class_name, ce);
 			break;
 		}
 
@@ -1268,6 +1272,8 @@ object ":" uiv ":" ["]	{
 			php_error_docref(NULL, E_WARNING, "Function %s() hasn't defined the class it was called for", Z_STRVAL(user_func));
 			incomplete_class = 1;
 			ce = PHP_IC_ENTRY;
+		} else {
+			zend_check_class_name_case(class_name, ce);
 		}
 		BG(serialize_lock)--;
 
@@ -1392,6 +1398,7 @@ object ":" uiv ":" ["]	{
 		goto fail;
 	}
 
+	zend_check_class_name_case(enum_name, ce);
 	YYCURSOR += 2;
 	*p = YYCURSOR;
 

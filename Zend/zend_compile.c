@@ -1339,6 +1339,7 @@ ZEND_API zend_class_entry *zend_bind_class_in_slot(
 	}
 
 	if (ce->ce_flags & ZEND_ACC_LINKED) {
+		zend_check_namespace_case(ce);
 		zend_observer_class_linked_notify(ce, Z_STR_P(lcname));
 		return ce;
 	}
@@ -4332,6 +4333,8 @@ static zend_result zend_try_compile_ct_bound_init_user_func(zend_ast *name_ast, 
 		return FAILURE;
 	}
 
+	zend_check_func_name_case(name, fbc);
+
 	opline = zend_emit_op(NULL, ZEND_INIT_FCALL, NULL, NULL);
 	opline->extended_value = num_args;
 	opline->op1.num = zend_vm_calc_used_stack(num_args, fbc);
@@ -5454,6 +5457,8 @@ static void zend_compile_call(znode *result, const zend_ast *ast, uint32_t type)
 			zend_compile_dynamic_call(result, &name_node, args_ast, ast->lineno, type);
 			return;
 		}
+
+		zend_check_func_name_case(Z_STR_P(name), fbc);
 
 		if (!is_callable_convert &&
 		    zend_try_compile_special_func(result, lcname,
@@ -8537,6 +8542,34 @@ static void add_stringable_interface(zend_class_entry *ce) {
 		ZSTR_INIT_LITERAL("stringable", 0);
 }
 
+static const char *zend_get_canonical_magic_method_name(const zend_string *lcname) /* {{{ */
+{
+	if (zend_string_equals_literal(lcname, ZEND_TOSTRING_FUNC_NAME)) {
+		return "__toString";
+	} else if (zend_string_equals_literal(lcname, ZEND_CALLSTATIC_FUNC_NAME)) {
+		return "__callStatic";
+	} else if (zend_string_equals_literal(lcname, ZEND_DEBUGINFO_FUNC_NAME)) {
+		return "__debugInfo";
+	} else if (zend_string_equals_literal(lcname, ZEND_CONSTRUCTOR_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_DESTRUCTOR_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_CLONE_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_GET_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_SET_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_UNSET_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_ISSET_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_CALL_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, ZEND_INVOKE_FUNC_NAME)
+			|| zend_string_equals_literal(lcname, "__sleep")
+			|| zend_string_equals_literal(lcname, "__wakeup")
+			|| zend_string_equals_literal(lcname, "__serialize")
+			|| zend_string_equals_literal(lcname, "__unserialize")
+			|| zend_string_equals_literal(lcname, "__set_state")) {
+		return ZSTR_VAL(lcname);
+	}
+	return NULL;
+}
+/* }}} */
+
 static zend_string *zend_begin_method_decl(zend_op_array *op_array, zend_string *name, bool has_body) /* {{{ */
 {
 	zend_class_entry *ce = CG(active_class_entry);
@@ -8610,6 +8643,15 @@ static zend_string *zend_begin_method_decl(zend_op_array *op_array, zend_string 
 	}
 
 	zend_add_magic_method(ce, (zend_function *) op_array, lcname);
+
+	const char *canonical_magic = zend_get_canonical_magic_method_name(lcname);
+	if (canonical_magic && strcmp(ZSTR_VAL(name), canonical_magic) != 0) {
+		zend_error(E_DEPRECATED,
+			"Declaring %s::%s() with incorrect case is deprecated, "
+			"use the correct casing %s() instead",
+			ZSTR_VAL(ce->name), ZSTR_VAL(name), canonical_magic);
+	}
+
 	if (zend_string_equals_literal(lcname, ZEND_TOSTRING_FUNC_NAME)
 			&& !(ce->ce_flags & ZEND_ACC_TRAIT)) {
 		add_stringable_interface(ce);
@@ -9675,6 +9717,7 @@ static void zend_compile_class_decl(znode *result, const zend_ast *ast, bool top
 				zend_build_properties_info_table(ce);
 				zend_inheritance_check_override(ce);
 				ce->ce_flags |= ZEND_ACC_LINKED;
+				zend_check_namespace_case(ce);
 				zend_observer_class_linked_notify(ce, lcname);
 				return;
 			} else {
@@ -11377,6 +11420,22 @@ static void zend_compile_class_const(znode *result, zend_ast *ast) /* {{{ */
 			zend_string *resolved_name = zend_resolve_class_name_ast(class_ast);
 			if (zend_try_ct_eval_class_const(&result->u.constant, resolved_name, const_str)) {
 				result->op_type = IS_CONST;
+				if (zend_get_class_fetch_type(resolved_name) == ZEND_FETCH_CLASS_DEFAULT) {
+					const zend_class_entry *ce;
+					if (CG(active_class_entry) && zend_string_equals_ci(resolved_name, CG(active_class_entry)->name)) {
+						ce = CG(active_class_entry);
+					} else {
+						ce = zend_hash_find_ptr_lc(CG(class_table), resolved_name);
+					}
+					if (ce && !(ce->ce_flags & ZEND_ACC_ANON_CLASS)
+						&& !zend_string_equals(resolved_name, ce->name)
+						&& zend_string_equals_ci(resolved_name, ce->name)) {
+						zend_error(E_DEPRECATED,
+							"Using %s as a class name with incorrect case is deprecated, use the correct casing %s instead",
+							ZSTR_VAL(resolved_name),
+							ZSTR_VAL(ce->name));
+					}
+				}
 				zend_string_release_ex(resolved_name, 0);
 				return;
 			}

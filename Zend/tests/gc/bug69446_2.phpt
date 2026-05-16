@@ -31,7 +31,9 @@ unserialize(serialize($foo));
 gc_collect_cycles();
 var_dump($bar);
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(bad)#4 (1) {
   ["_private"]=>
   array(1) {

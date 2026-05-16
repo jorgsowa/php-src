@@ -67,8 +67,10 @@ A::myCatch();
 echo "via B:\n";
 B::myCatch();
 ?>
---EXPECT--
+--EXPECTF--
 via A:
+
+Deprecated: Calling myCatch() is deprecated, use the correct casing A::mycatch() instead in %s on line %d
 A
 A
 A
@@ -79,6 +81,8 @@ A
 A
 A
 via B:
+
+Deprecated: Calling myCatch() is deprecated, use the correct casing A::mycatch() instead in %s on line %d
 B
 B
 A

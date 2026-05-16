@@ -29,8 +29,10 @@ foreach(get_declared_classes() as $class)
 }
 echo "Done.\n";
 ?>
---EXPECT--
+--EXPECTF--
 Instantiating an infoBlob with a lowercase i
+
+Deprecated: Using infoBlob as a class name with incorrect case is deprecated, use the correct casing InfoBlob instead in %s on line %d
 Foo
 Instantiating an InfoBlob with an uppercase I
 Foo

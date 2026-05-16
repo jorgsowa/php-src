@@ -98,12 +98,16 @@ echo $fn(" OK".PHP_EOL);
 ?>
 --EXPECTF--
 Access public static function OK
-Access public static function with different case OK
+Access public static function with different case
+Deprecated: Calling publicStaticfUNCTION() is deprecated, use the correct casing Foo::publicStaticFunction() instead in %s on line %d
+ OK
 Access public static function with colon scheme OK
 Access public instance method of object OK
 Access public instance method of parent object through parent::  OK
 Function that exists OK
-Function that exists with different spelling OK
+Function that exists with different spelling
+Deprecated: Calling BAR() is deprecated, use the correct casing bar() instead in %s on line %d
+ OK
 Closure is already a closure OK
 Class with public invocable OK
 Instance return private method as callable OK

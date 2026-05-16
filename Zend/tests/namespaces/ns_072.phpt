@@ -30,7 +30,9 @@ object(foo\test)#%d (0) {
 }
 NULL
 
-Fatal error: Uncaught TypeError: foo\bar::__construct(): Argument #1 ($x) must be of type ?foo\foo, stdClass given, called in %s:%d
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Fatal error: Uncaught TypeError: foo\bar::__construct(): Argument #1 ($x) must be of type ?foo\foo, stdClass given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): foo\bar->__construct(Object(stdClass))
 #1 {main}

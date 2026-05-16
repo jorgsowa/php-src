@@ -56,11 +56,15 @@ var_dump($foo->baz);
 
 
 ?>
---EXPECT--
+--EXPECTF--
 string(3) "bar"
 Cannot modify protected(set) property Foo::$bar from global scope
 string(3) "baz"
 string(3) "qux"
 Cannot modify protected(set) property Foo::$baz from global scope
+
+Deprecated: Calling setbazPrivate() is deprecated, use the correct casing Foo::setBazPrivate() instead in %s on line %d
 string(4) "baz2"
+
+Deprecated: Calling setbazProtected() is deprecated, use the correct casing FooChild::setBazProtected() instead in %s on line %d
 string(4) "baz3"

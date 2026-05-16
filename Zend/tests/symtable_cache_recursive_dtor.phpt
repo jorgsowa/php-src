@@ -15,5 +15,7 @@ new A;
 
 ?>
 ===DONE===
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using a as a class name with incorrect case is deprecated, use the correct casing A instead in %s on line %d
 ===DONE===

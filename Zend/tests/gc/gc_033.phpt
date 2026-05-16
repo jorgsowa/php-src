@@ -26,5 +26,7 @@ for ($i=0; $i<9999; $i++) {
 /* then $a will be freed, but $a->a[0] is not. reference to a freed $a */
 var_dump(gc_collect_cycles());
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using Stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 int(10002)

@@ -24,6 +24,7 @@
 #include "zend_strtod.h"
 #include "zend_interfaces.h"
 #include "zend_enum.h"
+#include "zend_execute.h"
 
 /* zval type decode */
 static zval *to_zval_double(zval* ret, encodeTypePtr type, xmlNodePtr data);
@@ -1407,6 +1408,7 @@ static zval *to_zval_object_ex(zval *ret, encodeTypePtr type, xmlNodePtr data, z
 		if (classname != NULL &&
 		    Z_TYPE_P(classname) == IS_STRING &&
 		    (tmp = zend_fetch_class(Z_STR_P(classname), ZEND_FETCH_CLASS_AUTO)) != NULL) {
+			zend_check_class_name_case(Z_STR_P(classname), tmp);
 			ce = tmp;
 		}
 	}

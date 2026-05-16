@@ -13,7 +13,12 @@ register_shutdown_function('ABC');
 register_shutdown_function('exploDe');
 
 ?>
---EXPECT--
+--EXPECTF--
+Deprecated: Calling timE() is deprecated, use the correct casing time() instead in %s on line %d
+
+Deprecated: Calling ABC() is deprecated, use the correct casing abc() instead in %s on line %d
+
+Deprecated: Calling exploDe() is deprecated, use the correct casing explode() instead in %s on line %d
 int(1)
 
 Fatal error: Uncaught ArgumentCountError: explode() expects at least 2 arguments, 0 given in [no active file]:0

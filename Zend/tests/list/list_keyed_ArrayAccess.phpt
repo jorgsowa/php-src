@@ -44,10 +44,14 @@ list(123 => $x) = $op;
 list("123" => $x) = $op;
 
 ?>
---EXPECT--
+--EXPECTF--
 string(3) "bad"
 string(3) "sad"
 
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 string(3) "foo"
 string(3) "bar"
 

@@ -476,6 +476,7 @@ ZEND_API bool ZEND_FASTCALL zend_parse_arg_class(zval *arg, zend_class_entry **p
 		zend_argument_type_error(num, "must be a valid class name, %s given", Z_STRVAL_P(arg));
 		return 0;
 	}
+	zend_check_class_name_case(Z_STR_P(arg), *pce);
 	return 1;
 }
 /* }}} */
@@ -1008,6 +1009,7 @@ static const char *zend_parse_arg_impl(zval *arg, va_list *va, const char **spec
 						check_null ? " or null" : "", Z_STRVAL_P(arg));
 					return "";
 				}
+				zend_check_class_name_case(Z_STR_P(arg), *pce);
 				break;
 
 			}
@@ -3747,6 +3749,7 @@ static bool zend_is_callable_check_class(zend_string *name, zend_class_entry *sc
 			ret = true;
 		}
 	} else if ((ce = zend_lookup_class(name)) != NULL) {
+		zend_check_class_name_case(name, ce);
 		const zend_class_entry *frame_scope = get_scope(frame);
 		fcc->calling_scope = ce;
 		if (frame_scope && !fcc->object) {
@@ -3827,6 +3830,15 @@ static zend_always_inline bool zend_is_callable_check_func(const zval *callable,
 			}
 		}
 		if (EXPECTED(func != NULL)) {
+			if (!suppress_deprecation) {
+				if (UNEXPECTED(Z_STRVAL_P(callable)[0] == '\\')) {
+					zend_string *stripped = zend_string_init(Z_STRVAL_P(callable) + 1, Z_STRLEN_P(callable) - 1, 0);
+					zend_check_func_name_case(stripped, func);
+					zend_string_release_ex(stripped, 0);
+				} else {
+					zend_check_func_name_case(Z_STR_P(callable), func);
+				}
+			}
 			fcc->function_handler = func;
 			return 1;
 		}
@@ -3986,6 +3998,9 @@ get_function_via_handler:
 	}
 
 	if (retval) {
+		if (fcc->calling_scope && !call_via_handler && !suppress_deprecation) {
+			zend_check_func_name_case(mname, fcc->function_handler);
+		}
 		if (fcc->calling_scope && !call_via_handler) {
 			if (fcc->function_handler->common.fn_flags & ZEND_ACC_ABSTRACT) {
 				retval = false;

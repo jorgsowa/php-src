@@ -20,6 +20,9 @@ throw new excEption();
 echo "Done\n";
 ?>
 --EXPECTF--
+
+Deprecated: Using excEption as a class name with incorrect case is deprecated, use the correct casing Exception instead in %s on line %d
+
 Fatal error: Uncaught Exception in %s:%d
 Stack trace:
 #0 {main}

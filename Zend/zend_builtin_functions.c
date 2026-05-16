@@ -27,6 +27,7 @@
 #include "zend_interfaces.h"
 #include "zend_exceptions.h"
 #include "zend_extensions.h"
+#include "zend_execute.h"
 #include "zend_closures.h"
 #include "zend_generators.h"
 #include "zend_autoload.h"
@@ -702,6 +703,7 @@ static void is_a_impl(INTERNAL_FUNCTION_PARAMETERS, bool only_subclass) /* {{{ *
 		if (!instance_ce) {
 			RETURN_FALSE;
 		}
+		zend_check_class_name_case(Z_STR_P(obj), instance_ce);
 	} else if (Z_TYPE_P(obj) == IS_OBJECT) {
 		instance_ce = Z_OBJCE_P(obj);
 	} else {
@@ -716,6 +718,8 @@ static void is_a_impl(INTERNAL_FUNCTION_PARAMETERS, bool only_subclass) /* {{{ *
 	if (!ce) {
 		RETURN_FALSE;
 	}
+
+	zend_check_class_name_case(class_name, ce);
 
 	if (only_subclass && instance_ce == ce) {
 		RETURN_FALSE;
@@ -969,6 +973,7 @@ ZEND_FUNCTION(method_exists)
 		if ((ce = zend_lookup_class(Z_STR_P(klass))) == NULL) {
 			RETURN_FALSE;
 		}
+		zend_check_class_name_case(Z_STR_P(klass), ce);
 	} else {
 		zend_argument_type_error(1, "must be of type object|string, %s given", zend_zval_value_name(klass));
 		RETURN_THROWS();
@@ -979,6 +984,7 @@ ZEND_FUNCTION(method_exists)
 	zend_string_release_ex(lcname, 0);
 
 	if (func) {
+		zend_check_func_name_case(method_name, func);
 		/* Exclude shadow properties when checking a method on a specific class. Include
 		 * them when checking an object, as method_exists() generally ignores visibility.
 		 * TODO: Should we use EG(scope) for the object case instead? */
@@ -1021,6 +1027,7 @@ static void _property_exists(zval *return_value, const zval *object, zend_string
 		if (!ce) {
 			RETURN_FALSE;
 		}
+		zend_check_class_name_case(Z_STR_P(object), ce);
 	} else if (Z_TYPE_P(object) == IS_OBJECT) {
 		ce = Z_OBJCE_P(object);
 	} else {
@@ -1076,18 +1083,25 @@ static zend_always_inline void _class_exists_impl(zval *return_value, zend_strin
 	zend_string *lcname;
 	const zend_class_entry *ce;
 
+	zend_string *effective_name = name;
+	if (ZSTR_VAL(name)[0] == '\\') {
+		effective_name = zend_string_init(ZSTR_VAL(name) + 1, ZSTR_LEN(name) - 1, 0);
+	}
+
 	if (ZSTR_HAS_CE_CACHE(name)) {
 		ce = ZSTR_GET_CE_CACHE(name);
 		if (ce) {
+			zend_check_class_name_case(effective_name, ce);
+			if (effective_name != name) {
+				zend_string_release_ex(effective_name, 0);
+			}
 			RETURN_BOOL(((ce->ce_flags & flags) == flags) && !(ce->ce_flags & skip_flags));
 		}
 	}
 
 	if (!autoload) {
-		if (ZSTR_VAL(name)[0] == '\\') {
-			/* Ignore leading "\" */
-			lcname = zend_string_alloc(ZSTR_LEN(name) - 1, 0);
-			zend_str_tolower_copy(ZSTR_VAL(lcname), ZSTR_VAL(name) + 1, ZSTR_LEN(name) - 1);
+		if (effective_name != name) {
+			lcname = zend_string_tolower(effective_name);
 		} else {
 			lcname = zend_string_tolower(name);
 		}
@@ -1096,6 +1110,13 @@ static zend_always_inline void _class_exists_impl(zval *return_value, zend_strin
 		zend_string_release_ex(lcname, 0);
 	} else {
 		ce = zend_lookup_class(name);
+	}
+
+	if (ce) {
+		zend_check_class_name_case(effective_name, ce);
+	}
+	if (effective_name != name) {
+		zend_string_release_ex(effective_name, 0);
 	}
 
 	RETURN_BOOL(ce && ((ce->ce_flags & flags) == flags) && !(ce->ce_flags & skip_flags));
@@ -1174,8 +1195,9 @@ ZEND_FUNCTION(enum_exists)
 ZEND_FUNCTION(function_exists)
 {
 	zend_string *name;
-	bool exists;
 	zend_string *lcname;
+	zend_function *func;
+	bool exists;
 
 	ZEND_PARSE_PARAMETERS_START(1, 1)
 		Z_PARAM_STR(name)
@@ -1185,12 +1207,23 @@ ZEND_FUNCTION(function_exists)
 		/* Ignore leading "\" */
 		lcname = zend_string_alloc(ZSTR_LEN(name) - 1, 0);
 		zend_str_tolower_copy(ZSTR_VAL(lcname), ZSTR_VAL(name) + 1, ZSTR_LEN(name) - 1);
+		func = zend_hash_find_ptr(EG(function_table), lcname);
+		zend_string_release_ex(lcname, 0);
+		if (func) {
+			zend_string *stripped = zend_string_init(ZSTR_VAL(name) + 1, ZSTR_LEN(name) - 1, 0);
+			zend_check_func_name_case(stripped, func);
+			zend_string_release_ex(stripped, 0);
+		}
+		exists = func != NULL;
 	} else {
 		lcname = zend_string_tolower(name);
+		func = zend_hash_find_ptr(EG(function_table), lcname);
+		zend_string_release_ex(lcname, 0);
+		if (func) {
+			zend_check_func_name_case(name, func);
+		}
+		exists = func != NULL;
 	}
-
-	exists = zend_hash_exists(EG(function_table), lcname);
-	zend_string_release_ex(lcname, 0);
 
 	RETURN_BOOL(exists);
 }
@@ -1214,6 +1247,7 @@ ZEND_FUNCTION(class_alias)
 	ce = zend_lookup_class_ex(class_name, NULL, !autoload ? ZEND_FETCH_CLASS_NO_AUTOLOAD : 0);
 
 	if (ce) {
+		zend_check_class_name_case(class_name, ce);
 		if (zend_register_class_alias_ex(ZSTR_VAL(alias_name), ZSTR_LEN(alias_name), ce, false) == SUCCESS) {
 			RETURN_TRUE;
 		} else {

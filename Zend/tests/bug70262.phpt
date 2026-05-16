@@ -23,7 +23,9 @@ $a->getObj($array) //use function call to get a refcount == 1 IS_VAR object
 
 var_dump($array);
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using Stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 array(1) {
   [0]=>
   int(1)

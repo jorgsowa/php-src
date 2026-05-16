@@ -49,6 +49,10 @@ foreach($a as $var) {
 echo "Done\n";
 ?>
 --EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 array(3) {  [0]=>  int(1)  [1]=>  int(2)  [2]=>  int(3)} >= array(3) {  [0]=>  int(1)  [1]=>  int(2)  [2]=>  int(3)}
 array(3) {  [0]=>  int(1)  [1]=>  int(2)  [2]=>  int(3)} >= string(0) ""
 array(3) {  [0]=>  int(1)  [1]=>  int(2)  [2]=>  int(3)} >= int(1)

@@ -39,7 +39,7 @@ $a = new a;
 $a->nonstaticTest();
 
 ?>
---EXPECT--
+--EXPECTF--
 bool(true)
 bool(true)
 bool(true)
@@ -48,6 +48,8 @@ bool(true)
 bool(true)
 bool(true)
 ------------------
+
+Deprecated: Using a as a class name with incorrect case is deprecated, use the correct casing A instead in %s on line %d
 bool(true)
 bool(true)
 bool(true)

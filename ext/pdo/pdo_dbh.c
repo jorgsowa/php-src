@@ -27,6 +27,7 @@
 #include "php_pdo_int.h"
 #include "zend_attributes.h"
 #include "zend_exceptions.h"
+#include "zend_execute.h"
 #include "zend_object_handlers.h"
 #include "zend_hash.h"
 #include "pdo_dbh_arginfo.h"
@@ -621,6 +622,7 @@ PHP_METHOD(PDO, prepare)
 			zend_type_error("PDO::ATTR_STATEMENT_CLASS class must be a valid class");
 			RETURN_THROWS();
 		}
+		zend_check_class_name_case(Z_STR_P(item), pce);
 		dbstmt_ce = pce;
 		if (!instanceof_function(dbstmt_ce, pdo_dbstmt_ce)) {
 			zend_type_error("PDO::ATTR_STATEMENT_CLASS class must be derived from PDOStatement");
@@ -918,6 +920,7 @@ static bool pdo_dbh_attribute_set(pdo_dbh_t *dbh, zend_long attr, zval *value, u
 				zend_argument_type_error(value_arg_num, "PDO::ATTR_STATEMENT_CLASS class must be a valid class");
 				return false;
 			}
+			zend_check_class_name_case(Z_STR_P(item), pce);
 			if (!instanceof_function(pce, pdo_dbstmt_ce)) {
 				zend_argument_type_error(value_arg_num, "PDO::ATTR_STATEMENT_CLASS class must be derived from PDOStatement");
 				return false;

@@ -189,6 +189,25 @@ PHP 8.6 UPGRADE NOTES
 4. Deprecated Functionality
 ========================================
 
+- Core:
+  . Calling a function or method using incorrect casing (e.g. STRLEN() instead
+    of strlen()) is now deprecated.
+    RFC: https://wiki.php.net/rfc/case_sensitive_php
+  . Referencing a class, interface, trait, or enum using incorrect casing (e.g.
+    new FOO() instead of new Foo()) is now deprecated. This covers all language
+    constructs and functions that accept a class name: new, instanceof, catch,
+    extends, implements, use (trait), type declarations, callable strings/arrays,
+    class_exists() and related introspection functions, Closure::bind()/bindTo(),
+    Reflection constructors and methods, magic method declarations, and the SOAP
+    classmap option.
+    RFC: https://wiki.php.net/rfc/case_sensitive_php
+  . Using a namespace with incorrect casing is now deprecated. This applies to
+    namespaced references (new \myapp\Service\Foo() when the namespace is
+    MyApp\Service), use/use function/use const imports with wrong-cased paths,
+    and namespace declarations that conflict with the casing established by other
+    files in the same namespace.
+    RFC: https://wiki.php.net/rfc/case_sensitive_php
+
 - GMP
   . The shift (<<, >>) and exponentiation (**) operators on GMP objects now
     emit a deprecation warning when converting a float right operand to int

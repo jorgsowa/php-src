@@ -37,7 +37,7 @@ try {
     echo $exception->getMessage() . "\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
 array(4) {
   [0]=>
   int(7)
@@ -99,6 +99,8 @@ array(1) {
   [0]=>
   int(7)
 }
+
+Deprecated: Using StdClass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 array(1) {
   [0]=>
   object(stdClass)#1 (0) {

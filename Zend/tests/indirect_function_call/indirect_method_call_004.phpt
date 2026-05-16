@@ -20,6 +20,8 @@ var_dump(clone (new bar)->getZ());
 
 ?>
 --EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(stdClass)#%d (0) {
 }
 object(stdClass)#%d (0) {

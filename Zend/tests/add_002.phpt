@@ -20,6 +20,9 @@ var_dump($c);
 echo "Done\n";
 ?>
 --EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
 Exception: Unsupported operand types: array + stdClass
 
 Fatal error: Uncaught TypeError: Unsupported operand types: array + stdClass in %s:%d

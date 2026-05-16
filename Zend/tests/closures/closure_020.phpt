@@ -30,7 +30,7 @@ object(foo)#%d (2) {
   ["a"]=>
   object(Closure)#%d (5) {
     ["name"]=>
-    string(%d) "{closure:%s:%d}"
+    string(20) "{closure:foo::x():9}"
     ["file"]=>
     string(%d) "%s"
     ["line"]=>
@@ -44,6 +44,8 @@ object(foo)#%d (2) {
     *RECURSION*
   }
 }
+
+Deprecated: Using closure as a class name with incorrect case is deprecated, use the correct casing Closure instead in %s on line %d
 bool(true)
 bool(true)
 

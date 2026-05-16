@@ -22,6 +22,8 @@ $myPwa->test();
 
 echo "Done\n";
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using Pwa as a class name with incorrect case is deprecated, use the correct casing pwa instead in %s on line %d
 string(7) "myvalue"
 Done

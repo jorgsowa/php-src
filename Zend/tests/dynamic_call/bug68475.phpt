@@ -48,8 +48,10 @@ try {
     echo $e->getMessage() . "\n";
 }
 ?>
---EXPECT--
+--EXPECTF--
 Static method called!
+
+Deprecated: Calling staticmethod() is deprecated, use the correct casing TestClass::staticMethod() instead in %s on line %d
 Static method called!
 Static method called with args: arg1, arg2, arg3
 Static method called with args: arg1, arg2, arg3

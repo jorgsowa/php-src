@@ -15,6 +15,8 @@ function foo() {
 test\foo();
 \test::foo();
 ?>
---EXPECT--
+--EXPECTF--
 a\b\c\foo
+
+Deprecated: Using test as a class name with incorrect case is deprecated, use the correct casing Test instead in %s on line %d
 Test::foo

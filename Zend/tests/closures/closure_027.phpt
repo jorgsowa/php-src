@@ -23,6 +23,8 @@ test(new stdclass);
 
 ?>
 --EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 object(stdClass)#%d (0) {
 }
 NULL
@@ -30,7 +32,9 @@ NULL
 Warning: Undefined variable $y in %s on line %d
 Exception: Too few arguments to function {closure:%s:%d}(), 0 passed in %s on line %d and exactly 1 expected
 
-Fatal error: Uncaught TypeError: test(): Argument #1 ($a) must be of type Closure, stdClass given, called in %s:%d
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Fatal error: Uncaught TypeError: test(): Argument #1 ($a) must be of type Closure, stdClass given, called in %s on line %d and defined in %s:%d
 Stack trace:
 #0 %s(%d): test(Object(stdClass))
 #1 {main}

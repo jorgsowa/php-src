@@ -32,6 +32,7 @@
 #include "spl_heap.h"
 #include "zend_autoload.h"
 #include "zend_exceptions.h"
+#include "zend_execute.h"
 #include "zend_interfaces.h"
 
 ZEND_TLS zend_string *spl_autoload_extensions;
@@ -55,6 +56,7 @@ static zend_class_entry * spl_find_ce_by_name(zend_string *name, bool autoload)
 		return NULL;
 	}
 
+	zend_check_class_name_case(name, ce);
 	return ce;
 }
 

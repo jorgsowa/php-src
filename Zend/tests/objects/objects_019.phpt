@@ -16,7 +16,11 @@ $x = 'foo';
 var_dump($foo, $x);
 
 ?>
---EXPECT--
+--EXPECTF--
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
+
+Deprecated: Using stdclass as a class name with incorrect case is deprecated, use the correct casing stdClass instead in %s on line %d
 array(2) {
   [0]=>
   object(stdClass)#1 (1) {

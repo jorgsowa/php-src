@@ -18,7 +18,9 @@ foo();
 \test\foo();
 \test\test::foo();
 ?>
---EXPECT--
+--EXPECTF--
 test\foo
 test\foo
+
+Deprecated: Using test\test as a class name with incorrect case is deprecated, use the correct casing test\Test instead in %s on line %d
 test\Test::foo
