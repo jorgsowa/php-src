@@ -71,4 +71,6 @@ jobs:
     with:
       all_variations: ${{ needs.GENERATE_MATRIX.outputs.all_variations == 'true' }}
       branch: ${{ toJSON(matrix.branch) }}
-    secrets: inherit
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      BENCHMARKING_DATA_DEPLOY_KEY: ${{ secrets.BENCHMARKING_DATA_DEPLOY_KEY }}

@@ -8,6 +8,11 @@ on:
       branch:
         required: true
         type: string
+    secrets:
+      CODECOV_TOKEN:
+        required: false
+      BENCHMARKING_DATA_DEPLOY_KEY:
+        required: false
 permissions:
   contents: read
 jobs:
