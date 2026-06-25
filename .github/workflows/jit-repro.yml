@@ -4,8 +4,8 @@ name: JIT Hang Reproducer Search
 # GH-19303-introduced tracing-JIT hang. Probing candidates on x86 is essential:
 # the true infinite loop is x86-codegen-specific (ARM only shows slowness).
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
+  # Pattern search done (no minimal candidate hangs; it's a cross-trace bug).
+  # Dispatch-only to keep it out of the push path.
   workflow_dispatch: {}
 
 permissions:

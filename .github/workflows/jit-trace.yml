@@ -1,0 +1,125 @@
+name: JIT Hang Trace Capture
+# Run the (reliably-hanging) Symfony Console probe on native x86 with
+# opcache.jit_debug, detect the hang, and snapshot a GDB backtrace + the JIT
+# trace listing -> identifies the miscompiled/looping trace introduced by the
+# GH-19303 fix. Artifact for actually fixing the bug.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jit-trace-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  trace:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      SYMFONY_REF: 'dce1b899ab0c0e4cef9159c083ef535387a8db12'
+      USE_ZEND_ALLOC: '0'
+      USE_TRACKED_ALLOC: '1'
+      ASAN_OPTIONS: 'halt_on_error=0:abort_on_error=0:detect_leaks=0'
+      UBSAN_OPTIONS: 'halt_on_error=0'
+      SYMFONY_DEPRECATIONS_HELPER: 'max[total]=999'
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install build deps + gdb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential autoconf automake libtool bison re2c pkg-config ccache gdb \
+            libxml2-dev libsqlite3-dev libonig-dev libssl-dev zlib1g-dev
+
+      - name: Set up host PHP 8.4 (for composer)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, dom, tokenizer, ctype, simplexml, fileinfo
+          tools: composer
+
+      - name: Set up Symfony test bed
+        run: |
+          git clone --no-checkout --filter=blob:none https://github.com/symfony/symfony.git "$RUNNER_TEMP/symfony"
+          git -C "$RUNNER_TEMP/symfony" fetch --depth=1 origin "$SYMFONY_REF"
+          git -C "$RUNNER_TEMP/symfony" checkout "$SYMFONY_REF"
+          ( cd "$RUNNER_TEMP/symfony" && composer install --no-progress --ignore-platform-reqs && php ./phpunit install )
+
+      - name: Build PHP (debug + ZTS + JIT + ASAN)
+        run: |
+          export CC="ccache gcc" CXX="ccache g++"
+          ./buildconf --force
+          ./configure --enable-debug --enable-zts --enable-opcache \
+            CFLAGS="-fsanitize=undefined,address -DZEND_TRACK_ARENA_ALLOC" \
+            LDFLAGS="-fsanitize=undefined,address" \
+            --enable-mbstring --enable-tokenizer --disable-cgi >/tmp/conf.log 2>&1 || { tail -20 /tmp/conf.log; exit 1; }
+          make -j"$(nproc)" >/tmp/make.log 2>&1 || { tail -30 /tmp/make.log; exit 1; }
+          ./sapi/cli/php -v | head -1
+
+      - name: Run Console probe, detect hang, capture trace + backtrace
+        run: |
+          PHP="$PWD/sapi/cli/php"
+          OC="$(find "$PWD" -name opcache.so -path '*/modules/*' | head -1)"
+          # GDB(1<<8) ASM(1<<0) ASM_ADDR(1<<10) TRACE_START/STOP/COMPILED(12/13/14)
+          # TRACE_BYTECODE(1<<18) TRACE_EXIT_INFO(1<<20)
+          DBG=0x147501
+          cd "$RUNNER_TEMP/symfony"
+          echo "::group::launch probe with jit_debug=$DBG"
+          "$PHP" -dzend_extension="$OC" -dopcache.enable_cli=1 -dopcache.jit=tracing \
+            -dopcache.jit_buffer_size=1G -dopcache.jit_hot_loop=1 -dopcache.jit_hot_func=1 \
+            -dopcache.jit_hot_return=1 -dopcache.jit_hot_side_exit=1 -dopcache.jit_debug=$DBG \
+            -dmemory_limit=-1 \
+            ./phpunit src/Symfony/Component/Console \
+            --exclude-group tty --exclude-group benchmark --exclude-group intl-data \
+            --exclude-group transient --exclude-group skip > "$RUNNER_TEMP/trace.log" 2>&1 &
+          PID=$!
+          echo "pid=$PID"; echo "::endgroup::"
+          # Detect hang: trace.log stops growing while process still alive.
+          last=0; stable=0; hang=0
+          for i in $(seq 1 90); do
+            sleep 5
+            if ! kill -0 $PID 2>/dev/null; then echo "process exited at ${i}x5s (completed - no hang?)"; break; fi
+            sz=$(stat -c%s "$RUNNER_TEMP/trace.log" 2>/dev/null || echo 0)
+            if [ "$sz" = "$last" ]; then stable=$((stable+1)); else stable=0; fi
+            last=$sz
+            if [ $stable -ge 6 ]; then echo "HANG detected: trace.log stable for 30s at ${sz} bytes"; hang=1; break; fi
+          done
+          if [ $hang -eq 1 ]; then
+            for s in 1 2 3; do
+              echo "===== GDB sample $s =====" | tee -a "$RUNNER_TEMP/gdb.log"
+              sudo gdb -p $PID -batch \
+                -ex 'set pagination off' \
+                -ex 'info registers rip' \
+                -ex 'bt 30' 2>&1 | tee -a "$RUNNER_TEMP/gdb.log" || true
+              sleep 3
+            done
+          fi
+          kill -9 $PID 2>/dev/null || true
+          echo "trace.log size: $(stat -c%s "$RUNNER_TEMP/trace.log" 2>/dev/null) bytes"
+
+      - name: Summarize
+        if: always()
+        run: |
+          {
+            echo "## GDB backtrace at hang (leaf = looping JIT trace)"
+            echo '```'; sed -n '1,120p' "$RUNNER_TEMP/gdb.log" 2>/dev/null || echo "(no gdb capture)"; echo '```'
+            echo "## Last trace events before the hang"
+            echo '```'
+            grep -aE "TRACE-[0-9]+|JIT\\\$|ADD_ARRAY_UNPACK|start|stop|compiled" "$RUNNER_TEMP/trace.log" 2>/dev/null | tail -40
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload full trace + gdb logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jit-trace-logs
+          path: |
+            ${{ runner.temp }}/trace.log
+            ${{ runner.temp }}/gdb.log
+          if-no-files-found: warn
