@@ -3,8 +3,8 @@ name: JIT Hang Bisect
 # tracing-JIT hang seen in the nightly COMMUNITY_asan job. Runs on a native
 # x86-64 runner (the bug does not reproduce on ARM or under qemu emulation).
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
+  # Bisect already converged (first-bad = a08df32 / GH-19303 fix). Dispatch-only
+  # now to avoid re-running the ~3h job on every push.
   workflow_dispatch:
     inputs:
       good:

@@ -1,0 +1,120 @@
+name: JIT Hang Reproducer Search
+# Build PHP once (COMMUNITY_asan config, native x86) and run a battery of
+# minimal array-unpack candidates to find a small standalone reproducer of the
+# GH-19303-introduced tracing-JIT hang. Probing candidates on x86 is essential:
+# the true infinite loop is x86-codegen-specific (ARM only shows slowness).
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jit-repro-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repro:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      USE_ZEND_ALLOC: '0'
+      USE_TRACKED_ALLOC: '1'
+      # Recover mode so any incidental ASAN report doesn't abort the probe.
+      ASAN_OPTIONS: 'halt_on_error=0:detect_leaks=0'
+      UBSAN_OPTIONS: 'halt_on_error=0'
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential autoconf automake libtool bison re2c pkg-config ccache \
+            libxml2-dev libsqlite3-dev libonig-dev libssl-dev zlib1g-dev
+
+      - name: Build PHP (ZTS + JIT + ASAN, COMMUNITY_asan config)
+        run: |
+          export CC="ccache gcc" CXX="ccache g++"
+          ./buildconf --force
+          ./configure --enable-debug --enable-zts --enable-opcache \
+            CFLAGS="-fsanitize=undefined,address -DZEND_TRACK_ARENA_ALLOC" \
+            LDFLAGS="-fsanitize=undefined,address" \
+            --enable-mbstring --enable-tokenizer --disable-cgi >/tmp/conf.log 2>&1 || { tail -20 /tmp/conf.log; exit 1; }
+          make -j"$(nproc)" >/tmp/make.log 2>&1 || { tail -30 /tmp/make.log; exit 1; }
+          ./sapi/cli/php -v | head -1
+
+      - name: Write candidate reproducers
+        run: |
+          mkdir -p /tmp/repro
+          # r1: empty packed array unpacked in a hot function
+          cat > /tmp/repro/r1.php <<'P'
+          <?php
+          function f(array $a): array { return [...$a]; }
+          $a = [0]; unset($a[0]);
+          for ($i = 0; $i < 20000000; $i++) { f($a); }
+          echo "r1 done\n";
+          P
+          # r2: alternate empty and non-empty (both guard branches in one trace)
+          cat > /tmp/repro/r2.php <<'P'
+          <?php
+          function f(array $a): array { return [...$a]; }
+          $e = [0]; unset($e[0]); $full = [1,2,3];
+          for ($i = 0; $i < 20000000; $i++) { f(($i & 1) ? $e : $full); }
+          echo "r2 done\n";
+          P
+          # r3: inline empty unpack in the hot loop body
+          cat > /tmp/repro/r3.php <<'P'
+          <?php
+          $a = [0]; unset($a[0]);
+          for ($i = 0; $i < 20000000; $i++) { $b = [...$a]; }
+          echo "r3 done\n";
+          P
+          # r4: unpack empty into a non-empty literal (result_ht != 0, packed)
+          cat > /tmp/repro/r4.php <<'P'
+          <?php
+          function f(array $a): array { return [1, ...$a, 2]; }
+          $a = [0]; unset($a[0]);
+          for ($i = 0; $i < 20000000; $i++) { f($a); }
+          echo "r4 done\n";
+          P
+          # r5: two empty unpacks (sum stays 0 -> the skip branch)
+          cat > /tmp/repro/r5.php <<'P'
+          <?php
+          function f(array $a): array { return [...$a, ...$a]; }
+          $a = [0]; unset($a[0]);
+          for ($i = 0; $i < 20000000; $i++) { f($a); }
+          echo "r5 done\n";
+          P
+          # r6: grow then empty - mix sizes to stress the packed-fill trace
+          cat > /tmp/repro/r6.php <<'P'
+          <?php
+          function f(array $a, array $b): array { return [...$a, ...$b]; }
+          $e = [0]; unset($e[0]);
+          for ($i = 0; $i < 20000000; $i++) { f($e, ($i % 3) ? [] : [1,2]); }
+          echo "r6 done\n";
+          P
+
+      - name: Probe each candidate (true hang = timeout, healthy ~seconds)
+        run: |
+          PHP="$PWD/sapi/cli/php"
+          OC="$(find "$PWD" -name opcache.so -path '*/modules/*' | head -1)"
+          JIT=(-dzend_extension="$OC" -dopcache.enable_cli=1 -dopcache.jit=tracing -dopcache.jit_buffer_size=1G
+               -dopcache.jit_hot_loop=1 -dopcache.jit_hot_func=1 -dopcache.jit_hot_return=1
+               -dopcache.jit_hot_side_exit=1 -dmemory_limit=-1)
+          echo "## JIT reproducer search" >> "$GITHUB_STEP_SUMMARY"
+          any=0
+          for r in r1 r2 r3 r4 r5 r6; do
+            start=$SECONDS
+            timeout 90 "$PHP" "${JIT[@]}" "/tmp/repro/$r.php" >/dev/null 2>&1
+            rc=$?; dur=$((SECONDS-start))
+            if [ $rc -eq 124 ]; then
+              echo "- $r: **HANG** (>90s) — reproducer candidate" | tee -a "$GITHUB_STEP_SUMMARY"
+              any=1
+            else
+              echo "- $r: done in ${dur}s (rc=$rc)" | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+          [ $any -eq 1 ] && echo "Found at least one hanging candidate." || echo "No candidate hung; needs a different pattern."
