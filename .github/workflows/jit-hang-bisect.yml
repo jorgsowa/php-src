@@ -8,8 +8,10 @@ on:
   workflow_dispatch:
     inputs:
       good:
-        description: 'Known-GOOD commit/tag (bug absent)'
-        default: 'php-8.3.0'
+        # Must be a PHP version the pinned Symfony can run (>= 8.4); the
+        # default Symfony commit requires php >=8.4.1, so 8.3 is out of range.
+        description: 'Known-GOOD commit/tag (bug absent, PHP >= 8.4)'
+        default: 'php-8.4.0'
       bad:
         description: 'Known-BAD commit/tag (hang)'
         default: '27c10ddce6302912a46d72a4dcd47c89f1209544'
@@ -52,7 +54,7 @@ jobs:
         run: |
           git remote add upstream https://github.com/php/php-src.git || true
           git fetch --tags --quiet upstream
-          git rev-parse "${{ inputs.good || 'php-8.3.0' }}^{commit}"
+          git rev-parse "${{ inputs.good || 'php-8.4.0' }}^{commit}"
           git rev-parse "${{ inputs.bad || '27c10ddce6302912a46d72a4dcd47c89f1209544' }}^{commit}"
 
       - name: Install build dependencies
@@ -68,7 +70,7 @@ jobs:
           git clone --no-checkout --filter=blob:none https://github.com/symfony/symfony.git "$SYMFONY_DIR"
           git -C "$SYMFONY_DIR" fetch --depth=1 origin "${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}"
           git -C "$SYMFONY_DIR" checkout "${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}"
-          ( cd "$SYMFONY_DIR" && composer install --no-progress --ignore-platform-req=php+ && php ./phpunit install )
+          ( cd "$SYMFONY_DIR" && composer install --no-progress --ignore-platform-reqs && php ./phpunit install )
 
       - name: Write bisect predicate
         run: |
@@ -124,7 +126,7 @@ jobs:
           git bisect reset >/dev/null 2>&1 || true
           git bisect start
           git bisect bad  "${{ inputs.bad || '27c10ddce6302912a46d72a4dcd47c89f1209544' }}"
-          git bisect good "${{ inputs.good || 'php-8.3.0' }}"
+          git bisect good "${{ inputs.good || 'php-8.4.0' }}"
           set +e
           git bisect run "${{ runner.temp }}/bisect_step.sh" | tee "${{ runner.temp }}/bisect_out.txt"
           set -e
