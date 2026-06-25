@@ -31,12 +31,13 @@ on:
         description: 'Per-step test timeout in seconds (hang detector)'
         default: '300'
       use_asan:
-        # Off by default: ASAN catches the GH-19303 array-unpack corruption on
-        # pre-fix commits (rc=139 abort) and would skip them. The hang is an
-        # infinite loop, detected by timeout without ASAN. Set true to match
-        # COMMUNITY_asan exactly once a clean range is established.
-        description: 'Build with ASAN+UBSAN (matches COMMUNITY_asan)'
-        default: 'false'
+        # ON: the hang only reproduces under ASAN instrumentation (verified:
+        # non-debug+ASAN hangs, pure release does not). ASAN runs in recover/
+        # continue mode (see ASAN_OPTIONS + dropped -fno-sanitize-recover) so the
+        # GH-19303 array-unpack error is reported but does not abort, letting the
+        # run reach the downstream OutputFormatter hang.
+        description: 'Build with ASAN+UBSAN (required for the hang)'
+        default: 'true'
       use_debug:
         # --enable-debug enables ZEND_ASSERT. The GH-19303 array-unpack assertion
         # (debug-only) aborts pre-8.4.12 commits and masks the hang. Off by default
@@ -61,13 +62,15 @@ jobs:
       SYMFONY_REF: ${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}
       TEST_TARGET: ${{ inputs.test_target || 'src/Symfony/Component/Console' }}
       TEST_TIMEOUT: ${{ inputs.test_timeout || '300' }}
-      USE_ASAN: ${{ inputs.use_asan || 'false' }}
+      USE_ASAN: ${{ inputs.use_asan || 'true' }}
       USE_DEBUG: ${{ inputs.use_debug || 'false' }}
       # Mirror the COMMUNITY_asan runtime environment
       USE_ZEND_ALLOC: '0'
       USE_TRACKED_ALLOC: '1'
-      ASAN_OPTIONS: 'exitcode=139'
-      UBSAN_OPTIONS: 'print_stacktrace=1'
+      # Report-and-continue: don't abort on the GH-19303 array-unpack error so
+      # the run reaches the downstream OutputFormatter hang.
+      ASAN_OPTIONS: 'halt_on_error=0:detect_leaks=0'
+      UBSAN_OPTIONS: 'print_stacktrace=1:halt_on_error=0'
       SYMFONY_DEPRECATIONS_HELPER: 'max[total]=999'
     steps:
       - name: Resolve workspace paths
@@ -132,7 +135,9 @@ jobs:
                  --disable-cgi )
           [ "${USE_DEBUG:-false}" = "true" ] && CONF+=( --enable-debug )
           if [ "${USE_ASAN:-true}" = "true" ]; then
-            CONF+=( "CFLAGS=-fsanitize=undefined,address -fno-sanitize-recover -DZEND_TRACK_ARENA_ALLOC"
+            # No -fno-sanitize-recover: keep errors recoverable so ASAN_OPTIONS
+            # halt_on_error=0 can continue past the array-unpack error.
+            CONF+=( "CFLAGS=-fsanitize=undefined,address -DZEND_TRACK_ARENA_ALLOC"
                     "LDFLAGS=-fsanitize=undefined,address" )
           fi
           ./configure "${CONF[@]}" >/tmp/conf.log 2>&1 || { echo "[$rev] configure fail -> skip"; tail -5 /tmp/conf.log; exit 125; }
