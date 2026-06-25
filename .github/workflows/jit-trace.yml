@@ -4,8 +4,8 @@ name: JIT Hang Trace Capture
 # trace listing -> identifies the miscompiled/looping trace introduced by the
 # GH-19303 fix. Artifact for actually fixing the bug.
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
+  # Capture done (hang localized to FileInputHelper byte-by-byte read under ASAN).
+  # Dispatch-only to keep it off the push path.
   workflow_dispatch: {}
 
 permissions:

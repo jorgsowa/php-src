@@ -1,11 +1,12 @@
-name: JIT Hang Reproducer Search
-# Build PHP once (COMMUNITY_asan config, native x86) and run a battery of
-# minimal array-unpack candidates to find a small standalone reproducer of the
-# GH-19303-introduced tracing-JIT hang. Probing candidates on x86 is essential:
-# the true infinite loop is x86-codegen-specific (ARM only shows slowness).
+name: ASAN Paste-Read Repro
+# Reproduce the COMMUNITY_asan "hang": FileInputHelper::readWithPasteDetection
+# reads the stream one byte at a time (`$buf .= fread($s,1)`) up to 16MB. Under
+# the ASAN build every append pays realloc+quarantine cost, so time blows up
+# super-linearly -> reaching 16MB takes ~hours. This probes increasing sizes
+# with JIT on AND off to show it's ASAN-bound and JIT-independent.
 on:
-  # Pattern search done (no minimal candidate hangs; it's a cross-trace bug).
-  # Dispatch-only to keep it out of the push path.
+  pull_request:
+    types: [opened, reopened, synchronize]
   workflow_dispatch: {}
 
 permissions:
@@ -22,9 +23,7 @@ jobs:
     env:
       USE_ZEND_ALLOC: '0'
       USE_TRACKED_ALLOC: '1'
-      # Recover mode so any incidental ASAN report doesn't abort the probe.
       ASAN_OPTIONS: 'halt_on_error=0:detect_leaks=0'
-      UBSAN_OPTIONS: 'halt_on_error=0'
     steps:
       - uses: actions/checkout@v6
 
@@ -35,7 +34,7 @@ jobs:
             build-essential autoconf automake libtool bison re2c pkg-config ccache \
             libxml2-dev libsqlite3-dev libonig-dev libssl-dev zlib1g-dev
 
-      - name: Build PHP (ZTS + JIT + ASAN, COMMUNITY_asan config)
+      - name: Build PHP (debug + ZTS + JIT + ASAN, COMMUNITY_asan config)
         run: |
           export CC="ccache gcc" CXX="ccache g++"
           ./buildconf --force
@@ -46,75 +45,45 @@ jobs:
           make -j"$(nproc)" >/tmp/make.log 2>&1 || { tail -30 /tmp/make.log; exit 1; }
           ./sapi/cli/php -v | head -1
 
-      - name: Write candidate reproducers
+      - name: Write reproducer (byte-by-byte read, like readWithPasteDetection)
         run: |
-          mkdir -p /tmp/repro
-          # r1: empty packed array unpacked in a hot function
-          cat > /tmp/repro/r1.php <<'P'
+          cat > /tmp/paste.php <<'P'
           <?php
-          function f(array $a): array { return [...$a]; }
-          $a = [0]; unset($a[0]);
-          for ($i = 0; $i < 20000000; $i++) { f($a); }
-          echo "r1 done\n";
-          P
-          # r2: alternate empty and non-empty (both guard branches in one trace)
-          cat > /tmp/repro/r2.php <<'P'
-          <?php
-          function f(array $a): array { return [...$a]; }
-          $e = [0]; unset($e[0]); $full = [1,2,3];
-          for ($i = 0; $i < 20000000; $i++) { f(($i & 1) ? $e : $full); }
-          echo "r2 done\n";
-          P
-          # r3: inline empty unpack in the hot loop body
-          cat > /tmp/repro/r3.php <<'P'
-          <?php
-          $a = [0]; unset($a[0]);
-          for ($i = 0; $i < 20000000; $i++) { $b = [...$a]; }
-          echo "r3 done\n";
-          P
-          # r4: unpack empty into a non-empty literal (result_ht != 0, packed)
-          cat > /tmp/repro/r4.php <<'P'
-          <?php
-          function f(array $a): array { return [1, ...$a, 2]; }
-          $a = [0]; unset($a[0]);
-          for ($i = 0; $i < 20000000; $i++) { f($a); }
-          echo "r4 done\n";
-          P
-          # r5: two empty unpacks (sum stays 0 -> the skip branch)
-          cat > /tmp/repro/r5.php <<'P'
-          <?php
-          function f(array $a): array { return [...$a, ...$a]; }
-          $a = [0]; unset($a[0]);
-          for ($i = 0; $i < 20000000; $i++) { f($a); }
-          echo "r5 done\n";
-          P
-          # r6: grow then empty - mix sizes to stress the packed-fill trace
-          cat > /tmp/repro/r6.php <<'P'
-          <?php
-          function f(array $a, array $b): array { return [...$a, ...$b]; }
-          $e = [0]; unset($e[0]);
-          for ($i = 0; $i < 20000000; $i++) { f($e, ($i % 3) ? [] : [1,2]); }
-          echo "r6 done\n";
+          // Mirrors FileInputHelper::readWithPasteDetection's inner loop.
+          $bytes = (int) ($argv[1] ?? 1048576);
+          $s = fopen('php://memory', 'r+');
+          fwrite($s, str_repeat('A', $bytes));
+          rewind($s);
+          $buf = ''; $n = 0;
+          $t = microtime(true);
+          while (!feof($s)) {
+              $c = fread($s, 1);
+              if ($c === false || $c === '') break;
+              $buf .= $c;            // O(n) realloc+quarantine under ASAN
+              ++$n;
+          }
+          fprintf(STDERR, "size=%dKB read=%d time=%.2fs\n", $bytes >> 10, $n, microtime(true) - $t);
           P
 
-      - name: Probe each candidate (true hang = timeout, healthy ~seconds)
+      - name: Probe increasing sizes, JIT on vs off (shows ASAN super-linear blowup)
         run: |
           PHP="$PWD/sapi/cli/php"
           OC="$(find "$PWD" -name opcache.so -path '*/modules/*' | head -1)"
-          JIT=(-dzend_extension="$OC" -dopcache.enable_cli=1 -dopcache.jit=tracing -dopcache.jit_buffer_size=1G
-               -dopcache.jit_hot_loop=1 -dopcache.jit_hot_func=1 -dopcache.jit_hot_return=1
-               -dopcache.jit_hot_side_exit=1 -dmemory_limit=-1)
-          echo "## JIT reproducer search" >> "$GITHUB_STEP_SUMMARY"
-          any=0
-          for r in r1 r2 r3 r4 r5 r6; do
-            start=$SECONDS
-            timeout 90 "$PHP" "${JIT[@]}" "/tmp/repro/$r.php" >/dev/null 2>&1
-            rc=$?; dur=$((SECONDS-start))
-            if [ $rc -eq 124 ]; then
-              echo "- $r: **HANG** (>90s) — reproducer candidate" | tee -a "$GITHUB_STEP_SUMMARY"
-              any=1
-            else
-              echo "- $r: done in ${dur}s (rc=$rc)" | tee -a "$GITHUB_STEP_SUMMARY"
-            fi
+          JIT=(-dzend_extension="$OC" -dopcache.enable_cli=1 -dopcache.jit=tracing -dopcache.jit_buffer_size=1G -dopcache.jit_hot_loop=1 -dopcache.jit_hot_func=1 -dmemory_limit=-1)
+          NOJIT=(-dzend_extension="$OC" -dopcache.enable_cli=1 -dopcache.jit=disable -dmemory_limit=-1)
+          {
+            echo "## ASAN byte-by-byte read: time vs size"
+            echo '| size | JIT on | JIT off |'
+            echo '|------|--------|---------|'
+          } >> "$GITHUB_STEP_SUMMARY"
+          for kb in 256 512 1024 2048 4096; do
+            bytes=$((kb*1024))
+            on=$(timeout 200 "$PHP" "${JIT[@]}" /tmp/paste.php "$bytes" 2>&1 | grep -oE 'time=[0-9.]+s' || echo "timeout>200s")
+            off=$(timeout 200 "$PHP" "${NOJIT[@]}" /tmp/paste.php "$bytes" 2>&1 | grep -oE 'time=[0-9.]+s' || echo "timeout>200s")
+            echo "probe ${kb}KB: JITon=$on JIToff=$off"
+            echo "| ${kb}KB | $on | $off |" >> "$GITHUB_STEP_SUMMARY"
           done
-          [ $any -eq 1 ] && echo "Found at least one hanging candidate." || echo "No candidate hung; needs a different pattern."
+          {
+            echo ""
+            echo "If time ~4x per size-doubling -> O(n^2); extrapolating to 16MB = hours -> the nightly hang."
+          } >> "$GITHUB_STEP_SUMMARY"
