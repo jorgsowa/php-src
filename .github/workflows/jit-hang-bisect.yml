@@ -31,8 +31,12 @@ on:
         description: 'Per-step test timeout in seconds (hang detector)'
         default: '300'
       use_asan:
-        description: 'Build with ASAN+UBSAN (matches COMMUNITY_asan exactly)'
-        default: 'true'
+        # Off by default: ASAN catches the GH-19303 array-unpack corruption on
+        # pre-fix commits (rc=139 abort) and would skip them. The hang is an
+        # infinite loop, detected by timeout without ASAN. Set true to match
+        # COMMUNITY_asan exactly once a clean range is established.
+        description: 'Build with ASAN+UBSAN (matches COMMUNITY_asan)'
+        default: 'false'
       use_debug:
         # --enable-debug enables ZEND_ASSERT. The GH-19303 array-unpack assertion
         # (debug-only) aborts pre-8.4.12 commits and masks the hang. Off by default
@@ -57,7 +61,7 @@ jobs:
       SYMFONY_REF: ${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}
       TEST_TARGET: ${{ inputs.test_target || 'src/Symfony/Component/Console' }}
       TEST_TIMEOUT: ${{ inputs.test_timeout || '300' }}
-      USE_ASAN: ${{ inputs.use_asan || 'true' }}
+      USE_ASAN: ${{ inputs.use_asan || 'false' }}
       USE_DEBUG: ${{ inputs.use_debug || 'false' }}
       # Mirror the COMMUNITY_asan runtime environment
       USE_ZEND_ALLOC: '0'
