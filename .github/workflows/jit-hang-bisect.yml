@@ -8,14 +8,12 @@ on:
   workflow_dispatch:
     inputs:
       good:
-        # 8.4.12-dev merge that pulled in the GH-19303 fix ("Unpacking empty
-        # packed array ... assertion failure"). Earlier 8.4 commits abort on
-        # that array-unpack tracing-JIT assertion under the debug+JIT build,
-        # which masks the hang and stalls bisect with skips. Starting here
-        # gives a clean, assertion-free range; it's also 8.4.x so the pinned
-        # Symfony (php >=8.4.1) runs.
-        description: 'Known-GOOD commit/tag (no hang, assertion-free, PHP >= 8.4)'
-        default: 'a08df32f188d4f57b1c2751461d99c5a8f3012b1'
+        # 8.4.1-dev — earliest commit satisfying the pinned PHPUnit's php >=8.4.1
+        # floor (8.4.0 itself is refused). The hang predates 8.4.12, so GOOD must
+        # be well below it; in a NON-debug build (use_debug=false) the GH-19303
+        # array-unpack assertion compiles out, so this wide range becomes testable.
+        description: 'Known-GOOD commit/tag (no hang, PHP >= 8.4.1)'
+        default: '1fd82aa13a00d1c6b1876ff59cf7490d9a4fa33d'
       bad:
         description: 'Known-BAD commit/tag (hang)'
         default: '27c10ddce6302912a46d72a4dcd47c89f1209544'
@@ -35,6 +33,12 @@ on:
       use_asan:
         description: 'Build with ASAN+UBSAN (matches COMMUNITY_asan exactly)'
         default: 'true'
+      use_debug:
+        # --enable-debug enables ZEND_ASSERT. The GH-19303 array-unpack assertion
+        # (debug-only) aborts pre-8.4.12 commits and masks the hang. Off by default
+        # so older commits run past it; the hang (a timeout) is still detected.
+        description: 'Build with --enable-debug (enables ZEND_ASSERT)'
+        default: 'false'
 
 permissions:
   contents: read
@@ -48,12 +52,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 350
     env:
-      GOOD_REF: ${{ inputs.good || 'a08df32f188d4f57b1c2751461d99c5a8f3012b1' }}
+      GOOD_REF: ${{ inputs.good || '1fd82aa13a00d1c6b1876ff59cf7490d9a4fa33d' }}
       BAD_REF: ${{ inputs.bad || '27c10ddce6302912a46d72a4dcd47c89f1209544' }}
       SYMFONY_REF: ${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}
       TEST_TARGET: ${{ inputs.test_target || 'src/Symfony/Component/Console' }}
       TEST_TIMEOUT: ${{ inputs.test_timeout || '300' }}
       USE_ASAN: ${{ inputs.use_asan || 'true' }}
+      USE_DEBUG: ${{ inputs.use_debug || 'false' }}
       # Mirror the COMMUNITY_asan runtime environment
       USE_ZEND_ALLOC: '0'
       USE_TRACKED_ALLOC: '1'
@@ -116,11 +121,12 @@ jobs:
           make distclean >/dev/null 2>&1
           ./buildconf --force >/tmp/bc.log 2>&1 || { echo "[$rev] buildconf fail -> skip"; exit 125; }
 
-          CONF=( --enable-debug --enable-zts --enable-opcache
+          CONF=( --enable-zts --enable-opcache
                  --enable-mbstring --enable-tokenizer
                  --with-libxml --enable-dom --enable-xml --enable-xmlwriter --enable-xmlreader --enable-simplexml
                  --enable-ctype --enable-filter --enable-fileinfo --enable-phar --enable-posix --enable-pcntl
                  --disable-cgi )
+          [ "${USE_DEBUG:-false}" = "true" ] && CONF+=( --enable-debug )
           if [ "${USE_ASAN:-true}" = "true" ]; then
             CONF+=( "CFLAGS=-fsanitize=undefined,address -fno-sanitize-recover -DZEND_TRACK_ARENA_ALLOC"
                     "LDFLAGS=-fsanitize=undefined,address" )
