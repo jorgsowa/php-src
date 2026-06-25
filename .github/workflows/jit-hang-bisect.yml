@@ -62,8 +62,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             build-essential autoconf automake libtool bison re2c pkg-config ccache \
-            libxml2-dev libsqlite3-dev libonig-dev libssl-dev zlib1g-dev \
-            php-cli php-xml php-mbstring composer
+            libxml2-dev libsqlite3-dev libonig-dev libssl-dev zlib1g-dev
+
+      # Host PHP only for installing the Symfony/PHPUnit deps. The pinned
+      # Symfony and PHPUnit 14 require php >=8.4, which the runner's distro
+      # PHP (8.3) does not provide. The bisect itself uses the PHP we build.
+      - name: Set up host PHP 8.4 (for composer)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, dom, tokenizer, ctype, simplexml, fileinfo
+          tools: composer
 
       - name: Set up Symfony test bed (pinned commit)
         run: |
