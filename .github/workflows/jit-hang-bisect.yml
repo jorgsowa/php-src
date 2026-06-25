@@ -4,7 +4,7 @@ name: JIT Hang Bisect
 # (the bug does not reproduce on ARM or under qemu emulation).
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
   workflow_dispatch:
     inputs:
       good:
