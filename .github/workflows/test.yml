@@ -34,7 +34,8 @@ concurrency:
 jobs:
   GENERATE_MATRIX:
     name: Generate Matrix
-    if: github.repository == 'php/php-src' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    # Skip the full test suite on the JIT-hang bisect branches (run only that workflow).
+    if: (github.repository == 'php/php-src' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch') && !startsWith(github.head_ref, 'ci/jit-hang-bisect')
     runs-on: ubuntu-latest
     outputs:
       all_variations: ${{ steps.set-matrix.outputs.all_variations }}
