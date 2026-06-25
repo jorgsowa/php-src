@@ -8,8 +8,14 @@ on:
   workflow_dispatch:
     inputs:
       good:
-        description: 'Known-GOOD commit/tag (no hang). Must be PHP >= 8.4 so the pinned Symfony runs.'
-        default: 'php-8.4.0'
+        # 8.4.12-dev merge that pulled in the GH-19303 fix ("Unpacking empty
+        # packed array ... assertion failure"). Earlier 8.4 commits abort on
+        # that array-unpack tracing-JIT assertion under the debug+JIT build,
+        # which masks the hang and stalls bisect with skips. Starting here
+        # gives a clean, assertion-free range; it's also 8.4.x so the pinned
+        # Symfony (php >=8.4.1) runs.
+        description: 'Known-GOOD commit/tag (no hang, assertion-free, PHP >= 8.4)'
+        default: 'a08df32f188d4f57b1c2751461d99c5a8f3012b1'
       bad:
         description: 'Known-BAD commit/tag (hang)'
         default: '27c10ddce6302912a46d72a4dcd47c89f1209544'
@@ -17,12 +23,12 @@ on:
         description: 'Symfony commit to test against (CI nightly pin)'
         default: 'dce1b899ab0c0e4cef9159c083ef535387a8db12'
       test_target:
-        # Only the OutputFormatter tests, where the hang lives (test #672,
-        # testInlineStyle). Running the whole Console component instead drags
-        # in an unrelated array-unpack tracing-JIT assertion that aborts many
-        # commits (rc=134) and stalls the bisect with skips.
+        # The whole Console component. The hang needs the cumulative JIT trace
+        # state from the broad suite; running only OutputFormatterTest does NOT
+        # reproduce it (verified). The array-unpack assertion that this drags in
+        # is avoided by starting GOOD past its fix (see `good`).
         description: 'phpunit target (path or class) to run as the hang probe'
-        default: 'src/Symfony/Component/Console/Tests/Formatter/OutputFormatterTest.php'
+        default: 'src/Symfony/Component/Console'
       test_timeout:
         description: 'Per-step test timeout in seconds (hang detector)'
         default: '300'
@@ -42,10 +48,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 350
     env:
-      GOOD_REF: ${{ inputs.good || 'php-8.4.0' }}
+      GOOD_REF: ${{ inputs.good || 'a08df32f188d4f57b1c2751461d99c5a8f3012b1' }}
       BAD_REF: ${{ inputs.bad || '27c10ddce6302912a46d72a4dcd47c89f1209544' }}
       SYMFONY_REF: ${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}
-      TEST_TARGET: ${{ inputs.test_target || 'src/Symfony/Component/Console/Tests/Formatter/OutputFormatterTest.php' }}
+      TEST_TARGET: ${{ inputs.test_target || 'src/Symfony/Component/Console' }}
       TEST_TIMEOUT: ${{ inputs.test_timeout || '300' }}
       USE_ASAN: ${{ inputs.use_asan || 'true' }}
       # Mirror the COMMUNITY_asan runtime environment
