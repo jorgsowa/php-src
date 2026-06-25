@@ -1,26 +1,28 @@
 name: JIT Hang Bisect
-# Manually-triggered bisect for the Symfony Console OutputFormatter tracing-JIT
-# hang seen in the nightly COMMUNITY_asan job. Runs on a native x86-64 runner
-# (the bug does not reproduce on ARM or under qemu emulation).
+# Manually/PR-triggered bisect for the Symfony Console OutputFormatter
+# tracing-JIT hang seen in the nightly COMMUNITY_asan job. Runs on a native
+# x86-64 runner (the bug does not reproduce on ARM or under qemu emulation).
 on:
   pull_request:
     types: [opened, reopened, synchronize]
   workflow_dispatch:
     inputs:
       good:
-        # Default is the GH-9011 fix "Assertion failure with tracing JIT"
-        # (#17042). Earlier commits abort on that since-fixed JIT assertion
-        # under our debug+ASAN build, which masks the hang and stalls bisect;
-        # starting here keeps the range testable. Must also be >= 8.4 so the
-        # pinned Symfony (requires php >=8.4.1) can run.
-        description: 'Known-GOOD commit/tag (bug absent, PHP >= 8.4)'
-        default: '5ab2c02ea1935092866c4446e11939daf9b7102e'
+        description: 'Known-GOOD commit/tag (no hang). Must be PHP >= 8.4 so the pinned Symfony runs.'
+        default: 'php-8.4.0'
       bad:
         description: 'Known-BAD commit/tag (hang)'
         default: '27c10ddce6302912a46d72a4dcd47c89f1209544'
       symfony_commit:
         description: 'Symfony commit to test against (CI nightly pin)'
         default: 'dce1b899ab0c0e4cef9159c083ef535387a8db12'
+      test_target:
+        # Only the OutputFormatter tests, where the hang lives (test #672,
+        # testInlineStyle). Running the whole Console component instead drags
+        # in an unrelated array-unpack tracing-JIT assertion that aborts many
+        # commits (rc=134) and stalls the bisect with skips.
+        description: 'phpunit target (path or class) to run as the hang probe'
+        default: 'src/Symfony/Component/Console/Tests/Formatter/OutputFormatterTest.php'
       test_timeout:
         description: 'Per-step test timeout in seconds (hang detector)'
         default: '300'
@@ -31,11 +33,19 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: jit-hang-bisect-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   bisect:
     runs-on: ubuntu-24.04
     timeout-minutes: 350
     env:
+      GOOD_REF: ${{ inputs.good || 'php-8.4.0' }}
+      BAD_REF: ${{ inputs.bad || '27c10ddce6302912a46d72a4dcd47c89f1209544' }}
+      SYMFONY_REF: ${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}
+      TEST_TARGET: ${{ inputs.test_target || 'src/Symfony/Component/Console/Tests/Formatter/OutputFormatterTest.php' }}
       TEST_TIMEOUT: ${{ inputs.test_timeout || '300' }}
       USE_ASAN: ${{ inputs.use_asan || 'true' }}
       # Mirror the COMMUNITY_asan runtime environment
@@ -57,8 +67,8 @@ jobs:
         run: |
           git remote add upstream https://github.com/php/php-src.git || true
           git fetch --tags --quiet upstream
-          git rev-parse "${{ inputs.good || '5ab2c02ea1935092866c4446e11939daf9b7102e' }}^{commit}"
-          git rev-parse "${{ inputs.bad || '27c10ddce6302912a46d72a4dcd47c89f1209544' }}^{commit}"
+          git rev-parse "${GOOD_REF}^{commit}"
+          git rev-parse "${BAD_REF}^{commit}"
 
       - name: Install build dependencies
         run: |
@@ -80,15 +90,17 @@ jobs:
       - name: Set up Symfony test bed (pinned commit)
         run: |
           git clone --no-checkout --filter=blob:none https://github.com/symfony/symfony.git "$SYMFONY_DIR"
-          git -C "$SYMFONY_DIR" fetch --depth=1 origin "${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}"
-          git -C "$SYMFONY_DIR" checkout "${{ inputs.symfony_commit || 'dce1b899ab0c0e4cef9159c083ef535387a8db12' }}"
+          git -C "$SYMFONY_DIR" fetch --depth=1 origin "$SYMFONY_REF"
+          git -C "$SYMFONY_DIR" checkout "$SYMFONY_REF"
           ( cd "$SYMFONY_DIR" && composer install --no-progress --ignore-platform-reqs && php ./phpunit install )
 
       - name: Write bisect predicate
         run: |
           cat > "${{ runner.temp }}/bisect_step.sh" <<'STEP'
           #!/usr/bin/env bash
-          # exit 0=GOOD, 1=BAD(hang), 125=SKIP(untestable)
+          # Build PHP (ZTS+JIT[+ASAN]) at the current checkout and probe for the hang.
+          # exit 0=GOOD (ran, no hang), 1=BAD (hang/timeout), 125=SKIP (untestable:
+          # build failure, JIT off, or unrelated abort/crash).
           set -u
           NCPU="$(nproc)"
           WS="$PWD"
@@ -120,8 +132,8 @@ jobs:
             || { echo "[$rev] JIT not enabled -> skip"; exit 125; }
 
           cd "$SYMFONY_DIR" || { echo "[$rev] no symfony -> skip"; exit 125; }
-          echo "[$rev] running Console suite (timeout ${TEST_TIMEOUT}s)..."
-          timeout "${TEST_TIMEOUT}" "$PHP_BIN" "${JIT[@]}" ./phpunit src/Symfony/Component/Console \
+          echo "[$rev] probe: $TEST_TARGET (timeout ${TEST_TIMEOUT}s)..."
+          timeout "${TEST_TIMEOUT}" "$PHP_BIN" "${JIT[@]}" ./phpunit "$TEST_TARGET" \
               --exclude-group tty --exclude-group benchmark --exclude-group intl-data \
               --exclude-group transient --exclude-group skip >/tmp/test.log 2>&1
           rc=$?
@@ -133,24 +145,54 @@ jobs:
           STEP
           chmod +x "${{ runner.temp }}/bisect_step.sh"
 
+      # Build+test both ends before bisecting. A bisect is only meaningful if
+      # GOOD is actually clean and BAD actually hangs; this fails fast (and
+      # warms ccache) instead of burning hours on mislabeled bounds.
+      - name: Validate endpoints
+        run: |
+          set +e
+          STEP="${{ runner.temp }}/bisect_step.sh"
+          git checkout -q --detach "$BAD_REF"
+          echo "::group::Build+probe BAD ($BAD_REF)"; "$STEP"; rc_bad=$?; echo "::endgroup::"
+          git checkout -q --detach "$GOOD_REF"
+          echo "::group::Build+probe GOOD ($GOOD_REF)"; "$STEP"; rc_good=$?; echo "::endgroup::"
+          {
+            echo "## Endpoint validation"
+            echo "- BAD  \`$BAD_REF\`: predicate rc=$rc_bad (want 1 = hang)"
+            echo "- GOOD \`$GOOD_REF\`: predicate rc=$rc_good (want 0 = clean)"
+          } >> "$GITHUB_STEP_SUMMARY"
+          fail=0
+          if [ "$rc_bad" != "1" ]; then
+            echo "::error::BAD endpoint did not hang (rc=$rc_bad). The probe target may not trigger the hang in isolation, or BAD is wrong."
+            fail=1
+          fi
+          if [ "$rc_good" != "0" ]; then
+            echo "::error::GOOD endpoint is not clean (rc=$rc_good). It may hang (regression predates it) or abort (unrelated bug); pick a different GOOD."
+            fail=1
+          fi
+          exit $fail
+
       - name: Run git bisect
         run: |
           git bisect reset >/dev/null 2>&1 || true
           git bisect start
-          git bisect bad  "${{ inputs.bad || '27c10ddce6302912a46d72a4dcd47c89f1209544' }}"
-          git bisect good "${{ inputs.good || '5ab2c02ea1935092866c4446e11939daf9b7102e' }}"
+          git bisect bad  "$BAD_REF"
+          git bisect good "$GOOD_REF"
           set +e
           git bisect run "${{ runner.temp }}/bisect_step.sh" | tee "${{ runner.temp }}/bisect_out.txt"
           set -e
 
-      - name: Report first-bad commit
+      - name: Report result
         if: always()
         run: |
           {
             echo "## JIT hang bisect result"
             echo '```'
-            grep -E "is the first bad commit" -A0 "${{ runner.temp }}/bisect_out.txt" || echo "(no clear first-bad — see log below)"
+            grep -E "is the first bad commit" "${{ runner.temp }}/bisect_out.txt" 2>/dev/null \
+              || echo "(no single first-bad — likely too many skips; see log)"
             echo '```'
+            skips=$(grep -c -- "-> SKIP" "${{ runner.temp }}/bisect_out.txt" 2>/dev/null || echo 0)
+            echo "Skipped (untestable) probes: $skips"
             echo "### Full bisect log"
             echo '```'
             git bisect log 2>/dev/null || true
