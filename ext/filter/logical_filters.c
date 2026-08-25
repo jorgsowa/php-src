@@ -958,9 +958,16 @@ static bool ipv6_get_status_flags(const int ip[8], bool *global, bool *reserved,
 	} else if (ip[0] == 0 && ip[1] == 0 && ip[2] == 0 && ip[3] == 0 && ip[4] == 0 && ip[5] == 0 && ip[6] == 0 && ip[7] == 1) {
 		/* RFC 4291 - Loopback Address */
 		*reserved = true;
-	} else if (ip[0] == 0x0064 && ip[1] == 0xff9b) {
-		/* RFC 6052 - IPv4-IPv6 Translation */
-		*global = true;
+	} else if (ip[0] == 0x0064 && ip[1] == 0xff9b && ip[2] == 0 && ip[3] == 0 && ip[4] == 0 && ip[5] == 0) {
+		/* RFC 6052 - IPv4-IPv6 Translation (well-known prefix): status follows the embedded IPv4 address */
+		int ip4[8] = {0};
+		ip4[0] = (ip[6] >> 8) & 0xff;
+		ip4[1] = ip[6] & 0xff;
+		ip4[2] = (ip[7] >> 8) & 0xff;
+		ip4[3] = ip[7] & 0xff;
+		if (!ipv4_get_status_flags(ip4, global, reserved, private)) {
+			*global = true;
+		}
 	} else if (ip[0] == 0 && ip[1] == 0 && ip[2] == 0 && ip[3] == 0 && ip[4] == 0 && ip[5] == 0xffff) {
 		/* RFC 4291 - IPv4-mapped Address */
 		*reserved = true;
@@ -977,7 +984,15 @@ static bool ipv6_get_status_flags(const int ip[8], bool *global, bool *reserved,
 	} else if (ip[0] == 0x2001 && ip[1] >= 0x0010 && ip[1] <= 0x001f) {
 		/* RFC 4843 - ORCHID */
 	} else if (ip[0] == 0x2002) {
-		/* RFC 3056 - 6to4 */
+		/* RFC 3056 - 6to4: status follows the embedded IPv4 address */
+		int ip4[8] = {0};
+		ip4[0] = (ip[1] >> 8) & 0xff;
+		ip4[1] = ip[1] & 0xff;
+		ip4[2] = (ip[2] >> 8) & 0xff;
+		ip4[3] = ip[2] & 0xff;
+		if (!ipv4_get_status_flags(ip4, global, reserved, private)) {
+			*global = true;
+		}
 	} else if (ip[0] >= 0xfc00 && ip[0] <= 0xfdff) {
 		/* RFC 4193 - Unique-Local */
 		*private = true;
