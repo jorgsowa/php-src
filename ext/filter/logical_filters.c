@@ -850,13 +850,17 @@ static int _php_filter_validate_ipv6(const char *str, size_t str_len, int ip[8])
 
 fixup_ip:
 	if (ip && ipv4) {
-		for (i = 0; i < 5; i++) {
-			ip[i] = 0;
-}
-		ip[i++] = 0xffff;
-		ip[i++] = 256 * ip4elm[0] + ip4elm[1];
-		ip[i++] = 256 * ip4elm[2] + ip4elm[3];
-	} else if (ip && compressed_pos >= 0 && blocks <= 8) {
+		/* hex blocks were stored after the 2 blocks reserved for the IPv4 part */
+		for (i = 2; i < blocks; i++) {
+			ip[i - 2] = ip[i];
+		}
+		ip[blocks - 2] = 256 * ip4elm[0] + ip4elm[1];
+		ip[blocks - 1] = 256 * ip4elm[2] + ip4elm[3];
+		if (compressed_pos >= 0) {
+			compressed_pos -= 2;
+		}
+	}
+	if (ip && compressed_pos >= 0 && blocks <= 8) {
 		int offset = 8 - blocks;
 		for (i = 7; i > compressed_pos + offset; i--) {
 			ip[i] = ip[i - offset];
@@ -942,6 +946,8 @@ static bool ipv6_get_status_flags(const int ip[8], bool *global, bool *reserved,
 	} else if (ip[0] == 0 && ip[1] == 0 && ip[2] == 0 && ip[3] == 0 && ip[4] == 0 && ip[5] == 0 && ip[6] == 0 && ip[7] == 1) {
 		/* RFC 4291 - Loopback Address */
 		*reserved = true;
+	} else if (ip[0] == 0x0064 && ip[1] == 0xff9b && ip[2] == 0x0001) {
+		/* RFC 8215 - Local-Use IPv4/IPv6 Translation */
 	} else if (ip[0] == 0x0064 && ip[1] == 0xff9b) {
 		/* RFC 6052 - IPv4-IPv6 Translation */
 		*global = true;
