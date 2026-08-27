@@ -1307,6 +1307,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_D
 	zval retval;
 
 	SAVE_OPLINE();
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+zend_verify_internal_param_defaults(&call);
+#endif
 	EX(call) = call->prev_execute_data;
 
 	call->prev_execute_data = execute_data;
@@ -1377,6 +1380,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_D
 	zval retval;
 
 	SAVE_OPLINE();
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+zend_verify_internal_param_defaults(&call);
+#endif
 	EX(call) = call->prev_execute_data;
 
 	call->prev_execute_data = execute_data;
@@ -1447,6 +1453,9 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_
 	zval retval;
 
 	SAVE_OPLINE();
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+zend_verify_internal_param_defaults(&call);
+#endif
 	EX(call) = call->prev_execute_data;
 
 	call->prev_execute_data = execute_data;
@@ -54268,6 +54277,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_ICA
 	zval retval;
 
 	SAVE_OPLINE();
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+zend_verify_internal_param_defaults(&call);
+#endif
 	EX(call) = call->prev_execute_data;
 
 	call->prev_execute_data = execute_data;
@@ -54338,6 +54350,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_ICA
 	zval retval;
 
 	SAVE_OPLINE();
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+zend_verify_internal_param_defaults(&call);
+#endif
 	EX(call) = call->prev_execute_data;
 
 	call->prev_execute_data = execute_data;
@@ -54408,6 +54423,9 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_IC
 	zval retval;
 
 	SAVE_OPLINE();
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+zend_verify_internal_param_defaults(&call);
+#endif
 	EX(call) = call->prev_execute_data;
 
 	call->prev_execute_data = execute_data;
