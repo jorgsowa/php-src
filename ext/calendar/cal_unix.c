@@ -21,7 +21,7 @@
 #define SECS_PER_DAY (24 * 3600)
 #define JULIAN_DAY_UNIX_EPOCH 2440588
 
-/* {{{ Convert UNIX timestamp to Julian Day */
+/* Convert UNIX timestamp to Julian Day */
 PHP_FUNCTION(unixtojd)
 {
 	time_t ts;
@@ -46,9 +46,8 @@ PHP_FUNCTION(unixtojd)
 
 	RETURN_LONG(GregorianToSdn(tmbuf.tm_year + 1900, tmbuf.tm_mon + 1, tmbuf.tm_mday));
 }
-/* }}} */
 
-/* {{{ Convert Julian Day to UNIX timestamp */
+/* Convert Julian Day to UNIX timestamp */
 PHP_FUNCTION(jdtounix)
 {
 	zend_long julian_day;
@@ -65,4 +64,3 @@ PHP_FUNCTION(jdtounix)
 
 	RETURN_LONG((julian_day - JULIAN_DAY_UNIX_EPOCH) * SECS_PER_DAY);
 }
-/* }}} */
