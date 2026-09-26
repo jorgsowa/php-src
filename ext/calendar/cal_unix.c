@@ -15,7 +15,6 @@
  */
 
 #include "php.h"
-#include "php_calendar.h"
 #include "sdncal.h"
 #include <time.h>
 
@@ -28,27 +27,24 @@ PHP_FUNCTION(unixtojd)
 	time_t ts;
 	zend_long tl = 0;
 	bool tl_is_null = true;
-	struct tm *ta, tmbuf;
+	struct tm tmbuf;
 
 	ZEND_PARSE_PARAMETERS_START(0, 1)
 		Z_PARAM_OPTIONAL
 		Z_PARAM_LONG_OR_NULL(tl, tl_is_null)
 	ZEND_PARSE_PARAMETERS_END();
 
-	if (tl_is_null) {
-		ts = time(NULL);
-	} else if (tl >= 0) {
-		ts = (time_t) tl;
-	} else {
+	if (!tl_is_null && tl < 0) {
 		zend_argument_value_error(1, "must be greater than or equal to 0");
 		RETURN_THROWS();
 	}
 
-	if (!(ta = php_localtime_r(&ts, &tmbuf))) {
+	ts = tl_is_null ? time(NULL) : (time_t) tl;
+	if (!php_localtime_r(&ts, &tmbuf)) {
 		RETURN_FALSE;
 	}
 
-	RETURN_LONG(GregorianToSdn(ta->tm_year+1900, ta->tm_mon+1, ta->tm_mday));
+	RETURN_LONG(GregorianToSdn(tmbuf.tm_year + 1900, tmbuf.tm_mon + 1, tmbuf.tm_mday));
 }
 /* }}} */
 
