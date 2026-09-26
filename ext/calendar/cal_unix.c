@@ -29,9 +29,10 @@ PHP_FUNCTION(unixtojd)
 	bool tl_is_null = true;
 	struct tm *ta, tmbuf;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|l!", &tl, &tl_is_null) == FAILURE) {
-		RETURN_THROWS();
-	}
+	ZEND_PARSE_PARAMETERS_START(0, 1)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_LONG_OR_NULL(tl, tl_is_null)
+	ZEND_PARSE_PARAMETERS_END();
 
 	if (tl_is_null) {
 		ts = time(NULL);
@@ -55,10 +56,11 @@ PHP_FUNCTION(jdtounix)
 {
 	zend_long uday;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &uday) == FAILURE) {
-		RETURN_THROWS();
-	}
-	if (uday < 2440588 || (uday - 2440588) > (ZEND_LONG_MAX / SECS_PER_DAY)) { /* before beginning of unix epoch or greater than representable */
+	ZEND_PARSE_PARAMETERS_START(1, 1)
+		Z_PARAM_LONG(uday)
+	ZEND_PARSE_PARAMETERS_END();
+
+	if (uday < 2440588 || uday > ZEND_LONG_MAX / SECS_PER_DAY + 2440588) {
 		zend_argument_value_error(1, "jday must be between 2440588 and " ZEND_LONG_FMT, ZEND_LONG_MAX / SECS_PER_DAY + 2440588);
 		RETURN_THROWS();
 	}
