@@ -20,6 +20,7 @@
 #include <time.h>
 
 #define SECS_PER_DAY (24 * 3600)
+#define JULIAN_DAY_UNIX_EPOCH 2440588
 
 /* {{{ Convert UNIX timestamp to Julian Day */
 PHP_FUNCTION(unixtojd)
@@ -54,19 +55,18 @@ PHP_FUNCTION(unixtojd)
 /* {{{ Convert Julian Day to UNIX timestamp */
 PHP_FUNCTION(jdtounix)
 {
-	zend_long uday;
+	zend_long julian_day;
+	const zend_long max_julian_day = ZEND_LONG_MAX / SECS_PER_DAY + JULIAN_DAY_UNIX_EPOCH;
 
 	ZEND_PARSE_PARAMETERS_START(1, 1)
-		Z_PARAM_LONG(uday)
+		Z_PARAM_LONG(julian_day)
 	ZEND_PARSE_PARAMETERS_END();
 
-	if (uday < 2440588 || uday > ZEND_LONG_MAX / SECS_PER_DAY + 2440588) {
-		zend_argument_value_error(1, "jday must be between 2440588 and " ZEND_LONG_FMT, ZEND_LONG_MAX / SECS_PER_DAY + 2440588);
+	if (julian_day < JULIAN_DAY_UNIX_EPOCH || julian_day > max_julian_day) {
+		zend_argument_value_error(1, "jday must be between %d and " ZEND_LONG_FMT, JULIAN_DAY_UNIX_EPOCH, max_julian_day);
 		RETURN_THROWS();
 	}
 
-	uday -= 2440588 /* J.D. of 1.1.1970 */;
-
-	RETURN_LONG(uday * SECS_PER_DAY);
+	RETURN_LONG((julian_day - JULIAN_DAY_UNIX_EPOCH) * SECS_PER_DAY);
 }
 /* }}} */
