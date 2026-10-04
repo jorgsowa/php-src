@@ -15,56 +15,52 @@
  */
 
 #include "php.h"
-#include "php_calendar.h"
 #include "sdncal.h"
 #include <time.h>
 
 #define SECS_PER_DAY (24 * 3600)
+#define JULIAN_DAY_UNIX_EPOCH 2440588
 
-/* {{{ Convert UNIX timestamp to Julian Day */
+/* Convert UNIX timestamp to Julian Day */
 PHP_FUNCTION(unixtojd)
 {
 	time_t ts;
 	zend_long tl = 0;
 	bool tl_is_null = true;
-	struct tm *ta, tmbuf;
+	struct tm tmbuf;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|l!", &tl, &tl_is_null) == FAILURE) {
-		RETURN_THROWS();
-	}
+	ZEND_PARSE_PARAMETERS_START(0, 1)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_LONG_OR_NULL(tl, tl_is_null)
+	ZEND_PARSE_PARAMETERS_END();
 
-	if (tl_is_null) {
-		ts = time(NULL);
-	} else if (tl >= 0) {
-		ts = (time_t) tl;
-	} else {
+	if (!tl_is_null && tl < 0) {
 		zend_argument_value_error(1, "must be greater than or equal to 0");
 		RETURN_THROWS();
 	}
 
-	if (!(ta = php_localtime_r(&ts, &tmbuf))) {
+	ts = tl_is_null ? time(NULL) : (time_t) tl;
+	if (!php_localtime_r(&ts, &tmbuf)) {
 		RETURN_FALSE;
 	}
 
-	RETURN_LONG(GregorianToSdn(ta->tm_year+1900, ta->tm_mon+1, ta->tm_mday));
+	RETURN_LONG(GregorianToSdn(tmbuf.tm_year + 1900, tmbuf.tm_mon + 1, tmbuf.tm_mday));
 }
-/* }}} */
 
-/* {{{ Convert Julian Day to UNIX timestamp */
+/* Convert Julian Day to UNIX timestamp */
 PHP_FUNCTION(jdtounix)
 {
-	zend_long uday;
+	zend_long julian_day;
+	const zend_long max_julian_day = ZEND_LONG_MAX / SECS_PER_DAY + JULIAN_DAY_UNIX_EPOCH;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &uday) == FAILURE) {
+	ZEND_PARSE_PARAMETERS_START(1, 1)
+		Z_PARAM_LONG(julian_day)
+	ZEND_PARSE_PARAMETERS_END();
+
+	if (julian_day < JULIAN_DAY_UNIX_EPOCH || julian_day > max_julian_day) {
+		zend_argument_value_error(1, "jday must be between %d and " ZEND_LONG_FMT, JULIAN_DAY_UNIX_EPOCH, max_julian_day);
 		RETURN_THROWS();
 	}
-	if (uday < 2440588 || (uday - 2440588) > (ZEND_LONG_MAX / SECS_PER_DAY)) { /* before beginning of unix epoch or greater than representable */
-		zend_argument_value_error(1, "jday must be between 2440588 and " ZEND_LONG_FMT, ZEND_LONG_MAX / SECS_PER_DAY + 2440588);
-		RETURN_THROWS();
-	}
 
-	uday -= 2440588 /* J.D. of 1.1.1970 */;
-
-	RETURN_LONG(uday * SECS_PER_DAY);
+	RETURN_LONG((julian_day - JULIAN_DAY_UNIX_EPOCH) * SECS_PER_DAY);
 }
-/* }}} */
