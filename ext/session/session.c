@@ -106,6 +106,19 @@ static void proposed_session_id_to_session_id(const zval *proposed_session_id);
 /* Initialized in MINIT, readonly otherwise. */
 static int my_module_number = 0;
 static zend_string *session_var_name;
+/* Names of INI directives changed at runtime. */
+static zend_string *ini_name_cookie_lifetime;
+static zend_string *ini_name_cookie_path;
+static zend_string *ini_name_cookie_domain;
+static zend_string *ini_name_cookie_secure;
+static zend_string *ini_name_cookie_partitioned;
+static zend_string *ini_name_cookie_httponly;
+static zend_string *ini_name_cookie_samesite;
+static zend_string *ini_name_name;
+static zend_string *ini_name_save_handler;
+static zend_string *ini_name_save_path;
+static zend_string *ini_name_cache_limiter;
+static zend_string *ini_name_cache_expire;
 
 /* Dispatched by RINIT and by php_session_destroy */
 static inline void php_rinit_session_globals(void)
@@ -1822,7 +1835,6 @@ PHP_FUNCTION(session_set_cookie_params)
 	bool secure = false, secure_null = true;
 	bool httponly = false, httponly_null = true;
 	bool partitioned = false, partitioned_null = true;
-	zend_string *ini_name;
 	zend_result result;
 	int found = 0;
 
@@ -1919,63 +1931,49 @@ PHP_FUNCTION(session_set_cookie_params)
 	}
 
 	if (lifetime) {
-		ini_name = ZSTR_INIT_LITERAL("session.cookie_lifetime", false);
-		result = zend_alter_ini_entry(ini_name, lifetime, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		result = zend_alter_ini_entry(ini_name_cookie_lifetime, lifetime, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 		if (result == FAILURE) {
 			RETVAL_FALSE;
 			goto cleanup;
 		}
 	}
 	if (path) {
-		ini_name = ZSTR_INIT_LITERAL("session.cookie_path", false);
-		result = zend_alter_ini_entry(ini_name, path, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		result = zend_alter_ini_entry(ini_name_cookie_path, path, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 		if (result == FAILURE) {
 			RETVAL_FALSE;
 			goto cleanup;
 		}
 	}
 	if (domain) {
-		ini_name = ZSTR_INIT_LITERAL("session.cookie_domain", false);
-		result = zend_alter_ini_entry(ini_name, domain, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		result = zend_alter_ini_entry(ini_name_cookie_domain, domain, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 		if (result == FAILURE) {
 			RETVAL_FALSE;
 			goto cleanup;
 		}
 	}
 	if (!secure_null) {
-		ini_name = ZSTR_INIT_LITERAL("session.cookie_secure", false);
-		result = zend_alter_ini_entry(ini_name, secure ? ZSTR_CHAR('1') : ZSTR_CHAR('0'), PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		result = zend_alter_ini_entry(ini_name_cookie_secure, secure ? ZSTR_CHAR('1') : ZSTR_CHAR('0'), PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 		if (result == FAILURE) {
 			RETVAL_FALSE;
 			goto cleanup;
 		}
 	}
 	if (!partitioned_null) {
-		ini_name = ZSTR_INIT_LITERAL("session.cookie_partitioned", false);
-		result = zend_alter_ini_entry(ini_name, partitioned ? ZSTR_CHAR('1') : ZSTR_CHAR('0'), PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		result = zend_alter_ini_entry(ini_name_cookie_partitioned, partitioned ? ZSTR_CHAR('1') : ZSTR_CHAR('0'), PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 		if (result == FAILURE) {
 			RETVAL_FALSE;
 			goto cleanup;
 		}
 	}
 	if (!httponly_null) {
-		ini_name = ZSTR_INIT_LITERAL("session.cookie_httponly", false);
-		result = zend_alter_ini_entry(ini_name, httponly ? ZSTR_CHAR('1') : ZSTR_CHAR('0'), PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		result = zend_alter_ini_entry(ini_name_cookie_httponly, httponly ? ZSTR_CHAR('1') : ZSTR_CHAR('0'), PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 		if (result == FAILURE) {
 			RETVAL_FALSE;
 			goto cleanup;
 		}
 	}
 	if (samesite) {
-		ini_name = ZSTR_INIT_LITERAL("session.cookie_samesite", false);
-		result = zend_alter_ini_entry(ini_name, samesite, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		result = zend_alter_ini_entry(ini_name_cookie_samesite, samesite, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 		if (result == FAILURE) {
 			RETVAL_FALSE;
 			goto cleanup;
@@ -2024,9 +2022,7 @@ PHP_FUNCTION(session_name)
 	RETVAL_STRINGL(ZSTR_VAL(PS(session_name)), ZSTR_LEN(PS(session_name)));
 
 	if (name) {
-		zend_string *ini_name = ZSTR_INIT_LITERAL("session.name", false);
-		zend_alter_ini_entry(ini_name, name, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		zend_alter_ini_entry(ini_name_name, name, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 	}
 }
 
@@ -2066,9 +2062,7 @@ PHP_FUNCTION(session_module_name)
 		}
 		PS(mod_data) = NULL;
 
-		zend_string *ini_name = ZSTR_INIT_LITERAL("session.save_handler", false);
-		zend_alter_ini_entry(ini_name, name, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		zend_alter_ini_entry(ini_name_save_handler, name, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 	}
 }
 
@@ -2088,12 +2082,10 @@ static bool can_session_handler_be_changed(void) {
 
 static inline void set_user_save_handler_ini(void) {
 	/* const */ zend_string *ini_val = ZSTR_KNOWN(ZEND_STR_USER);
-	zend_string *ini_name = ZSTR_INIT_LITERAL("session.save_handler", false);
 
 	PS(set_handler) = true;
-	zend_alter_ini_entry(ini_name, ini_val, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
+	zend_alter_ini_entry(ini_name_save_handler, ini_val, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 	PS(set_handler) = false;
-	zend_string_release_ex(ini_name, false);
 }
 
 #define SESSION_RELEASE_USER_HANDLER_OO(struct_name) \
@@ -2312,9 +2304,7 @@ PHP_FUNCTION(session_save_path)
 	RETVAL_STRINGL(ZSTR_VAL(PS(save_path)), ZSTR_LEN(PS(save_path)));
 
 	if (name) {
-		zend_string *ini_name = ZSTR_INIT_LITERAL("session.save_path", false);
-		zend_alter_ini_entry(ini_name, name, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		zend_alter_ini_entry(ini_name_save_path, name, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 	}
 }
 
@@ -2554,9 +2544,7 @@ PHP_FUNCTION(session_cache_limiter)
 	RETVAL_STRINGL(ZSTR_VAL(PS(cache_limiter)), ZSTR_LEN(PS(cache_limiter)));
 
 	if (limiter) {
-		zend_string *ini_name = ZSTR_INIT_LITERAL("session.cache_limiter", false);
-		zend_alter_ini_entry(ini_name, limiter, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		zend_alter_ini_entry(ini_name_cache_limiter, limiter, PHP_INI_USER, PHP_INI_STAGE_RUNTIME);
 	}
 }
 
@@ -2583,10 +2571,8 @@ PHP_FUNCTION(session_cache_expire)
 	RETVAL_LONG(PS(cache_expire));
 
 	if (!expires_is_null) {
-		zend_string *ini_name = ZSTR_INIT_LITERAL("session.cache_expire", false);
 		zend_string *ini_value = zend_long_to_str(expires);
-		zend_alter_ini_entry(ini_name, ini_value, ZEND_INI_USER, ZEND_INI_STAGE_RUNTIME);
-		zend_string_release_ex(ini_name, false);
+		zend_alter_ini_entry(ini_name_cache_expire, ini_value, ZEND_INI_USER, ZEND_INI_STAGE_RUNTIME);
 		zend_string_release_ex(ini_value, false);
 	}
 }
@@ -2971,6 +2957,19 @@ static PHP_MINIT_FUNCTION(session)
 {
 	session_var_name = zend_string_init_interned(ZEND_STRL("_SESSION"), true);
 	zend_register_auto_global(session_var_name, false, NULL);
+
+	ini_name_cookie_lifetime = zend_string_init_interned(ZEND_STRL("session.cookie_lifetime"), true);
+	ini_name_cookie_path = zend_string_init_interned(ZEND_STRL("session.cookie_path"), true);
+	ini_name_cookie_domain = zend_string_init_interned(ZEND_STRL("session.cookie_domain"), true);
+	ini_name_cookie_secure = zend_string_init_interned(ZEND_STRL("session.cookie_secure"), true);
+	ini_name_cookie_partitioned = zend_string_init_interned(ZEND_STRL("session.cookie_partitioned"), true);
+	ini_name_cookie_httponly = zend_string_init_interned(ZEND_STRL("session.cookie_httponly"), true);
+	ini_name_cookie_samesite = zend_string_init_interned(ZEND_STRL("session.cookie_samesite"), true);
+	ini_name_name = zend_string_init_interned(ZEND_STRL("session.name"), true);
+	ini_name_save_handler = zend_string_init_interned(ZEND_STRL("session.save_handler"), true);
+	ini_name_save_path = zend_string_init_interned(ZEND_STRL("session.save_path"), true);
+	ini_name_cache_limiter = zend_string_init_interned(ZEND_STRL("session.cache_limiter"), true);
+	ini_name_cache_expire = zend_string_init_interned(ZEND_STRL("session.cache_expire"), true);
 
 	my_module_number = module_number;
 	PS(module_number) = module_number;
