@@ -119,6 +119,17 @@ static zend_string *ini_name_save_handler;
 static zend_string *ini_name_save_path;
 static zend_string *ini_name_cache_limiter;
 static zend_string *ini_name_cache_expire;
+/* Method names of OO session handlers. */
+static zend_string *handler_name_open;
+static zend_string *handler_name_close;
+static zend_string *handler_name_read;
+static zend_string *handler_name_write;
+static zend_string *handler_name_destroy;
+static zend_string *handler_name_gc;
+static zend_string *handler_name_create_sid;
+static zend_string *handler_name_validateid;
+static zend_string *handler_name_updatetimestamp;
+static zend_string *handler_name_updateTimestamp;
 
 /* Dispatched by RINIT and by php_session_destroy */
 static inline void php_rinit_session_globals(void)
@@ -2107,7 +2118,7 @@ static inline void set_user_save_handler_ini(void) {
 	array_init_size(&PS(mod_user_names).struct_name, 2); \
 	Z_ADDREF_P(obj); \
 	add_next_index_zval(&PS(mod_user_names).struct_name, obj); \
-	add_next_index_str(&PS(mod_user_names).struct_name, zend_string_init(method_name, strlen(method_name), false));
+	add_next_index_str(&PS(mod_user_names).struct_name, method_name);
 
 #define SESSION_SET_USER_HANDLER_PROCEDURAL(struct_name, fci) \
 	if (!Z_ISUNDEF(PS(mod_user_names).struct_name)) { \
@@ -2136,12 +2147,12 @@ PHP_FUNCTION(session_set_save_handler)
 		}
 
 		/* Define mandatory handlers */
-		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_open, "open");
-		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_close, "close");
-		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_read, "read");
-		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_write, "write");
-		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_destroy, "destroy");
-		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_gc, "gc");
+		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_open, handler_name_open);
+		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_close, handler_name_close);
+		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_read, handler_name_read);
+		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_write, handler_name_write);
+		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_destroy, handler_name_destroy);
+		SESSION_SET_USER_HANDLER_OO_MANDATORY(ps_gc, handler_name_gc);
 
 		/* Elements of object_methods HashTable are zend_function *method */
 		HashTable *object_methods = &Z_OBJCE_P(obj)->function_table;
@@ -2149,48 +2160,42 @@ PHP_FUNCTION(session_set_save_handler)
 		/* Find implemented methods - SessionIdInterface (optional) */
 		/* First release old handlers */
 		SESSION_RELEASE_USER_HANDLER_OO(ps_create_sid);
-		zend_string *create_sid_name = ZSTR_INIT_LITERAL("create_sid", false);
 		if (instanceof_function(Z_OBJCE_P(obj), php_session_id_iface_entry)) {
-			SESSION_SET_USER_HANDLER_OO(ps_create_sid, zend_string_copy(create_sid_name));
-		} else if (zend_hash_find_ptr(object_methods, create_sid_name)) {
+			SESSION_SET_USER_HANDLER_OO(ps_create_sid, handler_name_create_sid);
+		} else if (zend_hash_find_ptr(object_methods, handler_name_create_sid)) {
 			/* For BC reasons we accept methods even if the class does not implement the interface */
-			SESSION_SET_USER_HANDLER_OO(ps_create_sid, zend_string_copy(create_sid_name));
+			SESSION_SET_USER_HANDLER_OO(ps_create_sid, handler_name_create_sid);
 		} else {
 			php_error_docref(NULL, E_DEPRECATED,
 				"Providing an object to argument #1 ($sessionhandler) which does not have the create_sid() method defined is deprecated");
 		}
-		zend_string_release_ex(create_sid_name, false);
 
 		/* Find implemented methods - SessionUpdateTimestampInterface (optional) */
 		/* First release old handlers */
 		SESSION_RELEASE_USER_HANDLER_OO(ps_validate_sid);
 		SESSION_RELEASE_USER_HANDLER_OO(ps_update_timestamp);
 		/* Method names need to be lowercase */
-		zend_string *validate_sid_name = ZSTR_INIT_LITERAL("validateid", false);
-		zend_string *update_timestamp_name = ZSTR_INIT_LITERAL("updatetimestamp", false);
 		if (instanceof_function(Z_OBJCE_P(obj), php_session_update_timestamp_iface_entry)) {
 			/* Validate ID handler */
-			SESSION_SET_USER_HANDLER_OO(ps_validate_sid, zend_string_copy(validate_sid_name));
+			SESSION_SET_USER_HANDLER_OO(ps_validate_sid, handler_name_validateid);
 			/* Update Timestamp handler */
-			/* We need to provide a new string with the correct casing so that error messages work */
-			SESSION_SET_USER_HANDLER_OO(ps_update_timestamp, ZSTR_INIT_LITERAL("updateTimestamp", false));
+			/* We need to provide a string with the correct casing so that error messages work */
+			SESSION_SET_USER_HANDLER_OO(ps_update_timestamp, handler_name_updateTimestamp);
 		} else {
 			/* For BC reasons we accept methods even if the class does not implement the interface */
-			if (zend_hash_find_ptr(object_methods, validate_sid_name)) {
+			if (zend_hash_find_ptr(object_methods, handler_name_validateid)) {
 				/* For BC reasons we accept methods even if the class does not implement the interface */
-				SESSION_SET_USER_HANDLER_OO(ps_validate_sid, zend_string_copy(validate_sid_name));
+				SESSION_SET_USER_HANDLER_OO(ps_validate_sid, handler_name_validateid);
 			} else {
 				php_error_docref(NULL, E_DEPRECATED,
 					"Providing an object to argument #1 ($sessionhandler) which does not have the validateId() method defined is deprecated");
 			}
-			if (zend_hash_find_ptr(object_methods, update_timestamp_name)) {
+			if (zend_hash_find_ptr(object_methods, handler_name_updatetimestamp)) {
 				/* For BC reasons we accept methods even if the class does not implement the interface */
-				/* We need to provide a new string with the correct casing so that error messages work */
-				SESSION_SET_USER_HANDLER_OO(ps_update_timestamp, ZSTR_INIT_LITERAL("updateTimestamp", false));
+				/* We need to provide a string with the correct casing so that error messages work */
+				SESSION_SET_USER_HANDLER_OO(ps_update_timestamp, handler_name_updateTimestamp);
 			}
 		}
-		zend_string_release_ex(validate_sid_name, false);
-		zend_string_release_ex(update_timestamp_name, false);
 
 		PS(mod_user_uses_object_methods_as_handlers) = true;
 		if (register_shutdown) {
@@ -2970,6 +2975,17 @@ static PHP_MINIT_FUNCTION(session)
 	ini_name_save_path = zend_string_init_interned(ZEND_STRL("session.save_path"), true);
 	ini_name_cache_limiter = zend_string_init_interned(ZEND_STRL("session.cache_limiter"), true);
 	ini_name_cache_expire = zend_string_init_interned(ZEND_STRL("session.cache_expire"), true);
+
+	handler_name_open = zend_string_init_interned(ZEND_STRL("open"), true);
+	handler_name_close = zend_string_init_interned(ZEND_STRL("close"), true);
+	handler_name_read = zend_string_init_interned(ZEND_STRL("read"), true);
+	handler_name_write = zend_string_init_interned(ZEND_STRL("write"), true);
+	handler_name_destroy = zend_string_init_interned(ZEND_STRL("destroy"), true);
+	handler_name_gc = zend_string_init_interned(ZEND_STRL("gc"), true);
+	handler_name_create_sid = zend_string_init_interned(ZEND_STRL("create_sid"), true);
+	handler_name_validateid = zend_string_init_interned(ZEND_STRL("validateid"), true);
+	handler_name_updatetimestamp = zend_string_init_interned(ZEND_STRL("updatetimestamp"), true);
+	handler_name_updateTimestamp = zend_string_init_interned(ZEND_STRL("updateTimestamp"), true);
 
 	my_module_number = module_number;
 	PS(module_number) = module_number;
