@@ -130,6 +130,7 @@ static zend_string *handler_name_create_sid;
 static zend_string *handler_name_validateid;
 static zend_string *handler_name_updatetimestamp;
 static zend_string *handler_name_updateTimestamp;
+static zend_string *sid_deprecation_reason;
 
 /* Dispatched by RINIT and by php_session_destroy */
 static inline void php_rinit_session_globals(void)
@@ -1695,11 +1696,10 @@ PHPAPI zend_result php_session_reset_id(void)
 		}
 	}
 	if (new_sid_constant != NULL) {
-		zend_string *deprecation_reason = zend_string_init("as GET/POST sessions were deprecated", strlen("as GET/POST sessions were deprecated"), false);
 		zend_attribute *deprecation_attrib = zend_add_attribute(&new_sid_constant->attributes, ZSTR_KNOWN(ZEND_STR_DEPRECATED_CAPITALIZED), 2, 0, 0, 0);
 		ZVAL_STR(&deprecation_attrib->args[0].value, ZSTR_KNOWN(ZEND_STR_8_DOT_4));
 		deprecation_attrib->args[0].name = ZSTR_KNOWN(ZEND_STR_SINCE);
-		ZVAL_STR(&deprecation_attrib->args[1].value, deprecation_reason);
+		ZVAL_STR(&deprecation_attrib->args[1].value, sid_deprecation_reason);
 		deprecation_attrib->args[1].name = ZSTR_KNOWN(ZEND_STR_MESSAGE);
 	}
 
@@ -2986,6 +2986,8 @@ static PHP_MINIT_FUNCTION(session)
 	handler_name_validateid = zend_string_init_interned(ZEND_STRL("validateid"), true);
 	handler_name_updatetimestamp = zend_string_init_interned(ZEND_STRL("updatetimestamp"), true);
 	handler_name_updateTimestamp = zend_string_init_interned(ZEND_STRL("updateTimestamp"), true);
+
+	sid_deprecation_reason = zend_string_init_interned(ZEND_STRL("as GET/POST sessions were deprecated"), true);
 
 	my_module_number = module_number;
 	PS(module_number) = module_number;
