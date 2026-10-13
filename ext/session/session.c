@@ -105,6 +105,7 @@ static void proposed_session_id_to_session_id(const zval *proposed_session_id);
 
 /* Initialized in MINIT, readonly otherwise. */
 static int my_module_number = 0;
+static zend_string *session_var_name;
 
 /* Dispatched by RINIT and by php_session_destroy */
 static inline void php_rinit_session_globals(void)
@@ -248,9 +249,8 @@ PHPAPI zval *php_get_session_var_str(const char *name, size_t name_len)
 static void php_session_track_init(void)
 {
 	zval session_vars;
-	zend_string *var_name = ZSTR_INIT_LITERAL("_SESSION", false);
 	/* Unconditionally destroy existing array -- possible dirty data */
-	zend_delete_global_variable(var_name);
+	zend_delete_global_variable(session_var_name);
 
 	if (!Z_ISUNDEF(PS(http_session_vars))) {
 		zval_ptr_dtor(&PS(http_session_vars));
@@ -259,8 +259,7 @@ static void php_session_track_init(void)
 	array_init(&session_vars);
 	ZVAL_NEW_REF(&PS(http_session_vars), &session_vars);
 	Z_ADDREF_P(&PS(http_session_vars));
-	zend_hash_update_ind(&EG(symbol_table), var_name, &PS(http_session_vars));
-	zend_string_release_ex(var_name, false);
+	zend_hash_update_ind(&EG(symbol_table), session_var_name, &PS(http_session_vars));
 }
 
 static zend_string *php_session_encode(void)
@@ -1014,7 +1013,6 @@ PS_SERIALIZER_DECODE_FUNC(php_serialize)
 	zval session_vars;
 	php_unserialize_data_t var_hash;
 	bool result;
-	zend_string *var_name = ZSTR_INIT_LITERAL("_SESSION", false);
 
 	ZVAL_NULL(&session_vars);
 	PHP_VAR_UNSERIALIZE_INIT(var_hash);
@@ -1034,8 +1032,7 @@ PS_SERIALIZER_DECODE_FUNC(php_serialize)
 	}
 	ZVAL_NEW_REF(&PS(http_session_vars), &session_vars);
 	Z_ADDREF_P(&PS(http_session_vars));
-	zend_hash_update_ind(&EG(symbol_table), var_name, &PS(http_session_vars));
-	zend_string_release_ex(var_name, false);
+	zend_hash_update_ind(&EG(symbol_table), session_var_name, &PS(http_session_vars));
 	return result || !vallen ? SUCCESS : FAILURE;
 }
 
@@ -2972,7 +2969,8 @@ static void session_handler_interface_gets_implemented(zend_class_entry *self, z
 
 static PHP_MINIT_FUNCTION(session)
 {
-	zend_register_auto_global(zend_string_init_interned(ZEND_STRL("_SESSION"), true), false, NULL);
+	session_var_name = zend_string_init_interned(ZEND_STRL("_SESSION"), true);
+	zend_register_auto_global(session_var_name, false, NULL);
 
 	my_module_number = module_number;
 	PS(module_number) = module_number;
