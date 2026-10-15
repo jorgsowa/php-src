@@ -58,7 +58,6 @@ PHPAPI ZEND_DECLARE_MODULE_GLOBALS(ps)
 
 static zend_result php_session_rfc1867_callback(unsigned int event, void *event_data, void **extra);
 static zend_result (*php_session_rfc1867_orig_callback)(unsigned int event, void *event_data, void **extra);
-static void php_session_track_init(void);
 
 /* SessionHandler class */
 zend_class_entry *php_session_class_entry;
@@ -105,7 +104,6 @@ zend_class_entry *php_session_update_timestamp_iface_entry;
 
 #define APPLY_TRANS_SID (PS(use_trans_sid) && !PS(use_only_cookies))
 
-static zend_result php_session_send_cookie(void);
 static bool php_session_abort(void);
 static void proposed_session_id_to_session_id(const zval *proposed_session_id);
 
