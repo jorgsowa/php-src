@@ -56,12 +56,6 @@ typedef struct {
 
 static ps_mm *ps_mm_instance = NULL;
 
-#if 0
-# define ps_mm_debug(a) printf a
-#else
-# define ps_mm_debug(a)
-#endif
-
 static inline uint32_t ps_sd_hash(const zend_string *data)
 {
 	uint32_t h;
@@ -138,8 +132,6 @@ static ps_sd *ps_sd_new(ps_mm *data, zend_string *key)
 		}
 	}
 
-	ps_mm_debug(("inserting %s(%p) into slot %d\n", ZSTR_VAL(key), sd, slot));
-
 	return sd;
 }
 
@@ -192,8 +184,6 @@ static ps_sd *ps_sd_lookup(ps_mm *data, const zend_string *key, bool rw)
 		ret->next = data->hash[slot];
 		data->hash[slot] = ret;
 	}
-
-	ps_mm_debug(("lookup(%s): ret=%p,hv=%u,slot=%d\n", ZSTR_VAL(key), ret, hv, slot));
 
 	return ret;
 }
@@ -319,8 +309,6 @@ PHP_MSHUTDOWN_FUNCTION(ps_mm)
 
 PS_OPEN_FUNC(mm)
 {
-	ps_mm_debug(("open: ps_mm_instance=%p\n", ps_mm_instance));
-
 	if (!ps_mm_instance) {
 		return FAILURE;
 	}
@@ -365,7 +353,6 @@ PS_WRITE_FUNC(mm)
 	sd = ps_sd_lookup(data, key, true);
 	if (!sd) {
 		sd = ps_sd_new(data, key);
-		ps_mm_debug(("new entry for %s\n", ZSTR_VAL(key)));
 	}
 
 	if (sd) {
@@ -419,7 +406,6 @@ PS_GC_FUNC(mm)
 	ps_sd *sd, *next;
 
 	*nrdels = 0;
-	ps_mm_debug(("gc\n"));
 
 	time(&limit);
 
@@ -432,7 +418,6 @@ PS_GC_FUNC(mm)
 		for (sd = *ohash; sd; sd = next) {
 			next = sd->next;
 			if (sd->ctime < limit) {
-				ps_mm_debug(("purging %s\n", ZSTR_VAL(sd->key)));
 				ps_sd_destroy(data, sd);
 				(*nrdels)++;
 			}
