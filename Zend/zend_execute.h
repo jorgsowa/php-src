@@ -495,6 +495,14 @@ static zend_always_inline void zend_vm_stack_extend_call_frame(
 	}
 }
 
+#ifndef ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+# define ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS 1
+#endif
+
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+ZEND_API void zend_verify_internal_param_defaults(zend_execute_data **call_ptr);
+#endif
+
 ZEND_API void ZEND_FASTCALL zend_free_extra_named_params(zend_array *extra_named_params);
 
 /* services */

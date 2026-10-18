@@ -1063,6 +1063,9 @@ cleanup_args:
 	} else {
 		ZEND_ASSERT(func->type == ZEND_INTERNAL_FUNCTION);
 		ZVAL_NULL(fci->retval);
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = EG(current_execute_data);
 		EG(current_execute_data) = call;
 #if ZEND_DEBUG

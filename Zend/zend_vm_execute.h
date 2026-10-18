@@ -1308,7 +1308,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_D
 
 	SAVE_OPLINE();
 #if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
-zend_verify_internal_param_defaults(&call);
+	zend_verify_internal_param_defaults(&call);
 #endif
 	EX(call) = call->prev_execute_data;
 
@@ -1381,7 +1381,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_D
 
 	SAVE_OPLINE();
 #if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
-zend_verify_internal_param_defaults(&call);
+	zend_verify_internal_param_defaults(&call);
 #endif
 	EX(call) = call->prev_execute_data;
 
@@ -1454,7 +1454,7 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_
 
 	SAVE_OPLINE();
 #if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
-zend_verify_internal_param_defaults(&call);
+	zend_verify_internal_param_defaults(&call);
 #endif
 	EX(call) = call->prev_execute_data;
 
@@ -1644,6 +1644,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_D
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -1762,6 +1765,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_D
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -1879,6 +1885,9 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -2010,6 +2019,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_D
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -2145,6 +2157,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_D
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -2277,6 +2292,9 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -54296,7 +54314,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_ICA
 
 	SAVE_OPLINE();
 #if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
-zend_verify_internal_param_defaults(&call);
+	zend_verify_internal_param_defaults(&call);
 #endif
 	EX(call) = call->prev_execute_data;
 
@@ -54369,7 +54387,7 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_ICA
 
 	SAVE_OPLINE();
 #if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
-zend_verify_internal_param_defaults(&call);
+	zend_verify_internal_param_defaults(&call);
 #endif
 	EX(call) = call->prev_execute_data;
 
@@ -54442,7 +54460,7 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_IC
 
 	SAVE_OPLINE();
 #if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
-zend_verify_internal_param_defaults(&call);
+	zend_verify_internal_param_defaults(&call);
 #endif
 	EX(call) = call->prev_execute_data;
 
@@ -54632,6 +54650,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_FCA
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -54750,6 +54771,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_FCA
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -54867,6 +54891,9 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_FC
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -54998,6 +55025,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_FCA
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -55133,6 +55163,9 @@ static ZEND_VM_HOT ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_FCA
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -55265,6 +55298,9 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_DO_FC
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 

@@ -4950,29 +4950,32 @@ static void cleanup_unfinished_calls(zend_execute_data *execute_data, uint32_t o
 }
 /* }}} */
 
-/* Replace optional parameters that weren't passed with their declared default values,
- * which allows us to check that this does not change the behavior of the function. */
-#define ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS 1
 #if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
-static void zend_verify_internal_param_defaults(zend_execute_data **call_ptr) {
-	zend_function *fbc = (*call_ptr)->func;
+/* Pass declared defaults for omitted optional args, so mismatches with the implicit behavior show up. */
+ZEND_API void zend_verify_internal_param_defaults(zend_execute_data **call_ptr)
+{
+	const zend_function *fbc = (*call_ptr)->func;
 	uint32_t num_passed_args = ZEND_CALL_NUM_ARGS(*call_ptr);
-	if (num_passed_args < fbc->common.required_num_args) {
-		/* This is an error anyway. */
+	/* Too few args is an error anyway, and magic functions have no stub defaults. */
+	if (num_passed_args < fbc->common.required_num_args
+	 || (fbc->common.fn_flags & ZEND_ACC_USER_ARG_INFO)) {
 		return;
 	}
 
 	uint32_t num_declared_args = fbc->common.num_args;
 	while (num_passed_args < num_declared_args) {
-		zend_internal_arg_info *arg_info = (zend_internal_arg_info *)&fbc->internal_function.arg_info[num_passed_args];
+		const zend_arg_info *arg_info = &fbc->common.arg_info[num_passed_args];
 		zval default_value;
-		if (zend_get_default_from_internal_arg_info(&default_value, (zend_arg_info *)arg_info) == FAILURE) {
-			/* Default value not available, so we can't pass any further defaults either. */
+		/* Later defaults can't be passed positionally once one is unknown. */
+		if (zend_get_default_from_internal_arg_info(&default_value, arg_info) == FAILURE) {
 			return;
 		}
 
-		if (Z_TYPE(default_value) == IS_CONSTANT_AST) {
-			zval_update_constant_ex(&default_value, fbc->common.scope);
+		if (Z_TYPE(default_value) == IS_CONSTANT_AST
+		 && zval_update_constant_ex(&default_value, fbc->common.scope) == FAILURE) {
+			zend_string *name = get_function_or_method_name(fbc);
+			zend_error_noreturn(E_CORE_ERROR, "%s(): Default value of argument #%" PRIu32 " cannot be evaluated",
+				ZSTR_VAL(name), num_passed_args + 1);
 		}
 
 		zend_vm_stack_extend_call_frame(call_ptr, num_passed_args, 1);

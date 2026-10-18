@@ -4136,7 +4136,7 @@ ZEND_VM_HOT_HANDLER(129, ZEND_DO_ICALL, ANY, ANY, SPEC(RETVAL,OBSERVER))
 
 	SAVE_OPLINE();
 #if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
-zend_verify_internal_param_defaults(&call);
+	zend_verify_internal_param_defaults(&call);
 #endif
 	EX(call) = call->prev_execute_data;
 
@@ -4273,6 +4273,9 @@ ZEND_VM_HOT_HANDLER(131, ZEND_DO_FCALL_BY_NAME, ANY, ANY, SPEC(RETVAL,OBSERVER))
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
@@ -4401,6 +4404,9 @@ ZEND_VM_HOT_HANDLER(60, ZEND_DO_FCALL, ANY, ANY, SPEC(RETVAL,OBSERVER))
 			ret = NULL;
 		}
 
+#if ZEND_VERIFY_INTERNAL_PARAM_DEFAULTS
+		zend_verify_internal_param_defaults(&call);
+#endif
 		call->prev_execute_data = execute_data;
 		EG(current_execute_data) = call;
 
