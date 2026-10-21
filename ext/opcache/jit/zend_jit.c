@@ -1495,6 +1495,7 @@ static int zend_jit(const zend_op_array *op_array, zend_ssa *ssa, const zend_op 
 		for (i = ssa->cfg.blocks[b].start; i <= end; i++) {
 			zend_ssa_op *ssa_op = ssa->ops ? &ssa->ops[i] : NULL;
 			opline = op_array->opcodes + i;
+			ctx.op_start_ref = ctx.ctx.insns_count;
 			if (zend_jit_inc_call_level(opline->opcode)) {
 				call_level++;
 			}
