@@ -1886,6 +1886,12 @@ static ZEND_COLD bool zend_ast_valid_var_name(const char *s, size_t len)
 	return true;
 }
 
+/* T_HALT_COMPILER is the only keyword the grammar rejects as an identifier. */
+static ZEND_COLD bool zend_ast_is_halt_compiler(const zend_string *name)
+{
+	return zend_string_equals_literal_ci(name, "__halt_compiler");
+}
+
 static ZEND_COLD void zend_ast_export_class_const_name(smart_str *str, zend_ast *ast, int indent)
 {
 	if (ast->kind == ZEND_AST_ZVAL) {
@@ -1894,7 +1900,8 @@ static ZEND_COLD void zend_ast_export_class_const_name(smart_str *str, zend_ast 
 		/* A bare "class" would turn the dynamic fetch into a class name fetch. */
 		if (Z_TYPE_P(zv) == IS_STRING
 				&& zend_ast_valid_var_name(Z_STRVAL_P(zv), Z_STRLEN_P(zv))
-				&& !zend_string_equals_ci(Z_STR_P(zv), ZSTR_KNOWN(ZEND_STR_CLASS))) {
+				&& !zend_string_equals_ci(Z_STR_P(zv), ZSTR_KNOWN(ZEND_STR_CLASS))
+				&& !zend_ast_is_halt_compiler(Z_STR_P(zv))) {
 			smart_str_append(str, Z_STR_P(zv));
 			return;
 		}
@@ -1925,6 +1932,41 @@ static ZEND_COLD void zend_ast_export_var(smart_str *str, zend_ast *ast, int ind
 	smart_str_appendc(str, '{');
 	zend_ast_export_name(str, ast, 0, indent);
 	smart_str_appendc(str, '}');
+}
+
+static ZEND_COLD bool zend_ast_is_bare_set_arg_list(zend_ast *args)
+{
+	if (args->kind != ZEND_AST_ARG_LIST) {
+		return false;
+	}
+
+	const zend_ast_list *list = zend_ast_get_list(args);
+	if (list->children != 1 || list->child[0]->kind != ZEND_AST_CONST) {
+		return false;
+	}
+
+	zend_ast *name = list->child[0]->child[0];
+	return name->attr == ZEND_NAME_NOT_FQ && zend_string_equals_literal_ci(zend_ast_get_str(name), "set");
+}
+
+static ZEND_COLD void zend_ast_export_static_method_name(smart_str *str, zend_ast *name_ast, zend_ast *args, int indent)
+{
+	if (name_ast->kind == ZEND_AST_ZVAL && Z_TYPE_P(zend_ast_get_zval(name_ast)) == IS_STRING) {
+		const zend_string *name = zend_ast_get_str(name_ast);
+		/* "public(set)" and its siblings lex as a single token. */
+		bool lexes_as_set_modifier = (zend_string_equals_literal_ci(name, "public")
+				|| zend_string_equals_literal_ci(name, "protected")
+				|| zend_string_equals_literal_ci(name, "private"))
+			&& zend_ast_is_bare_set_arg_list(args);
+
+		if (zend_ast_is_halt_compiler(name) || lexes_as_set_modifier) {
+			smart_str_appendc(str, '{');
+			zend_ast_export_ex(str, name_ast, 0, indent);
+			smart_str_appendc(str, '}');
+			return;
+		}
+	}
+	zend_ast_export_var(str, name_ast, indent);
 }
 
 /* Use zend_ast_export_list() unless fewer than `list->children` children should
@@ -3073,7 +3115,7 @@ simple_list:
 			}
 
 			smart_str_appends(str, "::");
-			zend_ast_export_var(str, ast->child[1], indent);
+			zend_ast_export_static_method_name(str, ast->child[1], ast->child[2], indent);
 			smart_str_appendc(str, '(');
 			zend_ast_export_ex(str, ast->child[2], 0, indent);
 			smart_str_appendc(str, ')');
