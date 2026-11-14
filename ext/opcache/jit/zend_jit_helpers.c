@@ -1546,7 +1546,11 @@ static void ZEND_FASTCALL zend_jit_assign_dim_helper(zval *object_ptr, zval *dim
 				ZEND_ASSERT(op_data->opcode == ZEND_OP_DATA && op_data->op1_type == IS_CV);
 				if (!zend_jit_undefined_op_helper_write(arr, op_data->op1.var)) {
 					if (result) {
-						ZVAL_UNDEF(result);
+						if (EG(exception)) {
+							ZVAL_UNDEF(result);
+						} else {
+							ZVAL_NULL(result);
+						}
 					}
 					return;
 				}
