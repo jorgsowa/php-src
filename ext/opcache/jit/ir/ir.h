@@ -665,16 +665,7 @@ void ir_strtab_free(ir_strtab *strtab);
 #define IR_OPT_MEM2SSA         (1<<22)
 #define IR_OPT_CODEGEN         (1<<23)
 #define IR_OPT_TAILCALL        (1<<24)
-
-/* debug related */
-#ifdef IR_DEBUG
-# define IR_DEBUG_SCCP         (1<<26)
-# define IR_DEBUG_GCM          (1<<27)
-# define IR_DEBUG_GCM_SPLIT    (1<<28)
-# define IR_DEBUG_SCHEDULE     (1<<29)
-# define IR_DEBUG_RA           (1<<30)
-# define IR_DEBUG_BB_SCHEDULE  (1U<<31)
-#endif
+#define IR_NO_OPT              (1<<25)
 
 /* Calling Conventions */
 #define IR_CC_DEFAULT          0x00
@@ -693,6 +684,15 @@ void ir_strtab_free(ir_strtab *strtab);
 /* Deprecated constants */
 #define IR_BUILTIN_FUNC        IR_CC_BUILTIN
 #define IR_FASTCALL_FUNC       IR_CC_FASTCALL
+
+/* Flags for ir_ctx.debug_flags (they work only in "debug" build) */
+#define IR_DEBUG_SCCP          (1<<0)
+#define IR_DEBUG_GCM           (1<<1)
+#define IR_DEBUG_GCM_SPLIT     (1<<2)
+#define IR_DEBUG_SCHEDULE      (1<<3)
+#define IR_DEBUG_RA            (1<<4)
+#define IR_DEBUG_BB_SCHEDULE   (1<<5)
+#define IR_DEBUG_DESSA         (1<<6)
 
 typedef struct _ir_ctx           ir_ctx;
 typedef struct _ir_use_list      ir_use_list;
@@ -738,6 +738,7 @@ struct _ir_ctx {
 	uint32_t           flags2;                  /* IR context private flags (see IR_* defines in ir_private.h) */
 	ir_type            ret_type;                /* Function return type */
 	uint32_t           mflags;                  /* CPU specific flags (see IR_X86_... macros below) */
+	uint32_t           debug_flags;             /* Debug flags (see IR_DEBUG_... macros, work only in DEBUG build) */
 	int32_t            status;                  /* non-zero error code (see IR_ERROR_... macros), app may use negative codes */
 	ir_ref             fold_cse_limit;          /* CSE finds identical insns backward from "insn_count" to "fold_cse_limit" */
 	ir_insn            fold_insn;               /* temporary storage for folding engine */
@@ -1087,12 +1088,22 @@ void ir_dump_codegen(const ir_ctx *ctx, FILE *f);
 /* IR to C conversion (implementation in ir_emit_c.c) */
 int ir_emit_c(ir_ctx *ctx, const char *name, FILE *f);
 void ir_emit_c_func_decl(const char *name, uint32_t flags, ir_type ret_type, uint32_t params_count, const uint8_t *param_types, FILE *f);
-void ir_emit_c_sym_decl(const char *name, uint32_t flags, FILE *f);
+void ir_emit_c_sym_decl(const char *name, uint32_t flags, size_t size, FILE *f);
+void ir_emit_c_sym_data_str(size_t pos, const char *str, size_t len, FILE *f);
+void ir_emit_c_sym_data(size_t pos, const void *data, size_t size, FILE *f);
+void ir_emit_c_sym_data_pad(size_t pos, size_t size, FILE *f);
+void ir_emit_c_sym_data_ref(size_t pos, ir_op op, const char *ref, uintptr_t offset, FILE *f);
+void ir_emit_c_sym_data_end(uint32_t flags, FILE *f);
 
 /* IR to LLVM conversion (implementation in ir_emit_llvm.c) */
 int ir_emit_llvm(ir_ctx *ctx, const char *name, FILE *f);
 void ir_emit_llvm_func_decl(const char *name, uint32_t flags, ir_type ret_type, uint32_t params_count, const uint8_t *param_types, FILE *f);
-void ir_emit_llvm_sym_decl(const char *name, uint32_t flags, FILE *f);
+void ir_emit_llvm_sym_decl(const char *name, uint32_t flags, size_t size, FILE *f);
+void ir_emit_llvm_sym_data_str(size_t pos, const char *str, size_t len, FILE *f);
+void ir_emit_llvm_sym_data(size_t pos, const void *data, size_t size, FILE *f);
+void ir_emit_llvm_sym_data_pad(size_t pos, size_t size, FILE *f);
+void ir_emit_llvm_sym_data_ref(size_t pos, ir_op op, const char *ref, uintptr_t offset, FILE *f);
+void ir_emit_llvm_sym_data_end(uint32_t flags, FILE *f);
 
 /* IR verification API (implementation in ir_check.c) */
 bool ir_check(const ir_ctx *ctx);
@@ -1130,6 +1141,7 @@ IR_ALWAYS_INLINE void *ir_jit_compile(ir_ctx *ctx, int opt_level, size_t *size)
 			return NULL;
 		}
 		ctx->flags &= ~(IR_OPT_CFG | IR_OPT_CODEGEN | IR_OPT_TAILCALL);
+		ctx->flags |= IR_NO_OPT;
 
 		ir_build_def_use_lists(ctx);
 

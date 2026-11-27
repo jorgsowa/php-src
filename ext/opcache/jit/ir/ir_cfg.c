@@ -800,14 +800,14 @@ slow_case:
 			ir_list_push(&worklist, idom);
 			while (1) {
 				k--;
+				if (UNEXPECTED(k == 0)) {
+					// IR_ASSERT(0 && "Wrong blocks order: BB is before all its predecessors");
+					goto slow_case;
+				}
 				p++;
 				idom = *p;
 				if (idom < b) {
 					break;
-				}
-				if (UNEXPECTED(k == 0)) {
-					// IR_ASSERT(0 && "Wrong blocks order: BB is before all its predecessors");
-					goto slow_case;
 				}
 				ir_list_push(&worklist, idom);
 			}
@@ -1597,7 +1597,7 @@ static int ir_schedule_blocks_bottom_up(ir_ctx *ctx)
 {
 	uint32_t max_edges_count = ctx->cfg_edges_count / 2;
 	uint32_t edges_count = 0;
-	uint32_t b, i, loop_depth;
+	uint32_t b, i, n, tail, end, loop_depth;
 	float *bb_freq, freq;
 	ir_block *bb;
 	ir_edge_info *edges, *e;
@@ -1858,7 +1858,7 @@ restart:
 	qsort(edges, edges_count, sizeof(ir_edge_info), ir_edge_info_cmp);
 
 #ifdef IR_DEBUG
-	if (ctx->flags & IR_DEBUG_BB_SCHEDULE) {
+	if (ctx->debug_flags & IR_DEBUG_BB_SCHEDULE) {
 		ir_dump_edges(ctx, edges_count, edges);
 	}
 #endif
@@ -1907,7 +1907,7 @@ restart:
 	}
 
 #if IR_DEBUG_BB_SCHEDULE_GRAPH
-	if (ctx->flags & IR_DEBUG_BB_SCHEDULE) {
+	if (ctx->debug_flags & IR_DEBUG_BB_SCHEDULE) {
 		ir_dump_cfg_freq_graph(ctx, bb_freq, edges_count, edges, chains);
 	}
 #endif
@@ -1915,7 +1915,7 @@ restart:
 	ir_mem_free(bb_freq);
 
 #ifdef IR_DEBUG
-	if (ctx->flags & IR_DEBUG_BB_SCHEDULE) {
+	if (ctx->debug_flags & IR_DEBUG_BB_SCHEDULE) {
 		ir_dump_chains(ctx, chains);
 	}
 #endif
@@ -1942,19 +1942,21 @@ restart:
 		}
 
 #ifdef IR_DEBUG
-		if (ctx->flags & IR_DEBUG_BB_SCHEDULE) {
+		if (ctx->debug_flags & IR_DEBUG_BB_SCHEDULE) {
 			ir_dump_chains(ctx, chains);
 		}
 #endif
 	}
 
 	/* 5. Align loop headers */
-	for (b = 1; b <= ctx->cfg_blocks_count; b++) {
-		if (chains[b].head == b) {
-			bb = &ctx->cfg_blocks[b];
-			if (bb->loop_depth) {
-				if (ir_should_align_loop(ctx, chains, b, bb)) {
-					bb->flags |= IR_BB_ALIGN_LOOP;
+	if (ctx->flags2 & IR_CFG_HAS_LOOPS) {
+		for (b = 1; b <= ctx->cfg_blocks_count; b++) {
+			if (chains[b].head == b) {
+				bb = &ctx->cfg_blocks[b];
+				if (bb->loop_depth) {
+					if (ir_should_align_loop(ctx, chains, b, bb)) {
+						bb->flags |= IR_BB_ALIGN_LOOP;
+					}
 				}
 			}
 		}
@@ -1970,35 +1972,52 @@ restart:
 		uint32_t dst = ir_chain_head(chains, e->to);
 		if (src != dst) {
 			if (dst == 1) {
-				ir_join_chains(chains, dst, src);
-			} else {
-				ir_join_chains(chains, src, dst);
+				dst = src;
+				src = 1;
 			}
+			ir_join_chains(chains, src, dst);
 		}
 	}
 
 #ifdef IR_DEBUG
-	if (ctx->flags & IR_DEBUG_BB_SCHEDULE) {
+	if (ctx->debug_flags & IR_DEBUG_BB_SCHEDULE) {
 		ir_dump_chains(ctx, chains);
 	}
 #endif
 
 	/* 7. Form a final BB order */
-	count = 0;
-	for (b = 1; b <= ctx->cfg_blocks_count; b++) {
-		if (chains[b].head == b) {
-			uint32_t tail = chains[b].tail;
-			uint32_t i = b;
-			while (1) {
-				count++;
-				ctx->cfg_schedule[count] = i;
-				if (i == tail) break;
-				i = chains[i].next;
+	n = 0;
+	IR_ASSERT(chains[1].head == 1);
+	tail = chains[1].tail;
+	i = 1;
+	while (1) {
+		n++;
+		ctx->cfg_schedule[n] = i;
+		if (i == tail) break;
+		i = chains[i].next;
+	}
+	end = schedule_end - ctx->cfg_schedule;
+	if (n != end) {
+		ir_chain *chain;
+
+		count = ctx->cfg_blocks_count;
+		for (b = 2, chain = &chains[2]; b <= count; chain++, b++) {
+			if (chain->head == b) {
+				tail = chain->tail;
+				i = b;
+				while (1) {
+					n++;
+					ctx->cfg_schedule[n] = i;
+					if (i == tail) break;
+					i = chains[i].next;
+				}
+				if (n == end) {
+					break;
+				}
 			}
 		}
+		IR_ASSERT(n == end);
 	}
-
-	IR_ASSERT(ctx->cfg_schedule + count == schedule_end);
 	ctx->cfg_schedule[ctx->cfg_blocks_count + 1] = 0;
 
 	ir_mem_free(edges);
